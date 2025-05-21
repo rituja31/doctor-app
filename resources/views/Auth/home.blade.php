@@ -14,7 +14,7 @@
         }
 
         .hero-section {
-            background: url('/images/bg.jpg') no-repeat center center/cover;
+            background: url('/images/bg2.jpg') no-repeat center center/cover;
             height: 100vh;
             color: white;
             text-align: center;

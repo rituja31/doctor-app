@@ -5,9 +5,8 @@
 </head>
 <body>
     <h1>Welcome Admin</h1>
-    <h2>Welcome Razak</h2>
+    <h2>Welcome {{ Auth::user()->name }}</h2>
 
-    
     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         Logout
     </a>

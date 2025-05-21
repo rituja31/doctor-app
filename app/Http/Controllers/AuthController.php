@@ -31,26 +31,35 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registration successful!');
     }
 
-    public function showLogin() {
+    public function showLogin(){
         return view('auth.login');
     }
 
-    public function login(Request $request) {
-        $credentials = $request->only('email', 'password');
-        $credentials['role'] = $request->role;
+   public function login(Request $request){
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+        'role' => 'required'
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            $role = Auth::user()->role;
+    $credentials = $request->only('email', 'password');
 
-            return match($role) {
-                'admin' => redirect()->route('admin.dashboard'),
-                'doctor' => redirect()->route('doctor.dashboard'),
-                'patient' => redirect()->route('patient.dashboard'),
-            };
-        }
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
 
-        return back()->withErrors(['email' => 'Invalid credentials or role']);
+        switch ($request->role) {
+    case 'admin':
+        return redirect()->route('admin.dashboard');
+    case 'doctor':
+        return redirect()->route('doctor.dashboard');
+    case 'patient':
+        return redirect()->route('patient.dashboard');
+}
+
     }
+
+        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
+}
 
     public function logout() {
         Auth::logout();

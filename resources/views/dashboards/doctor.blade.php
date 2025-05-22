@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoveCare - Doctor Dashboard</title>
+    <title>Health Care - Doctor Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -82,13 +82,13 @@
             text-align: center;
         }
 
-        /* Main Content */
+      
         .main-content {
             flex: 1;
             padding: 20px;
         }
 
-        /* Header */
+        
         .header {
             display: flex;
             justify-content: space-between;
@@ -146,14 +146,14 @@
             margin-right: 5px;
         }
 
-        /* Dashboard Grid */
+        
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
 
-        /* Cards */
+     
         .card {
             background: white;
             border-radius: var(--border-radius);
@@ -190,7 +190,7 @@
             font-size: 14px;
         }
 
-        /* Responsive */
+       
         @media (max-width: 768px) {
             .dashboard {
                 flex-direction: column;
@@ -219,11 +219,11 @@
 </head>
 <body>
     <div class="dashboard">
-        <!-- Sidebar -->
+        
         <aside class="sidebar">
             <div class="logo">
                 <i class="fas fa-heartbeat"></i>
-                <h2>LoveCare</h2>
+                <h2>Health Care</h2>
             </div>
             
             <nav class="nav-menu">
@@ -242,12 +242,12 @@
             </nav>
         </aside>
         
-        <!-- Main Content -->
+        
         <main class="main-content">
-            <!-- Header -->
+           
             <header class="header">
                 <div class="header-title">
-                    <h1>LoveCare</h1>
+                    <h1>Health Care</h1>
                     <h2>Dashboard Overview</h2>
                 </div>
                 
@@ -264,7 +264,7 @@
                 </div>
             </header>
             
-            <!-- Stats Overview -->
+            
             <div class="dashboard-grid">
                 <a href="#" class="card">
                     <div class="card-header">

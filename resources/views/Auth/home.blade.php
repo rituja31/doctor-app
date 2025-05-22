@@ -108,7 +108,7 @@
         <div class="hero-content">
             <h1>Avoid Hassles & Delays.</h1>
             <p>How is health today, Sounds like not good!</p>
-            <p>Don't worry. Find your doctor online. Book as you wish with eDoc.<br>
+            <p>Don't worry. Find your doctor online. Book as you wish with Health Care.<br>
                We offer you a free doctor channeling service. Make your appointment now.</p>
             <a href="#" class="btn-primary">Make Appointment</a>
         </div>

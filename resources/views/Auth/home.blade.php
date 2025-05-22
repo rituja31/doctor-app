@@ -4,13 +4,41 @@
     <meta charset="UTF-8">
     <title>Doctor Appointment</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body, html {
             height: 100%;
-            margin: 0;
             font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #343a40;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #ccc;
         }
 
         .hero-section {
@@ -21,6 +49,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             padding: 0 20px;
             position: relative;
         }
@@ -29,52 +58,59 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
 
         .hero-content {
             z-index: 2;
             position: relative;
+            max-width: 700px;
         }
 
-        .navbar-brand {
+        .hero-content h1 {
+            font-size: 2.8rem;
             font-weight: bold;
-            color: #fff !important;
+            margin-bottom: 15px;
         }
 
-        .nav-link {
-            color: #fff !important;
+        .hero-content p {
+            font-size: 1.2rem;
+            margin: 10px 0;
         }
 
         .btn-primary {
             background-color: #007bff;
             border: none;
-            padding: 10px 20px;
-            font-size: 1.2rem;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-    
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <div class="ms-auto">
-                <a href="{{ route('login') }}" class="nav-link d-inline">Login</a>
-                <a href="{{ route('register') }}" class="nav-link d-inline">Register</a>
-            </div>
-        </div>
-    </nav>
+    <div class="navbar">
+        <a href="{{ route('login') }}">Login</a>
+        <a href="{{ route('register') }}">Register</a>
+    </div>
 
-   
     <div class="hero-section">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1 class="display-4 fw-bold">Avoid Hassles & Delays.</h1>
-            <p class="lead">How is health today, Sounds like not good!</p>
+            <h1>Avoid Hassles & Delays.</h1>
+            <p>How is health today, Sounds like not good!</p>
             <p>Don't worry. Find your doctor online. Book as you wish with eDoc.<br>
-                We offer you a free doctor channeling service. Make your appointment now.</p>
-            <a href="#" class="btn btn-primary mt-3">Make Appointment</a>
-           
+               We offer you a free doctor channeling service. Make your appointment now.</p>
+            <a href="#" class="btn-primary">Make Appointment</a>
         </div>
     </div>
 

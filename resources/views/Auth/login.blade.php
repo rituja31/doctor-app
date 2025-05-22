@@ -12,6 +12,17 @@
             align-items: center;
             height: 100vh;
         }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: url('/images/bg4.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
         .login-box {
             background: #fff;
             padding: 40px;

@@ -223,7 +223,7 @@
         <aside class="sidebar">
             <div class="logo">
                 <i class="fas fa-heartbeat"></i>
-                <h2>Health care</h2>
+                <h2>LoveCare</h2>
             </div>
             
             <nav class="nav-menu">
@@ -247,13 +247,13 @@
             <!-- Header -->
             <header class="header">
                 <div class="header-title">
-                    <h1>Healthcare</h1>
+                    <h1>LoveCare</h1>
                     <h2>Dashboard Overview</h2>
                 </div>
                 
                 <div class="user-profile">
                     <div class="user-avatar">DR</div>
-                    <span class="user-name">Dr. Razak Nadaf</span>
+                    <span class="user-name">Dr. {{ Auth::user()->name }}</span>
                     <button class="logout-btn" onclick="document.getElementById('logout-form').submit();">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout

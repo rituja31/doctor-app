@@ -24,7 +24,7 @@
         <option value="">Select Role</option>
         <option value="admin">Admin</option>
         <option value="doctor">Doctor</option>
-        <option value="patient">Patient</option>
+        
     </select><br><br>
 
     <button type="submit">Register</button>

@@ -14,7 +14,7 @@ Route::get('/', function () {
             default => redirect()->route('login'),
         };
     }
-    return view('Auth.home'); 
+    return view('auth.home');  
 })->name('home');
 
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -27,5 +27,5 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', fn() => view('dashboards.admin'))->name('admin.dashboard');
     Route::get('/doctor/dashboard', fn() => view('dashboards.doctor'))->name('doctor.dashboard');
-
+    Route::get('/home', fn() => view('auth.home'))->name('patient.dashboard');
 });

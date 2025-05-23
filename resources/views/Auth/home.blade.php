@@ -21,24 +21,51 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #343a40;
-            padding: 15px 30px;
+            background-color:rgb(3, 38, 72);
+            padding: 10px 30px;
             display: flex;
             justify-content: flex-end;
             align-items: center;
             z-index: 1000;
         }
 
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 16px;
-            transition: color 0.3s ease;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .navbar a:hover {
-            color: #ccc;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .username {
+            font-weight: bold;
+            color:rgb(248, 249, 251);
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color:rgb(242, 246, 249);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            color:rgb(99, 119, 139);
         }
 
         .hero-section {
@@ -99,8 +126,22 @@
 <body>
 
     <div class="navbar">
-        <a href="{{ route('login') }}">Login</a>
-        <a href="{{ route('register') }}">Register</a>
+        @auth
+        <div class="user-info">
+            <div class="avatar">
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+            </div>
+            <div class="username">
+                {{ Auth::user()->name }}
+            </div>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button class="logout-btn" type="submit">
+                    &#x1F6AA; Logout
+                </button>
+            </form>
+        </div>
+        @endauth
     </div>
 
     <div class="hero-section">

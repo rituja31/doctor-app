@@ -20,7 +20,7 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:4', 
-            'role' => 'required|in:admin,doctor',
+            'role' => 'required|in:doctor,patient',
         ]);
 
         User::create([
@@ -56,6 +56,9 @@ class AuthController extends Controller
                     return redirect()->route('admin.dashboard');
                 case 'doctor':
                     return redirect()->route('doctor.dashboard');
+                case 'patient':
+                    return redirect()->route('patient.dashboard'); 
+    
                 
             }
         }

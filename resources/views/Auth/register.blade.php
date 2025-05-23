@@ -7,15 +7,6 @@
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #f8f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        body {
-            font-family: 'Segoe UI', sans-serif;
             background: url('/images/bg4.jpg') no-repeat center center fixed;
             background-size: cover;
             display: flex;
@@ -24,7 +15,6 @@
             height: 100vh;
             margin: 0;
         }
-
 
         .register-box {
             background: #fff;
@@ -116,12 +106,18 @@
         <h2>Register</h2>
         <p>Create your account</p>
 
+        @if($errors->any())
+            <div style="color: red; text-align: center;">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
             <div class="roles">
-                <label><input type="radio" name="role" value="admin" required> Admin</label>
                 <label><input type="radio" name="role" value="doctor" required> Doctor</label>
+                <label><input type="radio" name="role" value="patient" required> Patient</label>
             </div>
 
             <div class="input-group">

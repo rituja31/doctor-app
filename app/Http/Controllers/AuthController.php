@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    
     public function showRegister() {
         return view('auth.register');
     }
 
-   
     public function register(Request $request) {
         $request->validate([
             'name' => 'required',
@@ -37,7 +35,6 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-   
     public function login(Request $request){
         $request->validate([
             'email' => 'required|email',
@@ -45,30 +42,35 @@ class AuthController extends Controller
             'role' => 'required'
         ]);
 
+        $adminEmail = 'admin@gmail.com';
+        $adminPassword = 'admin1234';
+
+        if ($request->role === 'admin' && $request->email === $adminEmail && $request->password === $adminPassword) {
+            session(['is_admin' => true]);
+            return redirect()->route('admin.dashboard');
+        }
+
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-          
             switch ($request->role) {
-                case 'admin':
-                    return redirect()->route('admin.dashboard');
                 case 'doctor':
                     return redirect()->route('doctor.dashboard');
                 case 'patient':
-                    return redirect()->route('patient.dashboard'); 
-    
-                
+                    return redirect()->route('patient.dashboard');
             }
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
     }
 
-    
-    public function logout() {
+    public function logout(Request $request) {
         Auth::logout();
+        $request->session()->forget('is_admin');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('login');
     }
 }

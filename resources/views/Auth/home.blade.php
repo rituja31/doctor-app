@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Doctor Appointment</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         * {
             margin: 0;
@@ -26,6 +26,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
+            gap: 15px;
             z-index: 1000;
         }
 
@@ -33,6 +34,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            color: #f8f9fb;
         }
 
         .avatar {
@@ -46,11 +48,27 @@
             justify-content: center;
             font-weight: bold;
             font-size: 16px;
+            user-select: none;
         }
 
         .username {
             font-weight: bold;
-            color: rgb(248, 249, 251);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 8px 18px;
+            font-size: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
 
         .hero-section {
@@ -90,25 +108,26 @@
             margin: 10px 0;
         }
 
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
+        .dashboard-links {
             margin-top: 20px;
-            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
+        form.logout-form {
+            display: inline;
         }
 
-        .logout-section {
-            margin-top: 30px;
+        @media (max-width: 600px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -116,14 +135,22 @@
 
     <div class="navbar">
         @auth
-        <div class="user-info">
-            <div class="avatar">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+            <div class="user-info">
+                <div class="avatar">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                </div>
+                <div class="username">
+                    {{ Auth::user()->name }}
+                </div>
             </div>
-            <div class="username">
-                {{ Auth::user()->name }}
-            </div>
-        </div>
+
+            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                @csrf
+                <button type="submit" class="btn-primary">Logout</button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="btn-primary">Login</a>
+            <a href="{{ route('register') }}" class="btn-primary">Register</a>
         @endauth
     </div>
 
@@ -134,15 +161,19 @@
             <p>How is health today, Sounds like not good!</p>
             <p>Don't worry. Find your doctor online. Book as you wish with Health Care.<br>
                We offer you a free doctor channeling service. Make your appointment now.</p>
-            <a href="#" class="btn-primary">Make Appointment</a>
+
+            <a href="@auth {{ route('patient.appointments.create') }} @else {{ route('login') }} @endauth" class="btn-primary">Make Appointment</a>
 
             @auth
-            <div class="logout-section">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn-primary">Logout</button>
-                </form>
-            </div>
+                <div class="dashboard-links">
+                    @if(Auth::user()->role === 'doctor')
+                        <a href="{{ route('doctor.dashboard') }}" class="btn-primary">Doctor Dashboard</a>
+                    @elseif(Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}" class="btn-primary">Admin Dashboard</a>
+                    @else
+                        <a href="{{ route('patient.dashboard') }}" class="btn-primary">Patient Dashboard</a>
+                    @endif
+                </div>
             @endauth
         </div>
     </div>

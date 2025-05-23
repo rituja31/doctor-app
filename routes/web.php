@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\AppointmentController;
+
 
 Route::get('/', function () {
     if (session('is_admin')) {
@@ -21,6 +24,7 @@ Route::get('/', function () {
     return view('auth.home');
 })->name('home');
 
+
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -37,7 +41,11 @@ Route::get('/admin/dashboard', function () {
 })->name('admin.dashboard');
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/doctor/dashboard', fn() => view('dashboards.doctor'))->name('doctor.dashboard');
-    Route::get('/home', fn() => view('auth.home'))->name('patient.dashboard');
+Route::middleware(['auth', 'role:doctor'])->group(function () {
+    Route::get('/doctor/dashboard', [AuthController::class, 'doctorDashboard'])->name('doctor.dashboard');
+});
+
+Route::middleware(['auth', 'role:patient'])->group(function () {
+    Route::get('/patient/dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
+    Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('patient.appointments.create');
 });

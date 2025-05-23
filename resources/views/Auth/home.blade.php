@@ -21,7 +21,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color:rgb(3, 38, 72);
+            background-color: rgb(3, 38, 72);
             padding: 10px 30px;
             display: flex;
             justify-content: flex-end;
@@ -50,22 +50,7 @@
 
         .username {
             font-weight: bold;
-            color:rgb(248, 249, 251);
-        }
-
-        .logout-btn {
-            background: none;
-            border: none;
-            color:rgb(242, 246, 249);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover {
-            color:rgb(99, 119, 139);
+            color: rgb(248, 249, 251);
         }
 
         .hero-section {
@@ -121,6 +106,10 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
+        .logout-section {
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
@@ -134,12 +123,6 @@
             <div class="username">
                 {{ Auth::user()->name }}
             </div>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button class="logout-btn" type="submit">
-                    &#x1F6AA; Logout
-                </button>
-            </form>
         </div>
         @endauth
     </div>
@@ -152,6 +135,15 @@
             <p>Don't worry. Find your doctor online. Book as you wish with Health Care.<br>
                We offer you a free doctor channeling service. Make your appointment now.</p>
             <a href="#" class="btn-primary">Make Appointment</a>
+
+            @auth
+            <div class="logout-section">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn-primary">Logout</button>
+                </form>
+            </div>
+            @endauth
         </div>
     </div>
 

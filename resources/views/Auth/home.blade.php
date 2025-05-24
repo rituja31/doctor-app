@@ -162,7 +162,7 @@
             <p>Don't worry. Find your doctor online. Book as you wish with Health Care.<br>
                We offer you a free doctor channeling service. Make your appointment now.</p>
 
-            <a href="@auth {{ route('patient.appointments.create') }} @else {{ route('login') }} @endauth" class="btn-primary">Make Appointment</a>
+            <a href="{{ route('appointment.page') }}" class="btn-primary">Book Appointment</a>
 
             @auth
                 <div class="dashboard-links">

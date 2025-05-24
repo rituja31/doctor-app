@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Care - Doctor Dashboard</title>
+    <title>Doctor Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <style>
@@ -146,11 +145,13 @@
             margin-right: 5px;
         }
 
+        /* Cards container stacked vertically */
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 20px;
             margin-bottom: 20px;
+            max-width: 400px; /* optional: limit width */
         }
 
         .card {
@@ -158,6 +159,9 @@
             border-radius: var(--border-radius);
             padding: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .card-header {
@@ -191,6 +195,7 @@
 
         .calendar-container {
             margin-top: 20px;
+            max-width: 900px;
         }
 
         .fc-event {
@@ -239,7 +244,7 @@
             }
 
             .dashboard-grid {
-                grid-template-columns: 1fr;
+                max-width: 100%;
             }
 
             .header {
@@ -293,8 +298,9 @@
                     </form>
                 </div>
             </header>
+
             <div class="dashboard-grid">
-                <a href="#" class="card">
+                <a href="{{ route('doctor.calendar') }}" class="card">
                     <div class="card-header">
                         <div class="card-title">Today's Appointments</div>
                         <div class="card-actions">
@@ -304,6 +310,7 @@
                     <div class="stats-value">5</div>
                     <div class="stats-label">Click to view details</div>
                 </a>
+
                 <a href="#" class="card">
                     <div class="card-header">
                         <div class="card-title">Active Patients</div>
@@ -314,6 +321,7 @@
                     <div class="stats-value">128</div>
                     <div class="stats-label">Under your care</div>
                 </a>
+
                 <a href="#" class="card">
                     <div class="card-header">
                         <div class="card-title">Unread Messages</div>
@@ -325,6 +333,7 @@
                     <div class="stats-label">Waiting for reply</div>
                 </a>
             </div>
+
             <div class="card calendar-container">
                 <div class="card-header">
                     <div class="card-title">Appointment Calendar</div>
@@ -343,6 +352,7 @@
             </div>
         </main>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -384,28 +394,6 @@
                             type: 'offline',
                             patientId: 103
                         }
-                    },
-                    {
-                        title: 'Amit Kumar - Vaccination',
-                        start: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T10:00:00',
-                        end: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T10:15:00',
-                        className: 'fc-event-offline',
-                        extendedProps: {
-                            type: 'offline',
-                            patientId: 104
-                        }
-                    },
-                    {
-                        title: 'Online Consultation',
-                        start: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0] + 'T15:00:00',
-                        end: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0] + 'T15:30:00',
-                        className: 'fc-event-online'
-                    },
-                    {
-                        title: 'Offline Checkup',
-                        start: new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0] + 'T16:00:00',
-                        end: new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0] + 'T16:45:00',
-                        className: 'fc-event-offline'
                     }
                 ],
                 eventClick: function(info) {

@@ -6,14 +6,6 @@
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #f8f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        body {
-            font-family: 'Segoe UI', sans-serif;
             background: url('/images/bg4.jpg') no-repeat center center fixed;
             background-size: cover;
             display: flex;
@@ -31,41 +23,50 @@
             width: 100%;
             max-width: 400px;
         }
+
         h2 {
             text-align: center;
             margin-bottom: 10px;
         }
+
         p {
             text-align: center;
             color: #666;
             margin-bottom: 30px;
         }
+
         .input-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 6px;
             font-weight: bold;
         }
+
         input[type="email"], input[type="password"] {
             width: 100%;
             padding: 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
         }
+
         .roles {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
         }
+
         .roles label {
             display: flex;
             align-items: center;
         }
+
         .roles input {
             margin-right: 6px;
         }
+
         .login-btn {
             width: 100%;
             padding: 12px;
@@ -75,6 +76,7 @@
             border-radius: 8px;
             font-size: 16px;
         }
+
         .signup-link {
             margin-top: 15px;
             text-align: center;
@@ -102,7 +104,7 @@
             <div class="roles">
                 <label><input type="radio" name="role" value="admin" required> Admin</label>
                 <label><input type="radio" name="role" value="doctor" required> Doctor</label>
-
+                <label><input type="radio" name="role" value="patient" required> Patient</label>
             </div>
 
             <div class="input-group">

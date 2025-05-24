@@ -9,18 +9,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    
     public function showRegister() {
         return view('auth.register');
     }
 
-   
     public function register(Request $request) {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:4', 
-            'role' => 'required|in:admin,doctor',
+            'role' => 'required|in:doctor,patient',
         ]);
 
         User::create([
@@ -37,29 +35,57 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-   
-   public function login(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+    public function login(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:4', 
+            'role' => 'required'
+        ]);
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $role = $request->input('role');
 
-        return match ($user->role) {
-            'admin' => redirect()->route('admin.dashboard'),
-            'doctor' => redirect()->route('doctor.dashboard'),
-            'patient' => redirect()->route('patient.dashboard'),
-            default => redirect()->route('home'),
-        };
+       
+        if ($role === 'admin') {
+            if ($email === 'admin@gmail.com' && $password === 'admin1234') {
+                
+                $request->session()->put('admin_logged_in', true);
+                $request->session()->put('admin_email', $email);
+                return redirect()->route('admin.dashboard');
+            } else {
+                return back()->withErrors(['email' => 'Invalid admin credentials.'])->onlyInput('email');
+            }
+        }
+
+        
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if ($user->role !== $role) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Incorrect role selected.'])->onlyInput('email');
+            }
+
+            $request->session()->regenerate();
+
+            switch ($role) {
+                case 'doctor':
+                    return redirect()->route('doctor.dashboard');
+                case 'patient':
+                    return redirect()->route('patient.dashboard');
+            }
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
     }
 
-    return back()->withErrors([
-        'email' => 'Invalid credentials.',
-    ])->withInput();
-}
+    public function logout(Request $request) {
+        
+        $request->session()->forget('admin_logged_in');
 
-    
-    public function logout() {
         Auth::logout();
         return redirect()->route('login');
     }

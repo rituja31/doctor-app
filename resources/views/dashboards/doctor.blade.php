@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #e63946;
+            --primary: rgb(80, 161, 243);
             --secondary: #6c757d;
             --light: #f8f9fa;
             --dark: #212529;

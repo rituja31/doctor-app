@@ -38,30 +38,25 @@ class AuthController extends Controller
     }
 
    
-    public function login(Request $request){
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:4', 
-            'role' => 'required'
-        ]);
+   public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
 
-        $credentials = $request->only('email', 'password');
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-          
-            switch ($request->role) {
-                case 'admin':
-                    return redirect()->route('admin.dashboard');
-                case 'doctor':
-                    return redirect()->route('doctor.dashboard');
-                
-            }
-        }
-
-        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'doctor' => redirect()->route('doctor.dashboard'),
+            'patient' => redirect()->route('patient.dashboard'),
+            default => redirect()->route('home'),
+        };
     }
+
+    return back()->withErrors([
+        'email' => 'Invalid credentials.',
+    ])->withInput();
+}
 
     
     public function logout() {

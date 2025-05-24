@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Care - Doctor Dashboard</title>
+    <title>Doctor Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #e63946;
@@ -12,6 +12,8 @@
             --light: #f8f9fa;
             --dark: #212529;
             --border-radius: 8px;
+            --online-booking: #0077b6;
+            --offline-booking: #ff8800;
         }
 
         body {
@@ -27,7 +29,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 200px;
             background: white;
@@ -82,13 +83,11 @@
             text-align: center;
         }
 
-      
         .main-content {
             flex: 1;
             padding: 20px;
         }
 
-        
         .header {
             display: flex;
             justify-content: space-between;
@@ -146,19 +145,23 @@
             margin-right: 5px;
         }
 
-        
+        /* Cards container stacked vertically */
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 20px;
+            margin-bottom: 20px;
+            max-width: 400px; /* optional: limit width */
         }
 
-     
         .card {
             background: white;
             border-radius: var(--border-radius);
             padding: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .card-header {
@@ -190,27 +193,65 @@
             font-size: 14px;
         }
 
-       
+        .calendar-container {
+            margin-top: 20px;
+            max-width: 900px;
+        }
+
+        .fc-event {
+            cursor: pointer;
+        }
+
+        .fc-event-online {
+            background-color: var(--online-booking);
+            border-color: var(--online-booking);
+        }
+
+        .fc-event-offline {
+            background-color: var(--offline-booking);
+            border-color: var(--offline-booking);
+        }
+
+        .booking-legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
         @media (max-width: 768px) {
             .dashboard {
                 flex-direction: column;
             }
-            
+
             .sidebar {
                 width: 100%;
                 border-right: none;
                 border-bottom: 1px solid #e0e0e0;
             }
-            
+
             .dashboard-grid {
-                grid-template-columns: 1fr;
+                max-width: 100%;
             }
-            
+
             .header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
+
             .user-profile {
                 margin-top: 15px;
             }
@@ -219,13 +260,11 @@
 </head>
 <body>
     <div class="dashboard">
-        
         <aside class="sidebar">
             <div class="logo">
                 <i class="fas fa-heartbeat"></i>
                 <h2>Health Care</h2>
             </div>
-            
             <nav class="nav-menu">
                 <div class="nav-item">
                     <a href="#" class="nav-link">
@@ -241,16 +280,12 @@
                 </div>
             </nav>
         </aside>
-        
-        
         <main class="main-content">
-           
             <header class="header">
                 <div class="header-title">
                     <h1>Health Care</h1>
                     <h2>Dashboard Overview</h2>
                 </div>
-                
                 <div class="user-profile">
                     <div class="user-avatar">DR</div>
                     <span class="user-name">Dr. {{ Auth::user()->name }}</span>
@@ -263,10 +298,9 @@
                     </form>
                 </div>
             </header>
-            
-            
+
             <div class="dashboard-grid">
-                <a href="#" class="card">
+                <a href="{{ route('doctor.calendar') }}" class="card">
                     <div class="card-header">
                         <div class="card-title">Today's Appointments</div>
                         <div class="card-actions">
@@ -276,7 +310,7 @@
                     <div class="stats-value">5</div>
                     <div class="stats-label">Click to view details</div>
                 </a>
-                
+
                 <a href="#" class="card">
                     <div class="card-header">
                         <div class="card-title">Active Patients</div>
@@ -287,7 +321,7 @@
                     <div class="stats-value">128</div>
                     <div class="stats-label">Under your care</div>
                 </a>
-                
+
                 <a href="#" class="card">
                     <div class="card-header">
                         <div class="card-title">Unread Messages</div>
@@ -299,7 +333,76 @@
                     <div class="stats-label">Waiting for reply</div>
                 </a>
             </div>
+
+            <div class="card calendar-container">
+                <div class="card-header">
+                    <div class="card-title">Appointment Calendar</div>
+                </div>
+                <div id="calendar"></div>
+                <div class="booking-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--online-booking);"></div>
+                        <span>Online Booking</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--offline-booking);"></div>
+                        <span>Offline Booking</span>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [
+                    {
+                        title: 'Razak Nadaf - Checkup',
+                        start: new Date().toISOString().split('T')[0] + 'T09:00:00',
+                        end: new Date().toISOString().split('T')[0] + 'T09:30:00',
+                        className: 'fc-event-online',
+                        extendedProps: {
+                            type: 'online',
+                            patientId: 101
+                        }
+                    },
+                    {
+                        title: 'Noor Hussain - Follow-up',
+                        start: new Date().toISOString().split('T')[0] + 'T11:00:00',
+                        end: new Date().toISOString().split('T')[0] + 'T11:45:00',
+                        className: 'fc-event-online',
+                        extendedProps: {
+                            type: 'online',
+                            patientId: 102
+                        }
+                    },
+                    {
+                        title: 'Sabana Nadaf - Consultation',
+                        start: new Date().toISOString().split('T')[0] + 'T14:00:00',
+                        end: new Date().toISOString().split('T')[0] + 'T14:30:00',
+                        className: 'fc-event-offline',
+                        extendedProps: {
+                            type: 'offline',
+                            patientId: 103
+                        }
+                    }
+                ],
+                eventClick: function(info) {
+                    alert('Appointment with ' + info.event.title + '\nType: ' +
+                          info.event.extendedProps.type.toUpperCase() + ' booking');
+                }
+            });
+            calendar.render();
+        });
+    </script>
 </body>
 </html>

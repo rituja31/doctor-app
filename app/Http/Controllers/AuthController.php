@@ -42,20 +42,36 @@ class AuthController extends Controller
             'role' => 'required'
         ]);
 
-        $adminEmail = 'admin@gmail.com';
-        $adminPassword = 'admin1234';
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $role = $request->input('role');
 
-        if ($request->role === 'admin' && $request->email === $adminEmail && $request->password === $adminPassword) {
-            session(['is_admin' => true]);
-            return redirect()->route('admin.dashboard');
+       
+        if ($role === 'admin') {
+            if ($email === 'admin@gmail.com' && $password === 'admin1234') {
+                
+                $request->session()->put('admin_logged_in', true);
+                $request->session()->put('admin_email', $email);
+                return redirect()->route('admin.dashboard');
+            } else {
+                return back()->withErrors(['email' => 'Invalid admin credentials.'])->onlyInput('email');
+            }
         }
 
+        
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if ($user->role !== $role) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Incorrect role selected.'])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
-            switch ($request->role) {
+            switch ($role) {
                 case 'doctor':
                     return redirect()->route('doctor.dashboard');
                 case 'patient':
@@ -67,10 +83,10 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request) {
+        
+        $request->session()->forget('admin_logged_in');
+
         Auth::logout();
-        $request->session()->forget('is_admin');
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
         return redirect()->route('login');
     }
 }

@@ -34,7 +34,7 @@
             text-decoration: none;
             margin-left: 15px;
             font-size: 1rem;
-            background-color: #007bff;
+            background-color:rgb(20, 35, 50);
             padding: 8px 14px;
             border: none;
             border-radius: 5px;
@@ -43,7 +43,7 @@
         }
 
         .navbar a:hover, .navbar form button:hover {
-            background-color: #0056b3;
+            background-color:rgb(112, 160, 211);
         }
 
         .dashboard-container {
@@ -71,7 +71,7 @@
         }
 
         .btn-primary {
-            background-color: #007bff;
+            background-color:rgb(16, 22, 28);
             color: white;
             padding: 10px 20px;
             text-decoration: none;
@@ -81,7 +81,7 @@
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color:rgb(14, 21, 29);
         }
     </style>
 </head>
@@ -90,7 +90,7 @@
     <div class="navbar">
         <div>
             <a href="{{ url('/') }}">Home</a>
-            <a href="{{ route('patient.appointments.create') }}">Book Appointment</a>
+            <a href="{{ route('appointment.page') }}">Book Appointment</a>
         </div>
         <div>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -108,7 +108,7 @@
             <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
         </div>
 
-        <a href="{{ route('patient.appointments.create') }}" class="btn-primary">Make a New Appointment</a>
+        <a class="btn-primary" href="{{ route('appointment.page') }}">Book an Appointment</a>
     </div>
 
 </body>

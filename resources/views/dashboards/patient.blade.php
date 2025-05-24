@@ -90,7 +90,7 @@
     <div class="navbar">
         <div>
             <a href="{{ url('/') }}">Home</a>
-            <a href="#">Book Appointment</a>
+            <a href="{{ route('appointment.page') }}">Book Appointment</a>
         </div>
         <div>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -108,7 +108,7 @@
             <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
         </div>
 
-        
+        <a class="btn-primary" href="{{ route('appointment.page') }}">Book an Appointment</a>
     </div>
 
 </body>

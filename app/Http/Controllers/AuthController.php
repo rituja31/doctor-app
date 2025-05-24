@@ -31,11 +31,11 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registration successful!');
     }
 
-    public function showLogin(){
+    public function showLogin() {
         return view('auth.login');
     }
 
-    public function login(Request $request){
+    public function login(Request $request) {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:4', 
@@ -46,10 +46,9 @@ class AuthController extends Controller
         $password = $request->input('password');
         $role = $request->input('role');
 
-       
+        // Admin login (hardcoded)
         if ($role === 'admin') {
             if ($email === 'admin@gmail.com' && $password === 'admin1234') {
-                
                 $request->session()->put('admin_logged_in', true);
                 $request->session()->put('admin_email', $email);
                 return redirect()->route('admin.dashboard');
@@ -58,7 +57,7 @@ class AuthController extends Controller
             }
         }
 
-        
+        // Normal user login
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
@@ -83,10 +82,11 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request) {
-        
-        $request->session()->forget('admin_logged_in');
-
         Auth::logout();
+        $request->session()->forget('admin_logged_in');
+        $request->session()->forget('is_admin');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('login');
     }
 }

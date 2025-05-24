@@ -110,7 +110,20 @@
             <p>How is health today, Sounds like not good!</p>
             <p>Don't worry. Find your doctor online. Book as you wish with Health Care.<br>
                We offer you a free doctor channeling service. Make your appointment now.</p>
-            <a href="#" class="btn-primary">Make Appointment</a>
+
+            <a href="{{ route('appointment.page') }}" class="btn-primary">Book Appointment</a>
+
+            @auth
+                <div class="dashboard-links">
+                    @if(Auth::user()->role === 'doctor')
+                        <a href="{{ route('doctor.dashboard') }}" class="btn-primary">Doctor Dashboard</a>
+                    @elseif(Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}" class="btn-primary">Admin Dashboard</a>
+                    @else
+                        <a href="{{ route('patient.dashboard') }}" class="btn-primary">Patient Dashboard</a>
+                    @endif
+                </div>
+            @endauth
         </div>
     </div>
 

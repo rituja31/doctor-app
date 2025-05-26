@@ -1,87 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Patient Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        body, html {
-            height: 100%;
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
         }
 
         .navbar {
-            position: sticky;
-            top: 0;
-            background-color: rgb(3, 38, 72);
-            padding: 10px 30px;
+            background-color: #003366;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
-            z-index: 1000;
+            color: #fff;
         }
 
-        .navbar a, .navbar form button {
-            color: white;
+        .navbar a, .navbar button {
+            color: #fff;
+            margin-left: 1rem;
             text-decoration: none;
-            margin-left: 15px;
-            font-size: 1rem;
-            background-color:rgb(20, 35, 50);
+            background-color: #005b96;
             padding: 8px 14px;
+            border-radius: 6px;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            font-size: 0.95rem;
+            transition: background-color 0.3s ease;
         }
 
-        .navbar a:hover, .navbar form button:hover {
-            background-color:rgb(112, 160, 211);
+        .navbar a:hover, .navbar button:hover {
+            background-color: #1792d3;
         }
 
-        .dashboard-container {
-            max-width: 800px;
-            margin: 60px auto;
+        .dashboard {
+            max-width: 1000px;
+            margin: 30px auto;
             padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .dashboard-container h2 {
-            margin-bottom: 20px;
-            color: rgb(3, 38, 72);
+        .top-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
         }
 
-        .profile-info {
-            margin-bottom: 30px;
-            line-height: 1.6;
+        .top-card h2 {
+            color: #003366;
+            margin-bottom: 15px;
         }
 
-        .profile-info p {
-            font-size: 1.1rem;
+        .top-card p {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card h3 {
             margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #003366;
+        }
+
+        .card i {
+            color: #1792d3;
+            margin-right: 10px;
         }
 
         .btn-primary {
-            background-color:rgb(16, 22, 28);
+            display: inline-block;
+            background-color: #003366;
             color: white;
             padding: 10px 20px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 1rem;
-            transition: background-color 0.2s ease;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color:rgb(14, 21, 29);
+            background-color: #1792d3;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar a, .navbar button {
+                margin: 10px 0 0 0;
+            }
         }
     </style>
 </head>
@@ -89,26 +132,46 @@
 
     <div class="navbar">
         <div>
-            <a href="{{ url('/') }}">Home</a>
-            <a href="{{ route('appointment.page') }}">Book Appointment</a>
+            <a href="{{ url('/') }}"><i class="fas fa-home"></i> Home</a>
+            <a href="{{ route('appointment.page') }}"><i class="fas fa-calendar-plus"></i> Book Appointment</a>
         </div>
         <div>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit">Logout</button>
+                <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </form>
         </div>
     </div>
 
-    <div class="dashboard-container">
-        <h2>Welcome, {{ Auth::user()->name }}</h2>
+    <div class="dashboard">
 
-        <div class="profile-info">
+        
+        <div class="top-card">
+            <h2>Welcome, {{ Auth::user()->name }}</h2>
             <p><strong>Name:</strong> {{ Auth::user()->name }}</p>
             <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
         </div>
 
-        <a class="btn-primary" href="{{ route('appointment.page') }}">Book an Appointment</a>
+       
+        <div class="card-grid">
+            <div class="card">
+                <h3><i class="fas fa-calendar-check"></i> My Appointments</h3>
+                <p>View and manage your upcoming and past appointments.</p>
+                <a class="btn-primary" href="{{ route('appointment.page') }}">View Appointments</a>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-notes-medical"></i> Medical History</h3>
+                <p>Review your medical records and history with doctors.</p>
+                <a class="btn-primary" href="#">View History</a>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-user-cog"></i> Settings</h3>
+                <p>Update your profile, password, and notification preferences.</p>
+                <a class="btn-primary" href="#">Go to Settings</a>
+            </div>
+        </div>
     </div>
 
 </body>

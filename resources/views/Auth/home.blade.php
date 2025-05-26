@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Doctor Appointment</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         * {
             margin: 0;
@@ -21,24 +22,40 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #343a40;
-            padding: 15px 30px;
+            background-color: #1f3557;
+            padding: 15px 50px;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             z-index: 1000;
         }
 
+        .navbar .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
         .navbar a {
-            color: white;
+            color: #fff;
             text-decoration: none;
-            margin-left: 20px;
             font-size: 16px;
             transition: color 0.3s ease;
         }
 
         .navbar a:hover {
-            color: #ccc;
+            color: #00c4ff;
+        }
+
+        .login-register-btn {
+            border: 2px solid #00c4ff;
+            padding: 6px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .login-register-btn:hover {
+            background-color: #00c4ff;
+            color: #fff;
         }
 
         .hero-section {
@@ -98,34 +115,51 @@
 </head>
 <body>
 
-    <div class="navbar">
-        <a href="{{ route('login') }}">Login</a>
-        <a href="{{ route('register') }}">Register</a>
+<div class="navbar">
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
     </div>
-
-    <div class="hero-section">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>Avoid Hassles & Delays.</h1>
-            <p>How is health today, Sounds like not good!</p>
-            <p>Don't worry. Find your doctor online. Book as you wish with Health Care.<br>
-               We offer you a free doctor channeling service. Make your appointment now.</p>
-
-            <a href="{{ route('appointment.page') }}" class="btn-primary">Book Appointment</a>
-
-            @auth
-                <div class="dashboard-links">
-                    @if(Auth::user()->role === 'doctor')
-                        <a href="{{ route('doctor.dashboard') }}" class="btn-primary">Doctor Dashboard</a>
-                    @elseif(Auth::user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="btn-primary">Admin Dashboard</a>
-                    @else
-                        <a href="{{ route('patient.dashboard') }}" class="btn-primary">Patient Dashboard</a>
-                    @endif
-                </div>
-            @endauth
-        </div>
+    <div>
+        <a href="{{ route('login') }}" class="login-register-btn">Login/Register</a>
     </div>
+</div>
+
+<div class="hero-section" id="home">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>Avoid Hassles & Delays.</h1>
+        <p>How is health today, Sounds like not good!</p>
+        <p>Don't worry. Find your doctor online. Book as you wish with Health Care.<br>
+            We offer you a free doctor channeling service. Make your appointment now.</p>
+
+        <a href="{{ route('appointment.page') }}" class="btn-primary">Book Appointment</a>
+
+        @auth
+            <div class="dashboard-links">
+                @if(Auth::user()->role === 'doctor')
+                    <a href="{{ route('doctor.dashboard') }}" class="btn-primary">Doctor Dashboard</a>
+                @elseif(Auth::user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="btn-primary">Admin Dashboard</a>
+                @else
+                    <a href="{{ route('patient.dashboard') }}" class="btn-primary">Patient Dashboard</a>
+                @endif
+            </div>
+        @endauth
+    </div>
+</div>
+
+<!-- Optional: Add sections for About Us and Contact -->
+<div id="about" style="padding: 100px 20px; background: #f9f9f9; text-align: center;">
+    <h2>About Us</h2>
+    <p>We aim to make healthcare accessible and stress-free for everyone.</p>
+</div>
+
+<div id="contact" style="padding: 100px 20px; background: #eee; text-align: center;">
+    <h2>Contact</h2>
+    <p>Email: support@healthcare.com | Phone: +1 234 567 890</p>
+</div>
 
 </body>
 </html>

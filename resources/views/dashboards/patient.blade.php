@@ -157,19 +157,20 @@
             <div class="card">
                 <h3><i class="fas fa-calendar-check"></i> My Appointments</h3>
                 <p>View and manage your upcoming and past appointments.</p>
-                <a class="btn-primary" href="{{ route('appointment.page') }}">View Appointments</a>
+                <a class="btn-primary" href="{{ route('appointments.calendar') }}">View Appointments</a>
             </div>
 
             <div class="card">
                 <h3><i class="fas fa-notes-medical"></i> Medical History</h3>
                 <p>Review your medical records and history with doctors.</p>
-                <a class="btn-primary" href="#">View History</a>
+                <a class="btn-primary" href="{{ route('medical.history') }}">View History</a>
             </div>
 
             <div class="card">
                 <h3><i class="fas fa-user-cog"></i> Settings</h3>
                 <p>Update your profile, password, and notification preferences.</p>
-                <a class="btn-primary" href="#">Go to Settings</a>
+                <a class="btn-primary" href="{{ route('patient.settings') }}">Go to Settings</a>
+>
             </div>
         </div>
     </div>

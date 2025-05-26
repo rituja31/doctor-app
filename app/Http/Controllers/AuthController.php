@@ -9,87 +9,94 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showRegister() {
+    public function showRegister()
+    {
         return view('auth.register');
     }
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:4', 
-            'role' => 'required|in:doctor,patient',
+            'password' => 'required|confirmed|min:4',
+            'role' => 'required|in:doctor,patient', 
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role'     => $request->role,
         ]);
 
         return redirect()->route('login')->with('success', 'Registration successful!');
     }
 
-    public function showLogin() {
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:4', 
-            'role' => 'required'
+            'email'    => 'required|email',
+            'password' => 'required|min:4',
+            'role'     => 'required|in:admin,doctor,patient'
         ]);
 
-        $email = $request->input('email');
-        $password = $request->input('password');
-        $role = $request->input('role');
+        $email = $request->email;
+        $password = $request->password;
+        $role = $request->role;
 
-        // Admin login (hardcoded)
+        
         if ($role === 'admin') {
             if ($email === 'admin@gmail.com' && $password === 'admin1234') {
                 $request->session()->put('admin_logged_in', true);
                 $request->session()->put('admin_email', $email);
                 return redirect()->route('admin.dashboard');
             } else {
-                return back()->withErrors(['email' => 'Invalid admin credentials.'])->onlyInput('email');
+                return back()->withErrors(['email' => 'Invalid admin credentials.'])->withInput();
             }
         }
 
-        // Normal user login
+        
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
+            
             if ($user->role !== $role) {
                 Auth::logout();
-                return back()->withErrors(['email' => 'Incorrect role selected.'])->onlyInput('email');
+                return back()->withErrors(['email' => 'Incorrect role selected.'])->withInput();
             }
 
             $request->session()->regenerate();
 
-            switch ($role) {
-                case 'doctor':
-                    return redirect()->route('doctor.dashboard');
-                case 'patient':
-                    return redirect()->route('patient.dashboard');
+            if ($role === 'doctor') {
+                return redirect()->route('doctor.dashboard');
+            } elseif ($role === 'patient') {
+                return redirect()->route('patient.dashboard');
             }
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
+        return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         
-        $request->session()->forget('admin_logged_in');
+        $request->session()->forget(['admin_logged_in', 'admin_email']);
 
+        
         Auth::logout();
-        $request->session()->forget('admin_logged_in');
-        $request->session()->forget('is_admin');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('login');
     }
+
+    
 }

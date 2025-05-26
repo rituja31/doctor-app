@@ -103,8 +103,9 @@
 
             <div class="roles">
                 <label><input type="radio" name="role" value="admin" required> Admin</label>
-                <label><input type="radio" name="role" value="doctor" required> Doctor</label>
-                <label><input type="radio" name="role" value="patient" required> Patient</label>
+                <label><input type="radio" name="role" value="doctor"> Doctor</label>
+                <label><input type="radio" name="role" value="patient"> Patient</label>
+
             </div>
 
             <div class="input-group">

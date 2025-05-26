@@ -110,6 +110,27 @@
             margin-left: 4px;
         }
 
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-back {
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #cbd5e0;
+        }
+
         .btn-next {
             background: #4a6cf7;
             color: white;
@@ -118,8 +139,6 @@
             border-radius: 6px;
             font-size: 16px;
             cursor: pointer;
-            display: block;
-            margin-left: auto;
             transition: background 0.3s;
         }
 
@@ -188,7 +207,6 @@
                 </select>
             </div>
 
-            <!-- Appointment Type Dropdown -->
             <div class="form-group">
                 <label for="appointment_type" class="required">Appointment Type</label>
                 <select id="appointment_type" name="appointment_type">
@@ -203,7 +221,10 @@
                 <input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>">
             </div>
 
-            <button onclick="window.location.href='{{ route('appointment.time') }}'" class="btn-next">Next &gt;</button>
+            <div class="button-group">
+                <button onclick="window.location.href='{{ route('patient.dashboard') }}'" class="btn-back">&lt; Back</button>
+                <button onclick="window.location.href='{{ route('appointment.time') }}'" class="btn-next">Next &gt;</button>
+            </div>
         </div>
     </div>
 </body>

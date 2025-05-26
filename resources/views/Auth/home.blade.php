@@ -111,6 +111,65 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
+        .contact-section {
+            padding: 100px 20px;
+            background: #f5f7fa;
+        }
+
+        .contact-card {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .contact-card h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .contact-card p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .contact-card input,
+        .contact-card textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .contact-flex {
+            display: flex;
+            gap: 15px;
+        }
+
+        .contact-flex > div {
+            flex: 1;
+        }
+
+        .contact-card button {
+            background-color: #3ab4f2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .contact-card button:hover {
+            background-color: #2196f3;
+        }
     </style>
 </head>
 <body>
@@ -150,15 +209,41 @@
     </div>
 </div>
 
-<!-- Optional: Add sections for About Us and Contact -->
+<!-- About Us Section -->
 <div id="about" style="padding: 100px 20px; background: #f9f9f9; text-align: center;">
     <h2>About Us</h2>
     <p>We aim to make healthcare accessible and stress-free for everyone.</p>
 </div>
 
-<div id="contact" style="padding: 100px 20px; background: #eee; text-align: center;">
-    <h2>Contact</h2>
-    <p>Email: support@healthcare.com | Phone: +1 234 567 890</p>
+<!-- Contact Form Section -->
+<div id="contact" class="contact-section">
+    <div class="contact-card">
+        <h2>Contact</h2>
+        <p>Get connect with us.</p>
+
+        <form>
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" placeholder="Enter your full name" required>
+
+            <div class="contact-flex">
+                <div>
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" placeholder="Phone Number">
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+            </div>
+
+            <label for="message">Message</label>
+            <textarea id="message" rows="5" placeholder="Write your message..." required></textarea>
+
+            <div style="text-align: center;">
+                <button type="submit">Send Message</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>

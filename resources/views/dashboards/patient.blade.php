@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Patient Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>Patient Dashboard</title>
     
+    <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <style>
@@ -130,6 +130,7 @@
 </head>
 <body>
 
+    <!-- Navbar -->
     <div class="navbar">
         <div>
             <a href="{{ url('/') }}"><i class="fas fa-home"></i> Home</a>
@@ -143,34 +144,37 @@
         </div>
     </div>
 
+    <!-- Dashboard Content -->
     <div class="dashboard">
 
-        
+        <!-- Welcome Card -->
         <div class="top-card">
             <h2>Welcome, {{ Auth::user()->name }}</h2>
             <p><strong>Name:</strong> {{ Auth::user()->name }}</p>
             <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
         </div>
 
-       
+        <!-- Cards Grid -->
         <div class="card-grid">
+            <!-- My Appointments Card -->
             <div class="card">
                 <h3><i class="fas fa-calendar-check"></i> My Appointments</h3>
                 <p>View and manage your upcoming and past appointments.</p>
                 <a class="btn-primary" href="{{ route('appointments.calendar') }}">View Appointments</a>
             </div>
 
+            <!-- Medical History Card -->
             <div class="card">
                 <h3><i class="fas fa-notes-medical"></i> Medical History</h3>
                 <p>Review your medical records and history with doctors.</p>
                 <a class="btn-primary" href="{{ route('medical.history') }}">View History</a>
             </div>
 
+            <!-- Settings Card -->
             <div class="card">
                 <h3><i class="fas fa-user-cog"></i> Settings</h3>
                 <p>Update your profile, password, and notification preferences.</p>
                 <a class="btn-primary" href="{{ route('patient.settings') }}">Go to Settings</a>
->
             </div>
         </div>
     </div>

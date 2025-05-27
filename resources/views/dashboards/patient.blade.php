@@ -500,7 +500,7 @@
                         </div>
                         <div class="info-content">
                             <h4>Last Checkup</h4>
-                            <p>15 Nov 2023</p>
+                            <p>18 March 2025</p>
                         </div>
                     </div>
                 </div>

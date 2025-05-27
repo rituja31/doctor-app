@@ -3,900 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Patient Dashboard | MediCare</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #3a86ff;
-            --primary-light: #ebf3ff;
-            --secondary: #6c757d;
-            --success: #28a745;
-            --info: #17a2b8;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --light: #f8f9fa;
-            --dark: #343a40;
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #3b82f6;
+            --accent-color: #00c4ff;
+            --dark-color: #1f3557;
+            --light-color: #f8fafc;
+            --text-color: #334155;
+            --text-light: #64748b;
             --white: #ffffff;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-400: #ced4da;
-            --gray-500: #adb5bd;
-            --gray-600: #6c757d;
-            --gray-700: #495057;
-            --gray-800: #343a40;
-            --gray-900: #212529;
-            --border-radius: 0.375rem;
-            --border-radius-lg: 0.5rem;
-            --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-            --box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.1);
-            --online-booking: #3a86ff;
-            --offline-booking: #8338ec;
-            --telehealth: #ff006e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f7fb;
-            color: var(--gray-800);
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
             line-height: 1.6;
         }
 
-        .dashboard {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
+        /* Sidebar Styles */
         .sidebar {
-            width: 260px;
-            background: var(--white);
-            padding: 1.5rem 0;
-            border-right: 1px solid var(--gray-200);
-            box-shadow: var(--box-shadow);
-            position: fixed;
+            width: 280px;
+            background-color: var(--white);
             height: 100vh;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .logo {
+            position: fixed;
             display: flex;
-            align-items: center;
-            padding: 0 1.5rem 1.5rem;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--gray-200);
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+            z-index: 100;
+            transition: var(--transition);
         }
 
-        .logo-icon {
-            background-color: var(--primary);
-            color: var(--white);
-            width: 36px;
-            height: 36px;
-            border-radius: var(--border-radius);
+        .profile {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: var(--white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .profile .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0f2fe;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 0.75rem;
-            font-size: 1.25rem;
+            margin: 0 auto 15px;
+            font-size: 32px;
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
         }
 
-        .logo-text h2 {
+        .profile h4 {
             font-size: 1.1rem;
             font-weight: 600;
-            margin: 0;
-            color: var(--dark);
+            color: var(--dark-color);
+            margin-bottom: 5px;
         }
 
-        .logo-text span {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            display: block;
-        }
-
-        .nav-menu {
-            padding: 0 1rem;
-        }
-
-        .nav-item {
-            margin-bottom: 0.25rem;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            color: var(--gray-600);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            transition: all 0.2s ease;
+        .profile p {
+            font-size: 0.9rem;
+            color: var(--text-light);
             font-weight: 500;
         }
 
-        .nav-link:hover {
-            background-color: var(--primary-light);
-            color: var(--primary);
+        .profile .role-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
-        .nav-link.active {
-            background-color: var(--primary-light);
-            color: var(--primary);
+        .nav-links {
+            flex-grow: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            padding: 12px 25px;
+            text-decoration: none;
+            transition: var(--transition);
+            margin: 5px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active {
+            background-color: #e0f2fe;
+            color: var(--primary-color);
             font-weight: 600;
         }
 
-        .nav-link i {
-            margin-right: 0.75rem;
-            width: 20px;
-            text-align: center;
+        .nav-links a i {
+            width: 24px;
+            margin-right: 12px;
             font-size: 1rem;
+            text-align: center;
         }
 
-        .nav-link .badge {
-            margin-left: auto;
-            background-color: var(--primary);
-            color: white;
-            font-size: 0.65rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 10px;
+        .logout-button {
+            padding: 20px;
+            background-color: var(--white);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Main Content */
+        .logout-button button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logout-button button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Main Content Styles */
         .main-content {
-            flex: 1;
-            margin-left: 260px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            transition: var(--transition);
         }
 
-        /* Header */
-        .header {
+        .navbar {
+            background-color: var(--white);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 90;
         }
 
-        .header-title h1 {
-            font-size: 1.75rem;
-            margin: 0;
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .header-title h2 {
-            font-size: 0.875rem;
-            color: var(--gray-600);
-            margin: 0.5rem 0 0;
-            font-weight: 400;
-        }
-
-        .user-profile {
+        .navbar-actions {
             display: flex;
             align-items: center;
+            gap: 15px;
+        }
+
+        .navbar a {
+            color: var(--white);
+            text-decoration: none;
+            background-color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar a:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .notification-bell {
             position: relative;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 0.75rem;
-            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1.2rem;
             cursor: pointer;
         }
 
-        .user-info {
-            margin-right: 1.5rem;
-            text-align: right;
-        }
-
-        .user-name {
-            font-weight: 500;
-            margin: 0;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-
-        .user-role {
-            color: var(--gray-600);
-            font-size: 0.75rem;
-            margin: 0;
-        }
-
-        .dropdown-menu {
+        .notification-badge {
             position: absolute;
-            top: 100%;
-            right: 0;
-            background: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-lg);
-            padding: 0.5rem 0;
-            min-width: 200px;
-            z-index: 1000;
-            display: none;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: var(--white);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
         }
 
-        .dropdown-item {
-            padding: 0.5rem 1rem;
-            color: var(--gray-700);
-            text-decoration: none;
-            display: block;
-            transition: all 0.2s ease;
+        .dashboard {
+            padding: 30px;
         }
 
-        .dropdown-item:hover {
-            background-color: var(--gray-100);
-            color: var(--primary);
-        }
-
-        .dropdown-item i {
-            margin-right: 0.75rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        .user-profile:hover .dropdown-menu {
-            display: block;
-        }
-
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
+        .welcome-card {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
             position: relative;
             overflow: hidden;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-lg);
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--primary-color);
         }
 
-        .card-header {
+        .welcome-card h2 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .welcome-card h2 span {
+            color: var(--primary-color);
+        }
+
+        .welcome-card p {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            max-width: 700px;
+        }
+
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .info-card {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            gap: 15px;
+            transition: var(--transition);
         }
 
-        .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--gray-700);
+        .info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
 
-        .card-icon {
-            width: 40px;
-            height: 40px;
+        .info-icon {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.2rem;
             color: var(--white);
         }
 
-        .card-icon.appointments {
-            background-color: var(--primary);
+        .info-icon.personal {
+            background-color: var(--primary-color);
         }
 
-        .card-icon.patients {
+        .info-icon.medical {
             background-color: var(--success);
         }
 
-        .card-icon.messages {
-            background-color: var(--info);
-        }
-
-        .card-icon.earnings {
+        .info-icon.contact {
             background-color: var(--warning);
-            color: var(--dark);
         }
 
-        .stats-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
-            color: var(--dark);
+        .info-content h4 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-weight: 500;
         }
 
-        .stats-label {
-            color: var(--gray-600);
-            font-size: 0.875rem;
-        }
-
-        .stats-change {
-            display: flex;
-            align-items: center;
-            font-size: 0.75rem;
-            margin-top: 0.5rem;
-        }
-
-        .stats-change.positive {
-            color: var(--success);
-        }
-
-        .stats-change.negative {
-            color: var(--danger);
-        }
-
-        .stats-change i {
-            margin-right: 0.25rem;
-        }
-
-        /* Calendar Container */
-        .calendar-container {
-            margin-bottom: 2rem;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
+        .info-content p {
+            font-size: 1rem;
+            color: var(--text-color);
             font-weight: 600;
             margin: 0;
-            color: var(--dark);
         }
 
-        .section-actions .btn {
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
         }
 
-        .btn-primary {
-            background-color: var(--primary);
-            border: 1px solid var(--primary);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background-color: #2a75e6;
-            border-color: #2a75e6;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--gray-300);
-            color: var(--gray-700);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--gray-100);
-        }
-
-        /* Calendar */
-        #calendar {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-        }
-
-        .fc-event {
-            border: none;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.8rem;
-            border-radius: 4px;
+        .action-card {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: var(--transition);
             cursor: pointer;
         }
 
-        .fc-event-online {
-            background-color: var(--online-booking);
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
         }
 
-        .fc-event-offline {
-            background-color: var(--offline-booking);
+        .action-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
         }
 
-        .fc-event-telehealth {
-            background-color: var(--telehealth);
+        .action-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
         }
 
-        .fc-daygrid-event-dot {
-            display: none;
+        .action-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
         }
 
-        /* Legend */
-        .booking-legend {
-            display: flex;
-            justify-content: center;
-            margin-top: 1.5rem;
-            gap: 1.5rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            font-size: 0.875rem;
-            color: var(--gray-700);
-        }
-
-        .legend-color {
-            width: 14px;
-            height: 14px;
-            border-radius: 3px;
-            margin-right: 0.5rem;
-        }
-
-        /* Graph Container */
-        .graph-container {
-            margin-top: 2rem;
-        }
-
-        .graph-card {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-        }
-
-        .graph-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .graph-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--dark);
-        }
-
-        .graph-period {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .period-btn {
-            padding: 0.375rem 0.75rem;
-            border-radius: var(--border-radius);
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            background-color: var(--gray-100);
-            border: none;
-            color: var(--gray-700);
-            transition: all 0.2s ease;
-        }
-
-        .period-btn.active {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        /* Responsive */
+        /* Responsive Styles */
         @media (max-width: 992px) {
             .sidebar {
-                width: 220px;
+                width: 250px;
             }
             .main-content {
-                margin-left: 220px;
+                margin-left: 250px;
+                width: calc(100% - 250px);
             }
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-            .sidebar.active {
-                transform: translateX(0);
+                width: 100%;
+                height: auto;
+                position: relative;
             }
             .main-content {
                 margin-left: 0;
+                width: 100%;
             }
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .header {
+            .navbar {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 15px;
+                padding: 15px;
             }
-            .user-profile {
-                margin-top: 1rem;
+            .navbar-actions {
+                width: 100%;
+                justify-content: space-between;
             }
-            .menu-toggle {
-                display: block;
-                margin-right: 1rem;
-                font-size: 1.5rem;
-                cursor: pointer;
+            .user-info-grid, .quick-actions {
+                grid-template-columns: 1fr;
             }
         }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 576px) {
+            .dashboard {
+                padding: 20px 15px;
+            }
+            .welcome-card {
+                padding: 20px;
+            }
         }
-
-        .card {
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
-        .card:nth-child(4) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
-<aside class="sidebar">
-    <div class="logo">
-        <div class="logo-icon">
-            <i class="fas fa-heartbeat"></i>
+
+    <div class="sidebar">
+        <!-- Profile Section -->
+        <div class="profile">
+            <div class="avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <h4>{{ \Illuminate\Support\Str::limit(Auth::user()->name, 20) }}</h4>
+            <p>{{ Auth::user()->email }}</p>
+            <span class="role-badge">Patient</span>
         </div>
-        <div class="logo-text">
-            <h2>MediCare Pro</h2>
-            <span>Doctor Portal</span>
+
+        <!-- Navigation Links -->
+        <div class="nav-links">
+            <a href="{{ route('patient.dashboard') }}" class="active">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="{{ route('appointments.calendar') }}">
+                <i class="fas fa-calendar-check"></i> My Appointments
+            </a>
+            <a href="{{ route('medical.history') }}">
+                <i class="fas fa-notes-medical"></i> Medical History
+            </a>
+            
+            <a href="{{ route('patient.settings') }}">
+                <i class="fas fa-user-cog"></i> Settings
+            </a>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="logout-button">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit">
+                    <i class="fas fa-sign-out-alt"></i> Log out
+                </button>
+            </form>
         </div>
     </div>
-    <nav class="nav-menu">
-        <div class="nav-item">
-            <a href="{{ route('doctor.dashboard') }}" class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
-                <i class="fas fa-tachometer-alt"></i>
-                Dashboard
-            </a>
-        </div>
-        
-        <div class="nav-item">
-            <a href="{{ route('doctor.calendar') }}" class="nav-link {{ request()->routeIs('doctor.calendar') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i>
-                Appointments
-                <span class="badge">5</span>
-            </a>
-        </div>
-        
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-user-injured"></i>
-                Patients
-            </a>
-        </div>
 
-        <div class="nav-item">
-            <a href="{{ route('doctor.analytics') }}" class="nav-link {{ request()->routeIs('doctor.analytics') ? 'active' : '' }}">
-                <i class="fas fa-chart-line"></i>
-                Analytics
-            </a>
-        </div>
-
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-cog"></i>
-                Settings
-            </a>
-        </div>
-    </nav>
-</aside>     <main class="main-content">
-            <header class="header">
-                <div class="header-title">
-                    <h1>Doctor Dashboard</h1>
-                    <h2>Welcome back, Dr. {{ Auth::user()->name }}</h2>
+    <div class="main-content">
+        <div class="navbar">
+            <div class="navbar-actions">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
                 </div>
-                <div class="user-profile">
-                    <div class="user-avatar">DR</div>
-                    <div class="user-info">
-                        <p class="user-name">Dr. {{ Auth::user()->name }}</p>
-                        <p class="user-role">Cardiologist</p>
-                    </div>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-user"></i> Profile
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-question-circle"></i> Help
-                        </a>
-                  <div class="dropdown-divider"></div>
-<a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-    <i class="fas fa-sign-out-alt"></i> Logout
-</a>
-</div>
-
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-    @csrf
-</form>
-
-            </header>
-<div class="dashboard-grid">
-    <a href="{{ route('doctor.calendar') }}" class="card" style="text-decoration: none; color: inherit;">
-        <div class="card-header">
-            <h3 class="card-title">Today's Appointments</h3>
-            <div class="card-icon appointments">
-                <i class="fas fa-calendar-day"></i>
+                <a href="{{ route('appointment.page') }}">
+                    <i class="fas fa-calendar-plus"></i> Book Appointment
+                </a>
             </div>
         </div>
-        <div class="stats-value">5</div>
-        <div class="stats-label">Scheduled for today</div>
-        <div class="stats-change positive">
-            <i class="fas fa-arrow-up"></i> 2 from yesterday
-        </div>
-    </a>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Active Patients</h3>
-                        <div class="card-icon patients">
-                            <i class="fas fa-user-friends"></i>
+        <div class="dashboard">
+            <div class="welcome-card">
+                <h2>Welcome back, <span>{{ Auth::user()->name }}</span></h2>
+                <p>Here's what's happening with your health profile today. You have 2 upcoming appointments and 1 new prescription.</p>
+                
+                <div class="user-info-grid">
+                    <div class="info-card">
+                        <div class="info-icon personal">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Full Name</h4>
+                            <p>{{ Auth::user()->name }}</p>
                         </div>
                     </div>
-                    <div class="stats-value">128</div>
-                    <div class="stats-label">Under your care</div>
-                    <div class="stats-change positive">
-                        <i class="fas fa-arrow-up"></i> 8 this month
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Unread Messages</h3>
-                        <div class="card-icon messages">
+                    
+                    <div class="info-card">
+                        <div class="info-icon contact">
                             <i class="fas fa-envelope"></i>
                         </div>
-                    </div>
-                    <div class="stats-value">3</div>
-                    <div class="stats-label">Require attention</div>
-                    <div class="stats-change negative">
-                        <i class="fas fa-arrow-down"></i> 2 since yesterday
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Monthly Earnings</h3>
-                        <div class="card-icon earnings">
-                            <i class="fas fa-dollar-sign"></i>
+                        <div class="info-content">
+                            <h4>Email Address</h4>
+                            <p>{{ Auth::user()->email }}</p>
                         </div>
                     </div>
-                    <div class="stats-value">$8,420</div>
-                    <div class="stats-label">Estimated revenue</div>
-                    <div class="stats-change positive">
-                        <i class="fas fa-arrow-up"></i> 12% from last month
-                    </div>
-                </div>
-            </div>
-
-            <div class="calendar-container">
-                <div class="section-header">
-                    <h2 class="section-title">Appointment Calendar</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-plus"></i> New Appointment
-                        </button>
-                    </div>
-                </div>
-                <div id="calendar"></div>
-                <div class="booking-legend">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: var(--online-booking);"></div>
-                        <span>Online Booking</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: var(--offline-booking);"></div>
-                        <span>Offline Booking</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: var(--telehealth);"></div>
-                        <span>Telehealth</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="graph-container">
-                <div class="graph-card">
-                    <div class="graph-header">
-                        <h2 class="graph-title">Appointments Overview</h2>
-                        <div class="graph-period">
-                            <button class="period-btn">Day</button>
-                            <button class="period-btn active">Week</button>
-                            <button class="period-btn">Month</button>
-                            <button class="period-btn">Year</button>
+                    
+                    <div class="info-card">
+                        <div class="info-icon medical">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Last Checkup</h4>
+                            <p>15 Nov 2023</p>
                         </div>
                     </div>
-                    <canvas id="appointmentGraph"></canvas>
                 </div>
             </div>
-        </main>
+
+            <div class="quick-actions">
+                <div class="action-card" onclick="window.location.href='{{ route('appointment.page') }}'">
+                    <i class="fas fa-calendar-plus"></i>
+                    <h3>Book Appointment</h3>
+                    <p>Schedule a new consultation with your doctor</p>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='{{ route('medical.history') }}'">
+                    <i class="fas fa-file-medical"></i>
+                    <h3>Medical Records</h3>
+                    <p>View your complete medical history</p>
+                </div>
+                
+               
+                
+                <div class="action-card" onclick="window.location.href='{{ route('patient.settings') }}'">
+                    <i class="fas fa-user-cog"></i>
+                    <h3>Profile Settings</h3>
+                    <p>Update your personal information</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Calendar initialization
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: [
-                    {
-                        title: 'John Smith - Checkup',
-                        start: new Date().toISOString().split('T')[0] + 'T09:00:00',
-                        end: new Date().toISOString().split('T')[0] + 'T09:30:00',
-                        className: 'fc-event-online',
-                        extendedProps: {
-                            type: 'online',
-                            patientId: 101
-                        }
-                    },
-                    {
-                        title: 'Sarah Johnson - Follow-up',
-                        start: new Date().toISOString().split('T')[0] + 'T11:00:00',
-                        end: new Date().toISOString().split('T')[0] + 'T11:45:00',
-                        className: 'fc-event-telehealth',
-                        extendedProps: {
-                            type: 'telehealth',
-                            patientId: 102
-                        }
-                    },
-                    {
-                        title: 'Michael Brown - Consultation',
-                        start: new Date().toISOString().split('T')[0] + 'T14:00:00',
-                        end: new Date().toISOString().split('T')[0] + 'T14:30:00',
-                        className: 'fc-event-offline',
-                        extendedProps: {
-                            type: 'offline',
-                            patientId: 103
-                        }
-                    },
-                    {
-                        title: 'Emily Davis - Annual Physical',
-                        start: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T10:00:00',
-                        end: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T10:45:00',
-                        className: 'fc-event-online',
-                        extendedProps: {
-                            type: 'online',
-                            patientId: 104
-                        }
-                    },
-                    {
-                        title: 'Robert Wilson - Post-Op',
-                        start: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T15:30:00',
-                        end: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T16:15:00',
-                        className: 'fc-event-offline',
-                        extendedProps: {
-                            type: 'offline',
-                            patientId: 105
-                        }
-                    }
-                ],
-                eventClick: function(info) {
-                    alert('Appointment with ' + info.event.title + '\nType: ' +
-                          info.event.extendedProps.type.toUpperCase() + ' booking');
-                },
-                eventDisplay: 'block',
-                eventTimeFormat: {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                }
-            });
-            calendar.render();
-
-            // Line graph configuration
-            var ctx = document.getElementById('appointmentGraph').getContext('2d');
-            var appointmentGraph = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [
-                        {
-                            label: 'Completed',
-                            data: [12, 15, 10, 18, 14, 8, 5],
-                            borderColor: 'rgba(58, 134, 255, 1)',
-                            backgroundColor: 'rgba(58, 134, 255, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Scheduled',
-                            data: [8, 10, 12, 9, 16, 10, 6],
-                            borderColor: 'rgba(131, 56, 236, 1)',
-                            backgroundColor: 'rgba(131, 56, 236, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Cancelled',
-                            data: [2, 1, 3, 2, 1, 0, 1],
-                            borderColor: 'rgba(255, 0, 110, 1)',
-                            backgroundColor: 'rgba(255, 0, 110, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                drawBorder: false
-                            },
-                            ticks: {
-                                stepSize: 5
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    elements: {
-                        point: {
-                            radius: 4,
-                            hoverRadius: 6
-                        }
-                    }
-                }
-            });
-
-            // Period buttons functionality
-            const periodButtons = document.querySelectorAll('.period-btn');
-            periodButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    periodButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    // Here you would update the chart data based on the selected period
-                });
-            });
-        });
-    </script>
 </body>
 </html>

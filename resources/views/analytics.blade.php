@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Analytics</title>
+    <title>Appointment Analytics Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -34,9 +34,7 @@
             --box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.1);
             --online-booking: #3a86ff;
             --offline-booking: #8338ec;
-            --telehealth: #ff006e;
         }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: #f5f7fb;
@@ -45,21 +43,17 @@
             padding: 0;
             line-height: 1.6;
         }
-
         .dashboard {
             display: flex;
             min-height: 100vh;
         }
-
-        /* Sidebar styles would be the same as previous implementation */
         
         .main-content {
             flex: 1;
-            margin-left: 260px;
-            padding: 1.5rem;
+            padding: 2rem;
             transition: all 0.3s ease;
+            width: 100%;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -68,28 +62,24 @@
             padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--gray-200);
         }
-
         .header-title h1 {
             font-size: 1.75rem;
             margin: 0;
             color: var(--dark);
             font-weight: 600;
         }
-
         .header-title h2 {
             font-size: 0.875rem;
             color: var(--gray-600);
             margin: 0.5rem 0 0;
             font-weight: 400;
         }
-
         .analytics-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-
         .card {
             background: var(--white);
             border-radius: var(--border-radius-lg);
@@ -100,35 +90,29 @@
             position: relative;
             overflow: hidden;
         }
-
         .card:hover {
             transform: translateY(-5px);
             box-shadow: var(--box-shadow-lg);
         }
-
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
         .card-title {
             font-size: 1rem;
             font-weight: 600;
             margin: 0;
             color: var(--gray-700);
         }
-
         .card-actions {
             display: flex;
             gap: 0.5rem;
         }
-
         .filter-dropdown {
             position: relative;
         }
-
         .filter-btn {
             background-color: var(--gray-100);
             border: none;
@@ -140,7 +124,6 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .filter-menu {
             position: absolute;
             right: 0;
@@ -152,11 +135,9 @@
             z-index: 1000;
             display: none;
         }
-
         .filter-menu.show {
             display: block;
         }
-
         .filter-item {
             padding: 0.5rem 1rem;
             color: var(--gray-700);
@@ -165,169 +146,155 @@
             transition: all 0.2s ease;
             font-size: 0.75rem;
         }
-
         .filter-item:hover {
             background-color: var(--gray-100);
             color: var(--primary);
         }
-
         .grid-col-12 {
             grid-column: span 12;
         }
-
         .grid-col-8 {
             grid-column: span 8;
         }
-
         .grid-col-6 {
             grid-column: span 6;
         }
-
         .grid-col-4 {
             grid-column: span 4;
         }
-
         .grid-col-3 {
             grid-column: span 3;
         }
-
         .stats-card {
             display: flex;
             flex-direction: column;
             height: 100%;
         }
-
         .stats-value {
             font-size: 1.75rem;
             font-weight: 700;
             margin: 0.5rem 0;
             color: var(--dark);
         }
-
         .stats-label {
             color: var(--gray-600);
             font-size: 0.875rem;
         }
-
         .stats-change {
             display: flex;
             align-items: center;
             font-size: 0.75rem;
             margin-top: 0.5rem;
         }
-
         .stats-change.positive {
             color: var(--success);
         }
-
         .stats-change.negative {
             color: var(--danger);
         }
-
         .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
         }
-
         .chart-container-sm {
             height: 200px;
         }
-
         .legend {
             display: flex;
             justify-content: center;
             gap: 1.5rem;
             margin-top: 1rem;
         }
-
         .legend-item {
             display: flex;
             align-items: center;
             font-size: 0.75rem;
         }
-
         .legend-color {
             width: 12px;
             height: 12px;
             border-radius: 3px;
             margin-right: 0.5rem;
         }
-
         .appointment-list {
             margin-top: 1rem;
         }
-
         .appointment-item {
             display: flex;
             justify-content: space-between;
             padding: 0.75rem 0;
             border-bottom: 1px solid var(--gray-200);
         }
-
         .appointment-item:last-child {
             border-bottom: none;
         }
-
         .appointment-info {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
-
         .appointment-type {
             width: 12px;
             height: 12px;
             border-radius: 50%;
         }
-
         .appointment-type.online {
             background-color: var(--online-booking);
         }
-
         .appointment-type.offline {
             background-color: var(--offline-booking);
         }
-
         .appointment-type.telehealth {
             background-color: var(--telehealth);
         }
-
         .appointment-details {
             flex: 1;
         }
-
         .appointment-patient {
             font-weight: 500;
             font-size: 0.875rem;
         }
-
         .appointment-time {
             font-size: 0.75rem;
             color: var(--gray-600);
         }
-
         .appointment-status {
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
             border-radius: 10px;
         }
-
         .status-completed {
             background-color: rgba(40, 167, 69, 0.1);
             color: var(--success);
         }
-
         .status-cancelled {
             background-color: rgba(220, 53, 69, 0.1);
             color: var(--danger);
         }
-
         .status-pending {
             background-color: rgba(255, 193, 7, 0.1);
             color: var(--warning);
         }
-
+        .back-button {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .back-button:hover {
+            background-color: var(--primary);
+            color: white;
+        }
         @media (max-width: 1200px) {
             .grid-col-8 {
                 grid-column: span 12;
@@ -339,7 +306,6 @@
                 grid-column: span 6;
             }
         }
-
         @media (max-width: 768px) {
             .grid-col-4 {
                 grid-column: span 12;
@@ -347,19 +313,28 @@
             .grid-col-3 {
                 grid-column: span 6;
             }
+            .main-content {
+                padding: 1rem;
+            }
         }
-
         @media (max-width: 576px) {
             .grid-col-3 {
                 grid-column: span 12;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
             }
         }
     </style>
 </head>
 <body>
     <div class="dashboard">
-        <!-- Sidebar would be the same as previous implementation -->
-        
         <main class="main-content">
             <header class="header">
                 <div class="header-title">
@@ -367,6 +342,9 @@
                     <h2>Detailed statistics and insights about your appointments</h2>
                 </div>
                 <div class="header-actions">
+                     <a href="{{ route('doctor.dashboard') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
                     <div class="filter-dropdown">
                         <button class="filter-btn" id="timeFilterBtn">
                             <i class="fas fa-calendar-alt"></i>
@@ -382,7 +360,6 @@
                     </div>
                 </div>
             </header>
-
             <div class="analytics-grid">
                 <!-- Summary Cards -->
                 <div class="card grid-col-3">
@@ -398,7 +375,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card grid-col-3">
                     <div class="stats-card">
                         <div class="card-header">
@@ -412,7 +388,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card grid-col-3">
                     <div class="stats-card">
                         <div class="card-header">
@@ -426,7 +401,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card grid-col-3">
                     <div class="stats-card">
                         <div class="card-header">
@@ -440,7 +414,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Main Chart -->
                 <div class="card grid-col-8">
                     <div class="card-header">
@@ -471,13 +444,8 @@
                             <div class="legend-color" style="background-color: var(--offline-booking);"></div>
                             <span>In-Person</span>
                         </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: var(--telehealth);"></div>
-                            <span>Telehealth</span>
-                        </div>
                     </div>
                 </div>
-
                 <!-- Appointment Types Pie Chart -->
                 <div class="card grid-col-4">
                     <div class="card-header">
@@ -489,19 +457,14 @@
                     <div class="legend">
                         <div class="legend-item">
                             <div class="legend-color" style="background-color: var(--online-booking);"></div>
-                            <span>Online (42%)</span>
+                            <span>Online (50%)</span>
                         </div>
                         <div class="legend-item">
                             <div class="legend-color" style="background-color: var(--offline-booking);"></div>
-                            <span>In-Person (48%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: var(--telehealth);"></div>
-                            <span>Telehealth (10%)</span>
+                            <span>In-Person (50%)</span>
                         </div>
                     </div>
                 </div>
-
                 <!-- Status Distribution -->
                 <div class="card grid-col-6">
                     <div class="card-header">
@@ -525,7 +488,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Recent Appointments -->
                 <div class="card grid-col-6">
                     <div class="card-header">
@@ -545,7 +507,7 @@
                         </div>
                         <div class="appointment-item">
                             <div class="appointment-info">
-                                <div class="appointment-type telehealth"></div>
+                                <div class="appointment-type online"></div>
                                 <div class="appointment-details">
                                     <div class="appointment-patient">Sarah Johnson</div>
                                     <div class="appointment-time">Today, 11:00 AM - Consultation</div>
@@ -568,61 +530,71 @@
                                 <div class="appointment-type online"></div>
                                 <div class="appointment-details">
                                     <div class="appointment-patient">Emily Davis</div>
-                                    <div class="appointment-time">Yesterday, 10:00 AM - Annual Physical</div>
+                                    <div class="appointment-time">Yesterday, 10:30 AM - Annual Physical</div>
+                                </div>
+                            </div>
+                            <span class="appointment-status status-completed">Completed</span>
+                        </div>
+                        <div class="appointment-item">
+                            <div class="appointment-info">
+                                <div class="appointment-type offline"></div>
+                                <div class="appointment-details">
+                                    <div class="appointment-patient">Robert Wilson</div>
+                                    <div class="appointment-time">Yesterday, 03:15 PM - New Patient</div>
                                 </div>
                             </div>
                             <span class="appointment-status status-cancelled">Cancelled</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Time Slot Popularity -->
+                <!-- Weekly Peak Hours -->
                 <div class="card grid-col-12">
                     <div class="card-header">
-                        <h3 class="card-title">Time Slot Popularity</h3>
+                        <h3 class="card-title">Weekly Peak Hours</h3>
                         <div class="card-actions">
                             <div class="filter-dropdown">
-                                <button class="filter-btn" id="timeSlotBtn">
-                                    <i class="fas fa-clock"></i>
-                                    By Hour
+                                <button class="filter-btn" id="weekFilterBtn">
+                                    <i class="fas fa-filter"></i>
+                                    This Week
                                     <i class="fas fa-chevron-down"></i>
                                 </button>
-                                <div class="filter-menu" id="timeSlotMenu">
-                                    <a href="#" class="filter-item" data-value="hour">By Hour</a>
-                                    <a href="#" class="filter-item" data-value="day">By Day of Week</a>
+                                <div class="filter-menu" id="weekFilterMenu">
+                                    <a href="#" class="filter-item" data-value="this-week">This Week</a>
+                                    <a href="#" class="filter-item" data-value="last-week">Last Week</a>
+                                    <a href="#" class="filter-item" data-value="this-month">This Month</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="timeSlotChart"></canvas>
+                    <div class="chart-container">
+                        <canvas id="peakHoursChart"></canvas>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Toggle filter dropdowns
-            document.querySelectorAll('.filter-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
+            // Initialize dropdown menus
+            const dropdowns = [
+                { btn: 'timeFilterBtn', menu: 'timeFilterMenu' },
+                { btn: 'chartTypeBtn', menu: 'chartTypeMenu' },
+                { btn: 'weekFilterBtn', menu: 'weekFilterMenu' }
+            ];
+            
+            dropdowns.forEach(dropdown => {
+                const btn = document.getElementById(dropdown.btn);
+                const menu = document.getElementById(dropdown.menu);
+                
+                btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const menu = this.nextElementSibling;
-                    document.querySelectorAll('.filter-menu').forEach(m => {
-                        if (m !== menu) m.classList.remove('show');
-                    });
                     menu.classList.toggle('show');
                 });
-            });
-
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function() {
-                document.querySelectorAll('.filter-menu').forEach(menu => {
+                
+                document.addEventListener('click', () => {
                     menu.classList.remove('show');
                 });
             });
-
             // Trend Chart (Main Chart)
             const trendCtx = document.getElementById('trendChart').getContext('2d');
             const trendChart = new Chart(trendCtx, {
@@ -632,28 +604,17 @@
                     datasets: [
                         {
                             label: 'Online',
-                            data: [12, 15, 10, 18, 14, 20, 16, 19, 15, 22, 18, 24],
+                            data: [12, 15, 10, 18, 22, 25, 30, 28, 24, 20, 18, 22],
                             borderColor: 'rgba(58, 134, 255, 1)',
                             backgroundColor: 'rgba(58, 134, 255, 0.1)',
-                            borderWidth: 2,
                             tension: 0.3,
                             fill: true
                         },
                         {
                             label: 'In-Person',
-                            data: [15, 18, 14, 20, 16, 22, 18, 24, 20, 26, 22, 28],
+                            data: [20, 18, 22, 25, 28, 30, 32, 30, 28, 25, 22, 24],
                             borderColor: 'rgba(131, 56, 236, 1)',
                             backgroundColor: 'rgba(131, 56, 236, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Telehealth',
-                            data: [3, 4, 5, 6, 7, 8, 6, 7, 8, 9, 7, 10],
-                            borderColor: 'rgba(255, 0, 110, 1)',
-                            backgroundColor: 'rgba(255, 0, 110, 0.1)',
-                            borderWidth: 2,
                             tension: 0.3,
                             fill: true
                         }
@@ -683,49 +644,47 @@
                                 display: false
                             }
                         }
-                    },
-                    elements: {
-                        point: {
-                            radius: 4,
-                            hoverRadius: 6
-                        }
                     }
                 }
             });
-
-            // Appointment Types Pie Chart
+            // Type Chart (Pie Chart)
             const typeCtx = document.getElementById('typeChart').getContext('2d');
             const typeChart = new Chart(typeCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Online', 'In-Person', 'Telehealth'],
+                    labels: ['Online', 'In-Person'],
                     datasets: [{
-                        data: [42, 48, 10],
+                        data: [50, 50],
                         backgroundColor: [
-                            'rgba(58, 134, 255, 1)',
-                            'rgba(131, 56, 236, 1)',
-                            'rgba(255, 0, 110, 1)'
+                            'rgba(58, 134, 255, 0.8)',
+                            'rgba(131, 56, 236, 0.8)'
                         ],
-                        borderWidth: 0
+                        borderColor: [
+                            'rgba(58, 134, 255, 1)',
+                            'rgba(131, 56, 236, 1)'
+                        ],
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '70%',
                     plugins: {
                         legend: {
                             display: false
                         },
-                        datalabels: {
-                            display: false
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
                         }
-                    }
-                },
-                plugins: [ChartDataLabels]
+                    },
+                    cutout: '70%'
+                }
             });
-
-            // Status Distribution Chart
+            // Status Chart (Pie Chart)
             const statusCtx = document.getElementById('statusChart').getContext('2d');
             const statusChart = new Chart(statusCtx, {
                 type: 'pie',
@@ -734,11 +693,16 @@
                     datasets: [{
                         data: [83, 10, 7],
                         backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(220, 53, 69, 0.8)',
+                            'rgba(255, 193, 7, 0.8)'
+                        ],
+                        borderColor: [
                             'rgba(40, 167, 69, 1)',
                             'rgba(220, 53, 69, 1)',
                             'rgba(255, 193, 7, 1)'
                         ],
-                        borderWidth: 0
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -748,23 +712,25 @@
                         legend: {
                             display: false
                         },
-                        datalabels: {
-                            display: false
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
                         }
                     }
-                },
-                plugins: [ChartDataLabels]
+                }
             });
-
-            // Time Slot Popularity Chart
-            const timeSlotCtx = document.getElementById('timeSlotChart').getContext('2d');
-            const timeSlotChart = new Chart(timeSlotCtx, {
+            // Peak Hours Chart (Bar Chart)
+            const peakCtx = document.getElementById('peakHoursChart').getContext('2d');
+            const peakHoursChart = new Chart(peakCtx, {
                 type: 'bar',
                 data: {
                     labels: ['8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'],
                     datasets: [{
                         label: 'Appointments',
-                        data: [8, 15, 22, 18, 12, 10, 14, 20, 16, 9],
+                        data: [5, 12, 18, 15, 10, 8, 14, 16, 12, 6],
                         backgroundColor: 'rgba(58, 134, 255, 0.7)',
                         borderColor: 'rgba(58, 134, 255, 1)',
                         borderWidth: 1
@@ -793,32 +759,30 @@
                     }
                 }
             });
-
-            // Filter functionality
-            document.querySelectorAll('.filter-item').forEach(item => {
+            // Chart type toggle functionality
+            document.querySelectorAll('#chartTypeMenu .filter-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const value = this.getAttribute('data-value');
-                    const menu = this.closest('.filter-menu');
-                    const btn = menu.previousElementSibling;
+                    const type = this.getAttribute('data-value');
+                    document.getElementById('chartTypeBtn').innerHTML = 
+                        `<i class="fas fa-chart-${type}"></i> ${type === 'line' ? 'Line' : 'Bar'} Chart <i class="fas fa-chevron-down"></i>`;
                     
-                    // Update button text
-                    if (menu.id === 'timeFilterMenu') {
-                        let text = '';
-                        switch(value) {
-                            case '7': text = 'Last 7 Days'; break;
-                            case '30': text = 'Last 30 Days'; break;
-                            case '90': text = 'Last 90 Days'; break;
-                            case '365': text = 'Last Year'; break;
-                        }
-                        btn.innerHTML = `<i class="fas fa-calendar-alt"></i> ${text} <i class="fas fa-chevron-down"></i>`;
-                        
-                        // Here you would update the charts with new data based on the filter
-                        // For demo purposes, we'll just log the filter change
-                        console.log(`Filter changed to: ${text}`);
-                    }
+                    trendChart.config.type = type;
+                    trendChart.update();
+                    document.getElementById('chartTypeMenu').classList.remove('show');
+                });
+            });
+            // Time filter functionality
+            document.querySelectorAll('#timeFilterMenu .filter-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const days = this.getAttribute('data-value');
+                    document.getElementById('timeFilterBtn').innerHTML = 
+                        `<i class="fas fa-calendar-alt"></i> Last ${days} Days <i class="fas fa-chevron-down"></i>`;
                     
-                    menu.classList.remove('show');
+                    // In a real app, you would fetch new data based on the filter
+                    console.log(`Filter changed to last ${days} days`);
+                    document.getElementById('timeFilterMenu').classList.remove('show');
                 });
             });
         });

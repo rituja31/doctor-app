@@ -7,21 +7,21 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary-color: #3b82f6;
-            --accent-color: #00c4ff;
-            --dark-color: #1f3557;
-            --light-color: #f8fafc;
-            --text-color: #334155;
+            --primary-color: #2a7fba;
+            --primary-dark: #1e6a9b;
+            --secondary-color: #4b5e6d;
+            --accent-color: #e0f2fe;
+            --dark-color: #1f2a44;
+            --light-color: #f5f7fa;
+            --text-color: #2d3748;
             --text-light: #64748b;
             --white: #ffffff;
-            --success: #10b981;
+            --success: #28a745;
             --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --danger: #dc3545;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 12px 20px rgba(0, 0, 0, 0.15);
             --transition: all 0.3s ease;
         }
 
@@ -32,12 +32,13 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e1e7ef 100%);
             color: var(--text-color);
             display: flex;
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* Sidebar Styles */
@@ -54,9 +55,22 @@
             transition: var(--transition);
         }
 
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+        }
+
+        .sidebar-header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
         .profile {
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px 20px;
             background-color: var(--white);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
@@ -65,7 +79,7 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background-color: #e0f2fe;
+            background-color: var(--accent-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -73,17 +87,22 @@
             font-size: 32px;
             color: var(--primary-color);
             box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .profile .avatar:hover {
+            transform: scale(1.05);
         }
 
         .profile h4 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--dark-color);
             margin-bottom: 5px;
         }
 
         .profile p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-light);
             font-weight: 500;
         }
@@ -92,10 +111,10 @@
             display: inline-block;
             background-color: var(--primary-color);
             color: var(--white);
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.75rem;
-            margin-top: 8px;
+            font-size: 0.8rem;
+            margin-top: 10px;
             font-weight: 500;
         }
 
@@ -118,14 +137,16 @@
         }
 
         .nav-links a:hover {
-            background-color: #f1f5f9;
+            background-color: var(--accent-color);
             color: var(--primary-color);
+            transform: translateX(5px);
         }
 
         .nav-links a.active {
-            background-color: #e0f2fe;
+            background-color: var(--accent-color);
             color: var(--primary-color);
             font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .nav-links a i {
@@ -145,7 +166,7 @@
             background-color: var(--primary-color);
             color: var(--white);
             border: none;
-            padding: 10px 25px;
+            padding: 12px 25px;
             border-radius: 8px;
             font-weight: 500;
             cursor: pointer;
@@ -159,6 +180,7 @@
 
         .logout-button button:hover {
             background-color: var(--primary-dark);
+            transform: translateY(-2px);
         }
 
         /* Main Content Styles */
@@ -170,7 +192,7 @@
 
         .navbar {
             background-color: var(--white);
-            padding: 1rem 2rem;
+            padding: 1.2rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -183,14 +205,14 @@
         .navbar-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         .navbar a {
             color: var(--white);
             text-decoration: none;
             background-color: var(--primary-color);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 8px;
             font-size: 0.95rem;
             font-weight: 500;
@@ -202,29 +224,36 @@
 
         .navbar a:hover {
             background-color: var(--primary-dark);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .notification-bell {
             position: relative;
             color: var(--text-color);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-bell:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
         }
 
         .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: -8px;
+            right: -8px;
             background-color: var(--danger);
             color: var(--white);
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 600;
         }
 
@@ -233,13 +262,19 @@
         }
 
         .welcome-card {
-            background-color: var(--white);
+            background: linear-gradient(135deg, var(--white), #f8fafc);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
             margin-bottom: 30px;
             position: relative;
             overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .welcome-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
         }
 
         .welcome-card::before {
@@ -247,15 +282,16 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 5px;
+            width: 6px;
             height: 100%;
-            background-color: var(--primary-color);
+            background: linear-gradient(to bottom, var(--primary-color), var(--primary-dark));
         }
 
         .welcome-card h2 {
             color: var(--dark-color);
-            margin-bottom: 20px;
-            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-size: 1.9rem;
+            font-weight: 700;
         }
 
         .welcome-card h2 span {
@@ -263,9 +299,9 @@
         }
 
         .welcome-card p {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             color: var(--text-light);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             max-width: 700px;
         }
 
@@ -279,7 +315,7 @@
         .info-card {
             background-color: var(--white);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
@@ -299,8 +335,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--white);
+            transition: var(--transition);
         }
 
         .info-icon.personal {
@@ -315,15 +352,19 @@
             background-color: var(--warning);
         }
 
+        .info-icon:hover {
+            transform: scale(1.1);
+        }
+
         .info-content h4 {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-light);
             margin-bottom: 5px;
             font-weight: 500;
         }
 
         .info-content p {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: var(--text-color);
             font-weight: 600;
             margin: 0;
@@ -331,15 +372,15 @@
 
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
             margin-top: 30px;
         }
 
         .action-card {
-            background-color: var(--white);
+            background: linear-gradient(135deg, var(--white), #f8fafc);
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 12px;
             box-shadow: var(--shadow-sm);
             text-align: center;
             transition: var(--transition);
@@ -352,43 +393,67 @@
         }
 
         .action-card i {
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--primary-color);
             margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .action-card:hover i {
+            transform: scale(1.1);
         }
 
         .action-card h3 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             margin-bottom: 10px;
             color: var(--dark-color);
+            font-weight: 600;
         }
 
         .action-card p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-light);
+        }
+
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 110;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .sidebar-toggle:hover {
+            background-color: var(--primary-dark);
         }
 
         /* Responsive Styles */
         @media (max-width: 992px) {
             .sidebar {
-                width: 250px;
+                width: 260px;
+                transform: translateX(-100%);
             }
-            .main-content {
-                margin-left: 250px;
-                width: calc(100% - 250px);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
+            .sidebar.active {
+                transform: translateX(0);
             }
             .main-content {
                 margin-left: 0;
                 width: 100%;
             }
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
                 align-items: flex-start;
@@ -411,12 +476,26 @@
             .welcome-card {
                 padding: 20px;
             }
+            .welcome-card h2 {
+                font-size: 1.6rem;
+            }
+            .welcome-card p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
 
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <div class="logo">MediCare</div>
+        </div>
+
         <!-- Profile Section -->
         <div class="profile">
             <div class="avatar">
@@ -438,7 +517,6 @@
             <a href="{{ route('medical.history') }}">
                 <i class="fas fa-notes-medical"></i> Medical History
             </a>
-            
             <a href="{{ route('patient.settings') }}">
                 <i class="fas fa-user-cog"></i> Settings
             </a>
@@ -500,7 +578,7 @@
                         </div>
                         <div class="info-content">
                             <h4>Last Checkup</h4>
-                            <p>18 March 2025</p>
+                            <p>15 Nov 2024</p>
                         </div>
                     </div>
                 </div>
@@ -519,8 +597,6 @@
                     <p>View your complete medical history</p>
                 </div>
                 
-               
-                
                 <div class="action-card" onclick="window.location.href='{{ route('patient.settings') }}'">
                     <i class="fas fa-user-cog"></i>
                     <h3>Profile Settings</h3>
@@ -530,5 +606,11 @@
         </div>
     </div>
 
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

@@ -69,7 +69,7 @@
         }
         .logo-icon {
             background-color: var(--primary);
-            color: var(--white);
+            color: white;
             width: 36px;
             height: 36px;
             border-radius: var(--border-radius);
@@ -144,6 +144,10 @@
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--gray-200);
+        }
+        .header-title {
+            display: flex;
+            flex-direction: column;
         }
         .header-title h1 {
             font-size: 1.75rem;
@@ -362,9 +366,6 @@
         .fc-event-offline {
             background-color: var(--offline-booking);
         }
-        .fc-event-telehealth {
-            background-color: var(--telehealth);
-        }
         .fc-daygrid-event-dot {
             display: none;
         }
@@ -547,17 +548,17 @@
                         <a href="#" class="dropdown-item">
                             <i class="fas fa-question-circle"></i> Help
                         </a>
-                  <div class="dropdown-divider"></div>
-<a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-    <i class="fas fa-sign-out-alt"></i> Logout
-</a>
-</div>
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-    @csrf
-</form>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                </div>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </header>
 <div class="dashboard-grid">
-    <a href="{{ route('doctor.calendar') }}" class="card" style="text-decoration: none; color: inherit;">
+    <a href="{{('calendar') }}" class="card" style="text-decoration: none; color: inherit;">
         <div class="card-header">
             <h3 class="card-title">Today's Appointments</h3>
             <div class="card-icon appointments">
@@ -629,10 +630,6 @@
                         <div class="legend-color" style="background-color: var(--offline-booking);"></div>
                         <span>Offline Booking</span>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: var(--telehealth);"></div>
-                        <span>Telehealth</span>
-                    </div>
                 </div>
             </div>
             <div class="graph-container">
@@ -678,9 +675,9 @@
                         title: 'Sarah Johnson - Follow-up',
                         start: new Date().toISOString().split('T')[0] + 'T11:00:00',
                         end: new Date().toISOString().split('T')[0] + 'T11:45:00',
-                        className: 'fc-event-telehealth',
+                        className: 'fc-event-offline',
                         extendedProps: {
-                            type: 'telehealth',
+                            type: 'offline',
                             patientId: 102
                         }
                     },
@@ -814,4 +811,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

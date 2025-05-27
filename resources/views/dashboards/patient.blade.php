@@ -572,15 +572,7 @@
                         </div>
                     </div>
                     
-                    <div class="info-card">
-                        <div class="info-icon medical">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Last Checkup</h4>
-                            <p>15 Nov 2024</p>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
 

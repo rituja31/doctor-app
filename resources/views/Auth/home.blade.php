@@ -653,7 +653,6 @@
     </div>
 </div>
 
-<!-- Contact Section -->
 <div id="contact" class="contact-section">
     <div class="section-title">
         <h2>Get In Touch</h2>
@@ -671,7 +670,7 @@
                 </div>
                 <div>
                     <h4>Location</h4>
-                    <p>123 Medical Drive, Health City, HC 12345</p>
+                    <p>123 Medical Drive, Margao Goa</p>
                 </div>
             </div>
             
@@ -681,7 +680,7 @@
                 </div>
                 <div>
                     <h4>Phone</h4>
-                    <p>+1 (555) 123-4567</p>
+                    <p>+91 7666373347</p>
                 </div>
             </div>
             
@@ -691,7 +690,7 @@
                 </div>
                 <div>
                     <h4>Email</h4>
-                    <p>info@medicare.example</p>
+                    <p>info@medicare.com</p>
                 </div>
             </div>
             
@@ -776,7 +775,7 @@
     </div>
     
     <div class="footer-bottom">
-        <p>&copy; 2023 MediCare. All Rights Reserved. | <a href="#" style="color: var(--accent-color);">Privacy Policy</a> | <a href="#" style="color: var(--accent-color);">Terms of Service</a></p>
+        <p>&copy; 2025 MediCare. All Rights Reserved. | <a href="#" style="color: var(--accent-color);">Privacy Policy</a> | <a href="#" style="color: var(--accent-color);">Terms of Service</a></p>
     </div>
 </footer>
 

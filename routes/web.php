@@ -57,7 +57,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('doctor')->group(function () {
         Route::get('/calendar', fn() => view('calendar'))->name('doctor.calendar');
         Route::get('/analytics', fn() => view('analytics'))->name('doctor.analytics');
+           Route::get('/docprofile', fn() => view('docprofile'))->name('doctor.docprofile');
     });
+
 
     // Appointments
     Route::get('/appointment', fn() => view('appointment'))->name('appointment.page');

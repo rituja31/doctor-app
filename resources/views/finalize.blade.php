@@ -16,7 +16,38 @@
             background-color: #f5f7fa;
             color: #333;
             line-height: 1.6;
-            padding: 20px;
+        }
+        
+        .navbar {
+            background-color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .nav-container {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-dashboard {
+            padding: 8px 16px;
+            background: #4a6cf7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-dashboard:hover {
+            background: #3a56d4;
         }
         
         .container {
@@ -28,6 +59,7 @@
             padding: 30px;
         }
         
+        /* [Rest of your existing CSS styles remain exactly the same] */
         .progress-steps {
             display: flex;
             justify-content: space-between;
@@ -148,6 +180,14 @@
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ route('patient.dashboard') }}" class="btn-dashboard">Go to Dashboard</a>
+            <div></div> <!-- Empty div for balance if needed -->
+        </div>
+    </nav>
+    
+    <!-- [Rest of your HTML remains exactly the same] -->
     <div class="container">
         <div class="progress-steps">
             <div class="step completed">

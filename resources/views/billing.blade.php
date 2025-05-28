@@ -167,20 +167,23 @@
         .btn-next:hover {
             background: #3a56d4;
         }
+        .step.completed .step-circle {
+            background: #48bb78; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="progress-steps">
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">1</div>
                 <div>Service</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">2</div>
                 <div>Time</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">3</div>
                 <div>Details</div>
             </div>

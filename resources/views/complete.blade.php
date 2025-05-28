@@ -128,24 +128,27 @@
         .btn-book:hover {
             background: #3a56d4;
         }
+        .step.completed .step-circle {
+            background: #48bb78; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="progress-steps">
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">1</div>
                 <div>Service</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">2</div>
                 <div>Time</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">3</div>
                 <div>Details</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">4</div>
                 <div>Billing</div>
             </div>
@@ -191,9 +194,15 @@
         </div>
         
         <form action="{{ route('appointment.finalize') }}" method="GET">
-    <button type="submit" class="btn-book">Book Appointment</button>
-</form>
-
+            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <button type="button" style="padding: 10px 25px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 6px; cursor: pointer;" onclick="window.location.href='{{ route('appointment.billing') }}'">
+                    &lt; Back to Billing
+                </button>
+                <button type="submit" style="padding: 10px 25px; background: #4a6cf7; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    Book Appointment
+                </button>
+            </div>
+        </form>
     </div>
 </body>
 </html>

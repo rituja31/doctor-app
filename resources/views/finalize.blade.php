@@ -142,28 +142,31 @@
             background: #e2e8f0;
             margin: 20px 0;
         }
+        .step.completed .step-circle {
+            background: #48bb78; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="progress-steps">
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">1</div>
                 <div>Service</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">2</div>
                 <div>Time</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">3</div>
                 <div>Details</div>
             </div>
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">4</div>
                 <div>Billing</div>
             </div>
-            <div class="step active">
+            <div class="step completed">
                 <div class="step-circle">5</div>
                 <div>Done</div>
             </div>

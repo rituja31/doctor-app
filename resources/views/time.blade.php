@@ -158,12 +158,15 @@
             color: #e53e3e;
             margin-left: 4px;
         }
+        .step.completed .step-circle {
+            background: #48bb78; /* Green color */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="progress-steps">
-            <div class="step">
+            <div class="step completed">
                 <div class="step-circle">1</div>
                 <div>Service</div>
             </div>

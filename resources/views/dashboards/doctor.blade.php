@@ -802,6 +802,7 @@
             // Period buttons functionality
             const periodButtons = document.querySelectorAll('.period-btn');
             periodButtons.forEach(button => {
+                
                 button.addEventListener('click', () => {
                     periodButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');

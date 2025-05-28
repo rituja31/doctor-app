@@ -241,7 +241,7 @@
             </div>
             
             <div class="nav-buttons">
-                <button type="button" class="btn btn-prev" onclick="window.location.href='{{ route('appointment.complete') }}'">
+                <button type="button" class="btn btn-prev" onclick="window.location.href='{{ route('appointment.details') }}'">
                     &lt; Prev
                 </button>
                 <button type="submit" class="btn btn-next">

@@ -98,7 +98,7 @@
             padding: 1.5rem;
             margin-top: 0;
             border-bottom: 1px solid var(--gray-200);
-            text-align: center;
+            position: relative;
         }
         .doctor-avatar {
             width: 60px;
@@ -112,6 +112,7 @@
             margin: 0 auto 1rem;
             font-weight: 600;
             font-size: 1.5rem;
+            cursor: pointer;
         }
         .doctor-info {
             text-align: center;
@@ -135,6 +136,39 @@
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 500;
+        }
+        .doctor-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-lg);
+            padding: 0.5rem 0;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 1rem;
+        }
+        .doctor-profile:hover .doctor-dropdown {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            color: var(--gray-700);
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+        }
+        .dropdown-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
         }
         
         .nav-menu {
@@ -178,14 +212,6 @@
             padding: 0.25rem 0.5rem;
             border-radius: 10px;
         }
-        
-        /* Bottom navigation items */
-        .nav-bottom {
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid var(--gray-200);
-        }
-        
         /* Main Content */
         .main-content {
             flex: 1;
@@ -476,7 +502,6 @@
             <span>Doctor Portal</span>
         </div>
     </div>
-    
     <!-- Doctor Profile in Sidebar -->
     <div class="doctor-profile">
         <div class="doctor-avatar">DR</div>
@@ -485,8 +510,25 @@
             <p class="doctor-specialty">Cardiologist</p>
             <span class="doctor-status">Available</span>
         </div>
+        <div class="doctor-dropdown">
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-question-circle"></i> Help
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
     </div>
-    
     <nav class="nav-menu">
         <div class="nav-item">
             <a href="{{ route('doctor.dashboard') }}" class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
@@ -509,49 +551,20 @@
                 Patients
             </a>
         </div>
-        
         <div class="nav-item">
             <a href="{{ route('doctor.analytics') }}" class="nav-link {{ request()->routeIs('doctor.analytics') ? 'active' : '' }}">
                 <i class="fas fa-chart-line"></i>
                 Analytics
             </a>
         </div>
-        
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-user"></i>
-                Profile
-            </a>
-        </div>
-        
         <div class="nav-item">
             <a href="#" class="nav-link">
                 <i class="fas fa-cog"></i>
                 Settings
             </a>
         </div>
-        
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-question-circle"></i>
-                Help
-            </a>
-        </div>
-        
-        <!-- Bottom navigation items -->
-        <div class="nav-bottom">
-            <div class="nav-item">
-                <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </div>
-        </div>
     </nav>
 </aside>
-
 <main class="main-content">
     <header class="header">
         <div class="header-title">
@@ -564,7 +577,6 @@
             </button>
         </div>
     </header>
-    
     <div class="dashboard-grid">
         <a href="{{('calendar') }}" class="card" style="text-decoration: none; color: inherit;">
             <div class="card-header">
@@ -579,7 +591,6 @@
                 <i class="fas fa-arrow-up"></i> 2 from yesterday
             </div>
         </a>
-        
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Active Patients</h3>
@@ -593,7 +604,6 @@
                 <i class="fas fa-arrow-up"></i> 8 this month
             </div>
         </div>
-        
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Unread Messages</h3>
@@ -608,14 +618,11 @@
             </div>
         </div>
     </div>
-    
     <div class="calendar-container">
         <div class="section-header">
             <h2 class="section-title">Appointment Calendar</h2>
             <div class="section-actions">
-                <button class="btn btn-primary">
-                    <i class="fas fa-plus"></i> New Appointment
-                </button>
+                
             </div>
         </div>
         <div id="calendar"></div>
@@ -630,7 +637,6 @@
             </div>
         </div>
     </div>
-    
     <div class="graph-container">
         <div class="graph-card">
             <div class="graph-header">
@@ -646,7 +652,6 @@
         </div>
     </div>
 </main>
-
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -723,7 +728,6 @@
             }
         });
         calendar.render();
-        
         // Line graph configuration
         var ctx = document.getElementById('appointmentGraph').getContext('2d');
         var appointmentGraph = new Chart(ctx, {
@@ -799,7 +803,6 @@
                 }
             }
         });
-        
         // Period buttons functionality
         const periodButtons = document.querySelectorAll('.period-btn');
         periodButtons.forEach(button => {

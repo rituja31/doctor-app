@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\AdminController;
+
 
 // -------------------
 // Home Redirection Based on Role
@@ -38,12 +40,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // -------------------
 // Admin Dashboard (session-based)
 // -------------------
-Route::get('/admin/dashboard', function () {
-    if (!session('admin_logged_in')) {
-        return redirect()->route('login')->withErrors(['email' => 'Unauthorized']);
-    }
-    return view('dashboards.admin'); // Corrected path
-})->name('admin.dashboard');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
 
 Route::post('/doctors', [DoctorController::class, 'store'])->name('doctors.store');
 

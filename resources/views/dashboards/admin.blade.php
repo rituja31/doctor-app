@@ -373,24 +373,6 @@
                     Appointments
                 </a>
             </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-prescription-bottle-alt"></i>
-                    Prescriptions
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-chart-line"></i>
-                    Reports
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    Settings
-                </a>
-            </div>
         </div>
 
         <!-- Removed the duplicate logout button from the bottom -->
@@ -403,26 +385,6 @@
             <button class="btn btn-primary add-doctor-btn" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
                 <i class="fas fa-plus"></i> Add New Doctor
             </button>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="stats-card">
-            <div class="stat-item">
-                <div class="stat-number">24</div>
-                <div class="stat-label">Total Doctors</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">18</div>
-                <div class="stat-label">Active Today</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">6</div>
-                <div class="stat-label">On Leave</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">4</div>
-                <div class="stat-label">New This Month</div>
-            </div>
         </div>
 
         <!-- Doctors Table -->
@@ -469,7 +431,7 @@
                                 <span class="badge bg-success bg-opacity-10 text-success">Active</span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-edit action-btn">
+                                <button onclick="window.location.href='{{ route('edit.page') }}'" class="btn btn-sm btn-edit action-btn">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn btn-sm btn-view action-btn">
@@ -502,7 +464,7 @@
                                 <span class="badge bg-success bg-opacity-10 text-success">Active</span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-edit action-btn">
+                                <button onclick="window.location.href='{{ route('edit.page') }}'" class="btn btn-sm btn-edit action-btn">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn btn-sm btn-view action-btn">
@@ -535,7 +497,7 @@
                                 <span class="badge bg-warning bg-opacity-10 text-warning">On Leave</span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-edit action-btn">
+                                <button onclick="window.location.href='{{ route('edit.page') }}'" class="btn btn-sm btn-edit action-btn">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn btn-sm btn-view action-btn">
@@ -548,23 +510,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center p-3 border-top">
-                <div class="text-muted">Showing 1 to 3 of 24 entries</div>
-                <nav>
-                    <ul class="pagination mb-0">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>

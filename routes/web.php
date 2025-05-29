@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DoctorController;
 
 // -------------------
 // Home Redirection Based on Role
@@ -43,6 +44,9 @@ Route::get('/admin/dashboard', function () {
     }
     return view('dashboards.admin'); // Corrected path
 })->name('admin.dashboard');
+
+Route::post('/doctors', [DoctorController::class, 'store'])->name('doctors.store');
+
 
 // -------------------
 // Authenticated Routes

@@ -665,63 +665,46 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="firstName" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phone">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="specialty" class="form-label">Primary Specialty</label>
-                                <select class="form-select" id="specialty" required>
-                                    <option value="">Select specialty</option>
-                                    <option>Cardiology</option>
-                                    <option>Neurology</option>
-                                    <option>Orthopedics</option>
-                                    <option>Pediatrics</option>
-                                    <option>Dermatology</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="department" class="form-label">Department</label>
-                                <select class="form-select" id="department">
-                                    <option value="">Select department</option>
-                                    <option>Cardiology</option>
-                                    <option>Neurology</option>
-                                    <option>Orthopedics</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="qualifications" class="form-label">Qualifications</label>
-                            <textarea class="form-control" id="qualifications" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="bio" class="form-label">Brief Biography</label>
-                            <textarea class="form-control" id="bio" rows="3"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Add Doctor</button>
-                </div>
+                    <form action="{{ route('doctors.store') }}" method="POST">
+    @csrf
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" name="first_name" required>
+        </div>
+        <div class="col-md-6">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="last_name" required>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="col-md-6">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone" name="phone" required>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="specialties" class="form-label">Specialties</label>
+        <input type="text" class="form-control" id="specialties" name="specialties" placeholder="e.g. Cardiology, Internal Medicine" required>
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" id="status" name="status">
+            <option value="Active" selected>Active</option>
+            <option value="On Leave">On Leave</option>
+            <option value="Retired">Retired</option>
+        </select>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Add Doctor</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    </div>
+</form>
+
             </div>
         </div>
     </div>

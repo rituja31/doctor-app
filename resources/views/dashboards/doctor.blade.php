@@ -98,8 +98,16 @@
             padding: 1.5rem;
             margin-top: 0;
             border-bottom: 1px solid var(--gray-200);
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
+        
+        .doctor-avatar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
         .doctor-avatar {
             width: 60px;
             height: 60px;
@@ -109,66 +117,60 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
+            margin-right: 1rem;
             font-weight: 600;
             font-size: 1.5rem;
-            cursor: pointer;
         }
+        
         .doctor-info {
-            text-align: center;
+            flex: 1;
+            text-align: left;
         }
+        
         .doctor-name {
             font-weight: 600;
             margin: 0 0 0.25rem;
             color: var(--dark);
             font-size: 1rem;
         }
+        
         .doctor-specialty {
             color: var(--gray-600);
             font-size: 0.8rem;
-            margin: 0 0 0.75rem;
+            margin: 0;
         }
-        .doctor-status {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background-color: var(--success);
-            color: white;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
+        
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
-        .doctor-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-lg);
-            padding: 0.5rem 0;
-            min-width: 200px;
-            z-index: 1000;
-            display: none;
-            margin-top: 1rem;
-        }
-        .doctor-profile:hover .doctor-dropdown {
-            display: block;
-        }
-        .dropdown-item {
-            padding: 0.5rem 1rem;
+        
+        .profile-link {
+            display: flex;
+            align-items: center;
             color: var(--gray-700);
             text-decoration: none;
-            display: block;
-            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            padding: 0.5rem 0;
+            transition: color 0.2s ease;
         }
-        .dropdown-item:hover {
-            background-color: var(--gray-100);
+        
+        .profile-link:hover {
             color: var(--primary);
         }
-        .dropdown-item i {
+        
+        .profile-link i {
             margin-right: 0.75rem;
             width: 20px;
             text-align: center;
+        }
+        
+        .logout-link {
+            color: var(--danger);
+            border-top: 1px solid var(--gray-200);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
         }
         
         .nav-menu {
@@ -502,33 +504,31 @@
             <span>Doctor Portal</span>
         </div>
     </div>
+    
     <!-- Doctor Profile in Sidebar -->
     <div class="doctor-profile">
-        <div class="doctor-avatar">DR</div>
-        <div class="doctor-info">
-            <h3 class="doctor-name">Dr. {{ Auth::user()->name }}</h3>
-            <p class="doctor-specialty">Cardiologist</p>
-            <span class="doctor-status">Available</span>
+        <div class="doctor-avatar-container">
+            <div class="doctor-avatar">DR</div>
+            <div class="doctor-info">
+                <h3 class="doctor-name">Dr. {{ Auth::user()->name }}</h3>
+                <p class="doctor-specialty">Cardiologist</p>
+            </div>
         </div>
-        <div class="doctor-dropdown">
-            <a href="#" class="dropdown-item">
-                <i class="fas fa-user"></i> Profile
+        
+        <div class="profile-actions">
+            <a href="{{ route('doctor.docprofile') }}" class="nav-link {{ request()->routeIs('doctor.docprofile') ? 'active' : '' }}">
+                <i class="fas fa-user"></i> View Profile
             </a>
-            <a href="#" class="dropdown-item">
-                <i class="fas fa-cog"></i> Settings
-            </a>
-            <a href="#" class="dropdown-item">
-                <i class="fas fa-question-circle"></i> Help
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a class="profile-link logout-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </div>
+        
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
     </div>
+    
     <nav class="nav-menu">
         <div class="nav-item">
             <a href="{{ route('doctor.dashboard') }}" class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
@@ -557,12 +557,7 @@
                 Analytics
             </a>
         </div>
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-cog"></i>
-                Settings
-            </a>
-        </div>
+       
     </nav>
 </aside>
 <main class="main-content">
@@ -622,7 +617,9 @@
         <div class="section-header">
             <h2 class="section-title">Appointment Calendar</h2>
             <div class="section-actions">
-                
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Appointment
+                </button>
             </div>
         </div>
         <div id="calendar"></div>

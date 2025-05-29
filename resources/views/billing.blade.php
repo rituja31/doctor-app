@@ -174,13 +174,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="progress-steps">
+        <div class="progress-steps"> 
             <div class="step completed">
                 <div class="step-circle">1</div>
                 <div>Service</div>
             </div>
             <div class="step completed">
-                <div class="step-circle">2</div>
+                <div class="step-circle">2</div> 
                 <div>Time</div>
             </div>
             <div class="step completed">

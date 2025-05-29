@@ -84,4 +84,14 @@ Route::middleware('auth')->group(function () {
     // Patient Extras
     Route::get('/patient/medical-history', fn() => view('medicalhistory'))->name('medical.history');
     Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');
+
 });
+
+// Admin Edit Page
+Route::get('/edit', function () {
+    if (!session('admin_logged_in')) {
+        return redirect()->route('login')->withErrors(['email' => 'Unauthorized']);
+    }
+    return view('edit');
+})->name('edit.page');
+

@@ -159,7 +159,7 @@
             margin-left: 4px;
         }
         .step.completed .step-circle {
-            background: #48bb78; /* Green color */
+            background: #48bb78; 
         }
     </style>
 </head>

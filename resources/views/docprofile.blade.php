@@ -145,6 +145,7 @@
         }
         
         .profile-actions {
+            padding: 0 1rem;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
@@ -156,25 +157,35 @@
             color: var(--gray-700);
             text-decoration: none;
             font-size: 0.875rem;
-            padding: 0.5rem 0;
-            transition: color 0.2s ease;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+            border-radius: var(--border-radius);
         }
         
         .profile-link:hover {
+            background-color: var(--primary-light);
             color: var(--primary);
+        }
+        
+        .profile-link.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
         }
         
         .profile-link i {
             margin-right: 0.75rem;
             width: 20px;
             text-align: center;
+            font-size: 1rem;
         }
         
         .logout-link {
             color: var(--danger);
-            border-top: 1px solid var(--gray-200);
             margin-top: 0.5rem;
+            border-top: 1px solid var(--gray-200);
             padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
         }
         
         .nav-menu {
@@ -486,6 +497,145 @@
             margin-right: 1rem;
         }
         
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1050;
+            overflow-y: auto;
+        }
+        
+        .modal-dialog {
+            max-width: 800px;
+            margin: 1.75rem auto;
+        }
+        
+        .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            background-color: var(--white);
+            background-clip: padding-box;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius-lg);
+            outline: 0;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .modal-body {
+            position: relative;
+            flex: 1 1 auto;
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .btn-close {
+            background: transparent;
+            border: 0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.5;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--gray-700);
+            background-color: var(--white);
+            background-clip: padding-box;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .form-control:focus {
+            color: var(--gray-700);
+            background-color: var(--white);
+            border-color: var(--primary);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(58, 134, 255, 0.25);
+        }
+        
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 2.25rem 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--gray-700);
+            background-color: var(--white);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .form-select:focus {
+            border-color: var(--primary);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(58, 134, 255, 0.25);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+            border: 1px solid var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+            border-color: #bd2130;
+        }
+        
+        .me-auto {
+            margin-right: auto !important;
+        }
+        
         @media (max-width: 1200px) {
             .profile-content {
                 grid-template-columns: 1fr;
@@ -512,6 +662,10 @@
             .info-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .modal-dialog {
+                margin: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -532,7 +686,17 @@
             <!-- Doctor Profile in Sidebar -->
             <div class="doctor-profile">
                 <div class="doctor-avatar-container">
-                    <div class="doctor-avatar">RN</div>
+                    <div class="doctor-avatar">
+                        <?php 
+                        $name = Auth::user()->name;
+                        $initials = '';
+                        $nameParts = explode(' ', $name);
+                        foreach ($nameParts as $part) {
+                            $initials .= strtoupper(substr($part, 0, 1));
+                        }
+                        echo substr($initials, 0, 2);
+                        ?>
+                    </div>
                     <div class="doctor-info">
                         <h3 class="doctor-name">Dr. {{ Auth::user()->name }}</h3>
                         <p class="doctor-specialty">Orthopedic Surgeon</p>
@@ -606,17 +770,20 @@
                 <div class="profile-header">
                     <div class="profile-identity">
                         <div class="profile-avatar">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dr. {{ Auth::user()->name }}">
+                            <?php 
+                            $name = Auth::user()->name;
+                            $initials = '';
+                            $nameParts = explode(' ', $name);
+                            foreach ($nameParts as $part) {
+                                $initials .= strtoupper(substr($part, 0, 1));
+                            }
+                            echo substr($initials, 0, 2);
+                            ?>
                         </div>
                         <div class="profile-info">
                             <h2>Dr. {{ Auth::user()->name }}</h2>
                             <p>Orthopedic Surgeon | MS (Ortho), DNB</p>
-                            <p>Apollo Hospitals, Bengaluru</p>
                             <div class="profile-meta">
-                                <div class="meta-item">
-                                    <i class="fas fa-star"></i>
-                                    4.8 (215 reviews)
-                                </div>
                                 <div class="meta-item">
                                     <i class="fas fa-briefcase"></i>
                                     12 years experience
@@ -629,10 +796,7 @@
                         </div>
                     </div>
                     <div class="profile-actions-header">
-                        <button class="btn btn-outline">
-                            <i class="fas fa-print"></i> Print Profile
-                        </button>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" onclick="openEditModal()">
                             <i class="fas fa-pencil-alt"></i> Edit Profile
                         </button>
                     </div>
@@ -644,7 +808,7 @@
                             <h3 class="section-title">About Me</h3>
                             <div class="bio-text">
                                 <p>Dr. {{ Auth::user()->name }} is a board-certified orthopedic surgeon with over 12 years of experience in treating musculoskeletal disorders. He completed his residency at AIIMS Delhi and specializes in joint replacement surgeries.</p>
-                                <p>Dr. {{ Auth::user()->name }} has published numerous research papers in prestigious medical journals and is a fellow of the Indian Orthopaedic Association. He is dedicated to providing personalized care to his patients and staying at the forefront of orthopedic treatments.</p>
+                                <p>Dr. {{ Auth::user()->name }} is dedicated to providing personalized care to his patients and staying at the forefront of orthopedic treatments.</p>
                             </div>
                         </section>
                         
@@ -664,14 +828,6 @@
                                     <div class="info-value">KA/123456/2010</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">NPI Number</div>
-                                    <div class="info-value">IN987654321</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Board Certification</div>
-                                    <div class="info-value">Indian Orthopaedic Association</div>
-                                </div>
-                                <div class="info-item">
                                     <div class="info-label">Years of Experience</div>
                                     <div class="info-value">12</div>
                                 </div>
@@ -688,14 +844,6 @@
                                 <div class="info-item">
                                     <div class="info-label">Residency</div>
                                     <div class="info-value">AIIMS Delhi</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Fellowship</div>
-                                    <div class="info-value">Johns Hopkins Hospital</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Graduation Year</div>
-                                    <div class="info-value">2010</div>
                                 </div>
                             </div>
                         </section>
@@ -715,34 +863,11 @@
                                     <div class="info-label">Clinic Address</div>
                                     <div class="info-value">154, Bannerghatta Road, Bengaluru, Karnataka 560076</div>
                                 </div>
-                                <div class="info-item">
-                                    <div class="info-label">Emergency Contact</div>
-                                    <div class="info-value">+91 9876543211 (Hospital Operator)</div>
-                                </div>
                             </div>
                         </section>
                     </div>
                     
                     <div class="profile-sidebar">
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-value">1,500+</div>
-                                <div class="stat-label">Patients</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">4.8</div>
-                                <div class="stat-label">Rating</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">96%</div>
-                                <div class="stat-label">Satisfaction</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">12</div>
-                                <div class="stat-label">Years Exp.</div>
-                            </div>
-                        </div>
-                        
                         <section class="profile-section">
                             <h3 class="section-title">Availability</h3>
                             <div class="availability-list">
@@ -765,14 +890,6 @@
                                 <div class="availability-item">
                                     <span class="day">Friday</span>
                                     <span class="time">9:00 AM - 2:00 PM</span>
-                                </div>
-                                <div class="availability-item">
-                                    <span class="day">Saturday</span>
-                                    <span class="time">9:00 AM - 1:00 PM</span>
-                                </div>
-                                <div class="availability-item">
-                                    <span class="day">Sunday</span>
-                                    <span class="time">Closed</span>
                                 </div>
                             </div>
                         </section>
@@ -798,15 +915,6 @@
                                         <div class="info-label">Hip, Knee, Shoulder</div>
                                     </div>
                                 </div>
-                                <div class="specialty-item">
-                                    <div class="specialty-icon">
-                                        <i class="fas fa-running"></i>
-                                    </div>
-                                    <div>
-                                        <div class="info-value">Sports Medicine</div>
-                                        <div class="info-label">Injury Treatment</div>
-                                    </div>
-                                </div>
                             </div>
                         </section>
                     </div>
@@ -814,5 +922,106 @@
             </div>
         </main>
     </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editDoctorModal" class="modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Doctor Profile</h5>
+                    <button type="button" class="btn-close" onclick="closeEditModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDoctorForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editFirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="editFirstName" value="John" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editLastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="editLastName" value="Doe" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="editEmail" value="john.doe@example.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editPhone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="editPhone" value="+91 9876543210">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editSpecialty" class="form-label">Primary Specialty</label>
+                                <select class="form-select" id="editSpecialty" required>
+                                    <option value="">Select specialty</option>
+                                    <option selected>Orthopedics</option>
+                                    <option>Cardiology</option>
+                                    <option>Neurology</option>
+                                    <option>Pediatrics</option>
+                                    <option>Dermatology</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editDepartment" class="form-label">Department</label>
+                                <select class="form-select" id="editDepartment">
+                                    <option value="">Select department</option>
+                                    <option selected>Orthopedics</option>
+                                    <option>Cardiology</option>
+                                    <option>Neurology</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editQualifications" class="form-label">Qualifications</label>
+                            <textarea class="form-control" id="editQualifications" rows="3">MS (Ortho), DNB</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editBio" class="form-label">Brief Biography</label>
+                            <textarea class="form-control" id="editBio" rows="3">Dr. John Doe is a board-certified orthopedic surgeon with over 12 years of experience in treating musculoskeletal disorders. He completed his residency at AIIMS Delhi and specializes in joint replacement surgeries.</textarea>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editAddress" class="form-label">Clinic Address</label>
+                                <input type="text" class="form-control" id="editAddress" value="154, Bannerghatta Road, Bengaluru, Karnataka 560076">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveDoctorProfile()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal() {
+            document.getElementById('editDoctorModal').style.display = 'block';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editDoctorModal').style.display = 'none';
+        }
+        
+        function saveDoctorProfile() {
+            // Here you would typically save the data via AJAX
+            alert('Profile changes saved!');
+            closeEditModal();
+            // You would then update the profile page with the new data
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('editDoctorModal');
+            if (event.target == modal) {
+                closeEditModal();
+            }
+        }
+    </script>
 </body>
 </html>

@@ -140,39 +140,47 @@
             margin: 0;
         }
         
-        .profile-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .profile-link {
-            display: flex;
-            align-items: center;
-            color: var(--gray-700);
-            text-decoration: none;
-            font-size: 0.875rem;
-            padding: 0.5rem 0;
-            transition: color 0.2s ease;
-        }
-        
-        .profile-link:hover {
-            color: var(--primary);
-        }
-        
-        .profile-link i {
-            margin-right: 0.75rem;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .logout-link {
-            color: var(--danger);
-            border-top: 1px solid var(--gray-200);
-            margin-top: 0.5rem;
-            padding-top: 0.75rem;
-        }
-        
+/* Add this to your existing styles */
+.profile-actions {
+    padding: 0 1rem; /* Match the nav-menu padding */
+    margin-top: 1rem;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    color: var(--gray-700);
+    text-decoration: none;
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem; /* Match nav-link padding */
+    transition: color 0.2s ease;
+    border-radius: var(--border-radius);
+}
+
+.profile-link:hover {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+.profile-link i {
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+    font-size: 1rem; /* Match nav-link icon size */
+}
+
+.logout-link {
+    color: var(--danger);
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--gray-200);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem; /* Added to match other items */
+}
+
+/* Remove the margin from the form */
+#logout-form {
+    margin: 0;
+}
         .nav-menu {
             padding: 0 1rem;
             flex: 1;

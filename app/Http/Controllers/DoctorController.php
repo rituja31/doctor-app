@@ -2,34 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
+    public function index()
+    {
+        $doctors = Doctor::all(); // Fetch all doctors from the database
+        return view('dashboards.admin', compact('doctors')); // Corrected view path
+    }
+
+    // Rest of the methods (store, edit, destroy) remain unchanged
     public function store(Request $request)
     {
-        // Validate form data
         $validated = $request->validate([
-            'first_name'  => 'required|string|max:255',
-            'last_name'   => 'required|string|max:255',
-            'email'       => 'required|email|unique:doctors,email',
-            'phone'       => 'required|string|max:20',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:doctors,email',
+            'phone' => 'required|string|max:20',
             'specialties' => 'required|string',
-            'status'      => 'required|in:Active,On Leave,Retired',
+            'status' => 'required|in:Active,On Leave,Retired',
         ]);
 
-        // Save the new doctor to database
-        // Assuming you have a Doctor model
-        \App\Models\Doctor::create([
-            'first_name'  => $validated['first_name'],
-            'last_name'   => $validated['last_name'],
-            'email'       => $validated['email'],
-            'phone'       => $validated['phone'],
-            'specialties' => $validated['specialties'],
-            'status'      => $validated['status'],
-        ]);
+        Doctor::create($validated);
 
-        // Redirect back with success message
-        return redirect()->back()->with('success', 'Doctor added successfully!');
+        return redirect()->route('doctors.index')->with('success', 'Doctor added successfully.');
+    }
+
+    public function edit($id)
+    {
+        $doctor = Doctor::findOrFail($id);
+        return view('doctors.edit', compact('doctor')); // Ensure this view exists
+    }
+
+    public function destroy($id)
+    {
+        $doctor = Doctor::findOrFail($id);
+        $doctor->delete();
+        return redirect()->route('doctors.index')->with('success', 'Doctor deleted successfully.');
     }
 }

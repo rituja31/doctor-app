@@ -385,7 +385,7 @@
         
         .profile-content {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr;
             gap: 2rem;
         }
         
@@ -426,75 +426,6 @@
         .bio-text {
             line-height: 1.7;
             color: var(--gray-700);
-        }
-        
-        .profile-sidebar {
-            background: var(--gray-100);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            text-align: center;
-            box-shadow: var(--box-shadow);
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 0.25rem;
-        }
-        
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .availability-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .day {
-            font-weight: 500;
-        }
-        
-        .time {
-            color: var(--gray-600);
-        }
-        
-        .specialty-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .specialty-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
         }
         
         /* Modal Styles */
@@ -634,12 +565,6 @@
         
         .me-auto {
             margin-right: auto !important;
-        }
-        
-        @media (max-width: 1200px) {
-            .profile-content {
-                grid-template-columns: 1fr;
-            }
         }
         
         @media (max-width: 768px) {
@@ -782,17 +707,7 @@
                         </div>
                         <div class="profile-info">
                             <h2>Dr. {{ Auth::user()->name }}</h2>
-                            <p>Orthopedic Surgeon | MS (Ortho), DNB</p>
-                            <div class="profile-meta">
-                                <div class="meta-item">
-                                    <i class="fas fa-briefcase"></i>
-                                    12 years experience
-                                </div>
-                                <div class="meta-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    Bengaluru, India
-                                </div>
-                            </div>
+                            <p>Orthopedic Surgeon</p>
                         </div>
                     </div>
                     <div class="profile-actions-header">
@@ -808,7 +723,6 @@
                             <h3 class="section-title">About Me</h3>
                             <div class="bio-text">
                                 <p>Dr. {{ Auth::user()->name }} is a board-certified orthopedic surgeon with over 12 years of experience in treating musculoskeletal disorders. He completed his residency at AIIMS Delhi and specializes in joint replacement surgeries.</p>
-                                <p>Dr. {{ Auth::user()->name }} is dedicated to providing personalized care to his patients and staying at the forefront of orthopedic treatments.</p>
                             </div>
                         </section>
                         
@@ -818,32 +732,6 @@
                                 <div class="info-item">
                                     <div class="info-label">Specialization</div>
                                     <div class="info-value">Orthopedics</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Subspecialties</div>
-                                    <div class="info-value">Joint Replacement, Sports Medicine</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Medical License</div>
-                                    <div class="info-value">KA/123456/2010</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Years of Experience</div>
-                                    <div class="info-value">12</div>
-                                </div>
-                            </div>
-                        </section>
-                        
-                        <section class="profile-section">
-                            <h3 class="section-title">Education & Training</h3>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <div class="info-label">Medical School</div>
-                                    <div class="info-value">AIIMS Delhi</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Residency</div>
-                                    <div class="info-value">AIIMS Delhi</div>
                                 </div>
                             </div>
                         </section>
@@ -862,58 +750,6 @@
                                 <div class="info-item">
                                     <div class="info-label">Clinic Address</div>
                                     <div class="info-value">154, Bannerghatta Road, Bengaluru, Karnataka 560076</div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    
-                    <div class="profile-sidebar">
-                        <section class="profile-section">
-                            <h3 class="section-title">Availability</h3>
-                            <div class="availability-list">
-                                <div class="availability-item">
-                                    <span class="day">Monday</span>
-                                    <span class="time">9:00 AM - 5:00 PM</span>
-                                </div>
-                                <div class="availability-item">
-                                    <span class="day">Tuesday</span>
-                                    <span class="time">9:00 AM - 5:00 PM</span>
-                                </div>
-                                <div class="availability-item">
-                                    <span class="day">Wednesday</span>
-                                    <span class="time">9:00 AM - 3:00 PM</span>
-                                </div>
-                                <div class="availability-item">
-                                    <span class="day">Thursday</span>
-                                    <span class="time">9:00 AM - 5:00 PM</span>
-                                </div>
-                                <div class="availability-item">
-                                    <span class="day">Friday</span>
-                                    <span class="time">9:00 AM - 2:00 PM</span>
-                                </div>
-                            </div>
-                        </section>
-                        
-                        <section class="profile-section">
-                            <h3 class="section-title">Specialties</h3>
-                            <div class="specialty-list">
-                                <div class="specialty-item">
-                                    <div class="specialty-icon">
-                                        <i class="fas fa-bone"></i>
-                                    </div>
-                                    <div>
-                                        <div class="info-value">Orthopedics</div>
-                                        <div class="info-label">General Orthopedics</div>
-                                    </div>
-                                </div>
-                                <div class="specialty-item">
-                                    <div class="specialty-icon">
-                                        <i class="fas fa-procedures"></i>
-                                    </div>
-                                    <div>
-                                        <div class="info-value">Joint Replacement</div>
-                                        <div class="info-label">Hip, Knee, Shoulder</div>
-                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -965,19 +801,6 @@
                                     <option>Dermatology</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
-                                <label for="editDepartment" class="form-label">Department</label>
-                                <select class="form-select" id="editDepartment">
-                                    <option value="">Select department</option>
-                                    <option selected>Orthopedics</option>
-                                    <option>Cardiology</option>
-                                    <option>Neurology</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editQualifications" class="form-label">Qualifications</label>
-                            <textarea class="form-control" id="editQualifications" rows="3">MS (Ortho), DNB</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="editBio" class="form-label">Brief Biography</label>

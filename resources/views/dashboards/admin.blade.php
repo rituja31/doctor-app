@@ -539,122 +539,65 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Doctor</th>
-                            <th>Contact</th>
-                            <th>Specialties</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-3" width="40" height="40" alt="Doctor">
-                                    <div>
-                                        <h6 class="mb-0">Dr. Nehal Dessai</h6>
-                                        <small class="text-muted">Cardiologist</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div>nd@gmail.com</div>
-                                <small class="text-muted">+1 (555) 123-4567</small>
-                            </td>
-                            <td>
-                                <span class="specialty-badge">Cardiology</span>
-                                <span class="specialty-badge">Internal Medicine</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-success bg-opacity-10 text-success">Active</span>
-                            </td>
-                            <td>
-                                <button onclick="window.location.href='{{ route('edit.page') }}'" class="btn btn-sm btn-edit action-btn">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-view action-btn">
-                                    <i class="fas fa-eye"></i> View
-                                </button>
-                                <button class="btn btn-sm btn-delete action-btn">
-                                    <i class="fas fa-trash-alt"></i> Remove
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle me-3" width="40" height="40" alt="Doctor">
-                                    <div>
-                                        <h6 class="mb-0">Dr. Sarah Johnson</h6>
-                                        <small class="text-muted">Neurologist</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div>sjohnson@example.com</div>
-                                <small class="text-muted">+1 (555) 987-6543</small>
-                            </td>
-                            <td>
-                                <span class="specialty-badge">Neurology</span>
-                                <span class="specialty-badge">Pediatrics</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-success bg-opacity-10 text-success">Active</span>
-                            </td>
-                            <td>
-                                <button onclick="window.location.href='{{ route('edit.page') }}'" class="btn btn-sm btn-edit action-btn">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-view action-btn">
-                                    <i class="fas fa-eye"></i> View
-                                </button>
-                                <button class="btn btn-sm btn-delete action-btn">
-                                    <i class="fas fa-trash-alt"></i> Remove
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://randomuser.me/api/portraits/men/75.jpg" class="rounded-circle me-3" width="40" height="40" alt="Doctor">
-                                    <div>
-                                        <h6 class="mb-0">Dr. Michael Chen</h6>
-                                        <small class="text-muted">Orthopedic Surgeon</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div>mchen@example.com</div>
-                                <small class="text-muted">+1 (555) 456-7890</small>
-                            </td>
-                            <td>
-                                <span class="specialty-badge">Orthopedics</span>
-                                <span class="specialty-badge">Sports Medicine</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-warning bg-opacity-10 text-warning">On Leave</span>
-                            </td>
-                            <td>
-                                <button onclick="window.location.href='{{ route('edit.page') }}'" class="btn btn-sm btn-edit action-btn">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-view action-btn">
-                                    <i class="fas fa-eye"></i> View
-                                </button>
-                                <button class="btn btn-sm btn-delete action-btn">
-                                    <i class="fas fa-trash-alt"></i> Remove
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+      <div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Doctor</th>
+                <th>Contact</th>
+                <th>Specialties</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($doctors as $doctor)
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ $doctor->image ?? 'https://randomuser.me/api/portraits/men/' . rand(1, 99) . '.jpg' }}" class="rounded-circle me-3" width="40" height="40" alt="Doctor">
+                            <div>
+                                <h6 class="mb-0">Dr. {{ $doctor->first_name }} {{ $doctor->last_name }}</h6>
+                                <small class="text-muted">{{ $doctor->specialties }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>{{ $doctor->email }}</div>
+                        <small class="text-muted">{{ $doctor->phone }}</small>
+                    </td>
+                    <td>
+                        @foreach (explode(',', $doctor->specialties) as $specialty)
+                            <span class="specialty-badge">{{ trim($specialty) }}</span>
+                        @endforeach
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }}">{{ $doctor->status }}</span>
+                    </td>
+                    <td>
+                        <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-view action-btn">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <form action="{{ route('doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this doctor?')">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center">No doctors found.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 
     <!-- Add Doctor Modal -->
     <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">

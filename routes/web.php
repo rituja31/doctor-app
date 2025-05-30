@@ -8,6 +8,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AdminController;
 
 
+
 // -------------------
 // Home Redirection Based on Role
 // -------------------
@@ -88,6 +89,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');
 
 });
+
+Route::get('/admin', [DoctorController::class, 'index'])->name('doctors.index');
+Route::post('/doctors', [DoctorController::class, 'store'])->name('doctors.store');
+Route::get('/doctors/{id}/edit', [DoctorController::class, 'edit'])->name('edit.page');
+Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // Adjust based on your auth controller
 
 // Admin Edit Page
 Route::get('/edit', function () {

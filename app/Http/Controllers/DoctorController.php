@@ -32,7 +32,7 @@ class DoctorController extends Controller
     public function edit($id)
     {
         $doctor = Doctor::findOrFail($id);
-        return view('edit', compact('doctor')); // Points to resources/views/edit.blade.php
+        return view('edit', compact('doctor'));
     }
 
     public function update(Request $request, $id)
@@ -51,6 +51,12 @@ class DoctorController extends Controller
         $doctor->update($validated);
 
         return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully.');
+    }
+
+    public function show($id)
+    {
+        $doctor = Doctor::findOrFail($id);
+        return view('view', compact('doctor'));
     }
 
     public function destroy($id)

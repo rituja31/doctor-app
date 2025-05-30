@@ -574,22 +574,21 @@
                     <td>
                         <span class="badge bg-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }}">{{ $doctor->status }}</span>
                     </td>
-                    <td>
-        <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
-             <i class="fas fa-edit"></i> Edit
-                       </button>
-                             
-                        <button class="btn btn-sm btn-view action-btn">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                        <form action="{{ route('doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this doctor?')">
-                                <i class="fas fa-trash-alt"></i> Remove
-                            </button>
-                        </form>
-                    </td>
+<td>
+    <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
+        <i class="fas fa-edit"></i> Edit
+    </button>
+    <button onclick="window.location.href='{{ route('doctors.show', $doctor->id) }}'" class="btn btn-sm btn-view action-btn">
+        <i class="fas fa-eye"></i> View
+    </button>
+    <form action="{{ route('doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this doctor?')">
+            <i class="fas fa-trash-alt"></i> Remove
+        </button>
+    </form>
+</td>
                 </tr>
             @empty
                 <tr>

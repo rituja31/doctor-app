@@ -39,22 +39,20 @@ Route::get('/admin', [DoctorController::class, 'index'])->name('doctors.index');
 Route::post('/doctors', [DoctorController::class, 'store'])->name('doctors.store');
 Route::get('/doctors/{id}/edit', [DoctorController::class, 'edit'])->name('edit.page');
 Route::put('/doctors/{id}', [DoctorController::class, 'update'])->name('doctors.update');
+Route::get('/doctors/{id}', [DoctorController::class, 'show'])->name('doctors.show');
 Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
-    // Dashboards
     Route::get('/doctor/dashboard', fn() => view('dashboards.doctor'))->name('doctor.dashboard');
     Route::get('/patient/dashboard', fn() => view('dashboards.patient'))->name('patient.dashboard');
 
-    // Doctor Section
     Route::prefix('doctor')->group(function () {
         Route::get('/calendar', fn() => view('calendar'))->name('doctor.calendar');
         Route::get('/analytics', fn() => view('analytics'))->name('doctor.analytics');
         Route::get('/docprofile', fn() => view('docprofile'))->name('doctor.docprofile');
     });
 
-    // Appointments
     Route::get('/appointment', fn() => view('appointment'))->name('appointment.page');
     Route::post('/appointment', [AppointmentController::class, 'store'])->name('appointment.store');
     Route::get('/appointment/time', fn() => view('time'))->name('appointment.time');
@@ -67,8 +65,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/appointment/complete', fn() => redirect()->route('appointment.complete.show'))->name('appointment.complete');
     Route::get('/appointment/complete', fn() => view('complete'))->name('appointment.complete.show');
     Route::get('/appointments/calendar', fn() => view('appointmentcalender'))->name('appointments.calendar');
-
-    // Patient Extras
     Route::get('/patient/medical-history', fn() => view('medicalhistory'))->name('medical.history');
     Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');
 });

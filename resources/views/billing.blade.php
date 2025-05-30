@@ -199,7 +199,7 @@
         
         <h1>Book Appointment</h1>
         
-        <form action="{{ route('appointment.complete') }}" method="POST">
+        <form action="{{ route('appointment.billing.post') }}" method="POST">
             @csrf
             
             <div class="payment-header required">Select Payment method</div>
@@ -245,10 +245,10 @@
             
             <div class="nav-buttons">
                 <button type="button" class="btn btn-prev" onclick="window.location.href='{{ route('appointment.details') }}'">
-                    &lt; Prev
+                    < Prev
                 </button>
                 <button type="submit" class="btn btn-next">
-                    Next &gt;
+                    Next >
                 </button>
             </div>
         </form>

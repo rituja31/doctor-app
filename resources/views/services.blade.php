@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Doctor Management</title>
+    <title>Admin Dashboard | Service Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -31,7 +31,6 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles */
         .admin-sidebar {
             width: 280px;
             height: 100vh;
@@ -128,14 +127,12 @@
             text-align: center;
         }
 
-        /* Profile Logout Button */
         .profile-logout-btn {
             width: calc(100% - 40px);
             margin: 10px 20px 20px;
             display: flex;
             align-items: center;
-            justify-content: center Ascending
-            center;
+            justify-content: center;
             gap: 8px;
             padding: 8px 12px;
             border-radius: 6px;
@@ -154,7 +151,6 @@
             box-shadow: 0 4px 8px rgba(37, 99, 235, 0.15);
         }
 
-        /* Main Content Styles */
         .main-content {
             margin-left: 280px;
             padding: 30px;
@@ -177,7 +173,7 @@
             font-size: 1.75rem;
         }
 
-        .add-doctor-btn {
+        .add-service-btn {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -186,55 +182,11 @@
             transition: var(--transition);
         }
 
-        .add-doctor-btn:hover {
+        .add-service-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(37, 99, 235, 0.15);
         }
 
-        /* Stats Cards */
-        .stats-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            border: 1px solid rgba(0, 0, 0, 0.03);
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 0 15px;
-            position: relative;
-        }
-
-        .stat-item:not(:last-child):after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 50px;
-            width: 1px;
-            background-color: var(--border-color);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-            line-height: 1.2;
-        }
-
-        .stat-label {
-            color: var(--secondary-color);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        /* Table Styles */
         .table-container {
             background: white;
             border-radius: 12px;
@@ -355,39 +307,12 @@
             background-color: rgba(239, 68, 68, 0.2);
         }
 
-        .specialty-badge {
-            display: inline-block;
-            background-color: #f1f5f9;
-            color: var(--dark-color);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            margin-right: 5px;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
         .badge {
             font-weight: 500;
             padding: 5px 10px;
             font-size: 0.75rem;
         }
 
-        /* Pagination */
-        .pagination .page-item .page-link {
-            font-size: 0.85rem;
-            color: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            margin: 0 3px;
-            border-radius: 6px !important;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        /* Modal Styles */
         .modal-content {
             border-radius: 12px;
             border: none;
@@ -425,7 +350,6 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* Responsive Styles */
         @media (max-width: 992px) {
             .admin-sidebar {
                 width: 250px;
@@ -444,13 +368,6 @@
             .main-content {
                 margin-left: 0;
                 padding: 20px;
-            }
-            .stats-card {
-                flex-direction: column;
-                gap: 25px;
-            }
-            .stat-item:not(:last-child):after {
-                display: none;
             }
             .table-header {
                 flex-direction: column;
@@ -473,7 +390,6 @@
     </style>
 </head>
 <body>
-
     <!-- Sidebar Navigation -->
     <div class="admin-sidebar">
         <div class="admin-profile">
@@ -483,8 +399,6 @@
             <h5 class="admin-name">Admin</h5>
             <p class="admin-email">{{ session('admin_email', 'admin@medicare.com') }}</p>
             <span class="admin-role">Administrator</span>
-            
-            <!-- Logout Button Below Profile -->
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="profile-logout-btn">
@@ -492,10 +406,9 @@
                 </button>
             </form>
         </div>
-
         <div class="nav-menu">
             <div class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="#" class="nav-link">
                     <i class="fas fa-tachometer-alt"></i>
                     Dashboard
                 </a>
@@ -525,7 +438,7 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link active">
                     <i class="fas fa-concierge-bell"></i>
                     Services
                 </a>
@@ -536,145 +449,120 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="page-header">
-            <h1 class="page-title">Doctor Management</h1>
-            <button class="btn btn-primary add-doctor-btn" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
-                <i class="fas fa-plus"></i> Add New Doctor
+            <h1 class="page-title">Service Management</h1>
+            <button class="btn btn-primary add-service-btn" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                <i class="fas fa-plus"></i> Add New Service
             </button>
         </div>
 
-        <!-- Doctors Table -->
+        <!-- Services Table -->
         <div class="table-container">
             <div class="table-header">
-                <h3 class="table-title">All Doctors</h3>
+                <h3 class="table-title">All Services</h3>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" class="form-control" placeholder="Search doctors...">
+                    <input type="text" class="form-control" placeholder="Search services...">
                 </div>
             </div>
-
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Doctor</th>
-                            <th>Contact</th>
-                            <th>Specialties</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($doctors as $doctor)
+                        @forelse ($services as $service)
                             <tr>
+                                <td>{{ $service->name }}</td>
+                                <td>{{ $service->category->name }}</td>
+                                <td>${{ number_format($service->price, 2) }}</td>
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ $doctor->image ?? 'https://randomuser.me/api/portraits/men/' . rand(1, 99) . '.jpg' }}" class="rounded-circle me-3" width="40" height="40" alt="Doctor">
-                                        <div>
-                                            <h6 class="mb-0">Dr. {{ $doctor->first_name }} {{ $doctor->last_name }}</h6>
-                                            <small class="text-muted">{{ $doctor->specialties }}</small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>{{ $doctor->email }}</div>
-                                        <small class="text-muted">{{ $doctor->phone }}</small>
-                                    </td>
-                                    <td>
-                                        @foreach (explode(',', $doctor->specialties) as $specialty)
-                                            <span class="specialty-badge">{{ trim($specialty) }}</span>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }}">{{ $doctor->status }}</span>
-                                    </td>
-                                    <td>
-                                        <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
-                                            <i class="fas fa-edit"></i> Edit
+                                    <span class="badge bg-{{ $service->status == 'Active' ? 'success' : 'danger' }} bg-opacity-10 text-{{ $service->status == 'Active' ? 'success' : 'danger' }}">{{ $service->status }}</span>
+                                </td>
+                                <td>
+                                    <button onclick="window.location.href='{{ route('services.edit', $service->id) }}'" class="btn btn-sm btn-edit action-btn">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button onclick="window.location.href='{{ route('services.show', $service->id) }}'" class="btn btn-sm btn-view action-btn">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <form action="{{ route('services.destroy', $service->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this service?')">
+                                            <i class="fas fa-trash-alt"></i> Remove
                                         </button>
-                                        <button onclick="window.location.href='{{ route('doctors.show', $doctor->id) }}'" class="btn btn-sm btn-view action-btn">
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
-                                        <form action="{{ route('doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this doctor?')">
-                                                <i class="fas fa-trash-alt"></i> Remove
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">No doctors found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No services found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- Add Doctor Modal -->
-            <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addDoctorModalLabel">Add New Doctor</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ route('doctors.store') }}" method="POST">
-                                @csrf
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="firstName" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="firstName" name="first_name" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="lastName" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="lastName" name="last_name" required>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="phone" class="form-label">Phone Number</label>
-                                        <input type="text" class="form-control" id="phone" name="phone" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="specialties" class="form-label">Specialties</label>
-                                    <input type="text" class="form-control" id="specialties" name="specialties" placeholder="e.g. Cardiology, Internal Medicine" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" id="status" name="status">
-                                        <option value="Active" selected>Active</option>
-                                        <option value="On Leave">On Leave</option>
-                                        <option value="Retired">Retired</option>
-                                    </select>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Add Doctor</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
+        <!-- Add Service Modal -->
+        <div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addServiceModalLabel">Add New Service</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('services.store') }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Service Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="category_id" class="form-label">Category</label>
+                                <select class="form-select" id="category_id" name="category_id" required>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price ($)</label>
+                                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="Active" selected>Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Add Service</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-            <script>
-                // You can add your custom JavaScript here
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Initialize tooltips
-                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                        return new bootstrap.Tooltip(tooltipTriggerEl);
-                    });
-                });
-            </script>
-        </body>
-    </html>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>

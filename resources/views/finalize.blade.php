@@ -59,7 +59,6 @@
             padding: 30px;
         }
         
-        /* [Rest of your existing CSS styles remain exactly the same] */
         .progress-steps {
             display: flex;
             justify-content: space-between;
@@ -183,11 +182,10 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="{{ route('patient.dashboard') }}" class="btn-dashboard">Go to Dashboard</a>
-            <div></div> <!-- Empty div for balance if needed -->
+            <div></div>
         </div>
     </nav>
     
-    <!-- [Rest of your HTML remains exactly the same] -->
     <div class="container">
         <div class="progress-steps">
             <div class="step completed">
@@ -217,33 +215,33 @@
         <div class="confirmation-message">
             <h2>Thank you! Your Booking is Completed</h2>
             <p>You have successfully booked an appointment</p>
-            <p>We'll send booking details via an email to you at <span class="highlight">razak@gmail.com</span></p>
+            <p>We'll send booking details via an email to you at <span class="highlight">{{ $finalData['email'] }}</span></p>
         </div>
         
         <div class="booking-details">
             <div class="detail-row">
                 <span class="detail-label">Category</span>
-                <span class="detail-value">Chair Massage</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Service Fees</span>
-                <span class="detail-value">$10</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Appointment Date:</span>
-                <span class="detail-value">May 29, 2025</span>
+                <span class="detail-value">{{ $finalData['category_name'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Service</span>
-                <span class="detail-value">Chair Massage</span>
+                <span class="detail-value">{{ $finalData['service_name'] }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Service Fees</span>
+                <span class="detail-value">${{ number_format($finalData['service_fees'], 2) }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Employee</span>
-                <span class="detail-value">Sddemo Employee</span>
+                <span class="detail-value">{{ $finalData['employee_name'] }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Appointment Date:</span>
+                <span class="detail-value">{{ $finalData['appointment_date'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Appointment Time:</span>
-                <span class="detail-value">01:00 AM-01:10 AM</span>
+                <span class="detail-value">{{ $finalData['appointment_time'] }}</span>
             </div>
         </div>
         

@@ -174,58 +174,79 @@
 
         <h1>Book Appointment</h1>
 
-        <div class="form-container">
-            <div class="form-group">
-                <label for="category" class="required">Category</label>
-                <select id="category" name="category">
-                    <option value="">Select Category</option>
-                    <option value="1" selected>Hair Services</option>
-                    <option value="2">Skin Care</option>
-                    <option value="3">Massage</option>
-                    <option value="4">Nail Care</option>
-                </select>
-            </div>
+        <form action="{{ route('appointment.store') }}" method="POST">
+            @csrf
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="category" class="required">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="service" class="required">Service</label>
-                <select id="service" name="service">
-                    <option value="">Select Service</option>
-                    <option value="1" selected>Haircut</option>
-                    <option value="2">Coloring</option>
-                    <option value="3">Styling</option>
-                    <option value="4">Treatment</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="service" class="required">Service</label>
+                    <select id="service" name="service" required>
+                        <option value="">Select Service</option>
+                        @foreach($services as $service)
+                            <option value="{{ $service->id }}" data-category="{{ $service->category_id }}">{{ $service->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="employee" class="required">Employee</label>
-                <select id="employee" name="employee">
-                    <option value="">Select Employee</option>
-                    <option value="1" selected>Kevin D'costa</option>
-                    <option value="2">Sarah Fernandis</option>
-                    <option value="3">Shruti Kamat</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="employee" class="required">Employee</label>
+                    <select id="employee" name="employee" required>
+                        <option value="">Select Employee</option>
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="appointment_type" class="required">Appointment Type</label>
-                <select id="appointment_type" name="appointment_type">
-                    <option value="">Select Type</option>
-                    <option value="online">Online</option>
-                    <option value="offline">Offline</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="appointment_type" class="required">Appointment Type</label>
+                    <select id="appointment_type" name="appointment_type" required>
+                        <option value="">Select Type</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="date" class="required">Date</label>
-                <input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>">
-            </div>
+                <div class="form-group">
+                    <label for="date" class="required">Date</label>
+                    <input type="date" id="date" name="date" value="{{ $today }}" min="{{ $today }}" required>
+                </div>
 
-            <div class="button-group">
-                <button onclick="window.location.href='{{ route('patient.dashboard') }}'" class="btn-back">&lt; Back</button>
-                <button onclick="window.location.href='{{ route('appointment.time') }}'" class="btn-next">Next &gt;</button>
+                <div class="button-group">
+                    <button type="button" onclick="window.location.href='{{ route('patient.dashboard') }}'" class="btn-back">< Back</button>
+                    <button type="submit" class="btn-next">Next ></button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
+
+    <script>
+        // Optional: Add JavaScript to filter services based on selected category
+        document.getElementById('category').addEventListener('change', function() {
+            const categoryId = this.value;
+            const serviceSelect = document.getElementById('service');
+            const options = serviceSelect.querySelectorAll('option');
+
+            options.forEach(option => {
+                if (option.value === "") {
+                    return; // Skip the "Select Service" option
+                }
+                const optionCategoryId = option.getAttribute('data-category');
+                option.style.display = (categoryId === "" || optionCategoryId === categoryId) ? 'block' : 'none';
+                if (option.style.display === 'none' && option.selected) {
+                    serviceSelect.value = "";
+                }
+            });
+        });
+    </script>
 </body>
 </html>

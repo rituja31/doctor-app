@@ -163,40 +163,41 @@
         <div class="notice">
             Please confirm your appointment booking details once before proceed.
             <br><br>
-            We'll send booking details via an email to you at <span class="highlight">razak@gmail.com</span>
+            We'll send booking details via an email to you at <span class="highlight">{{ $appointment['email'] }}</span>
         </div>
         
         <div class="details-container">
             <div class="detail-row">
                 <span class="detail-label">Category</span>
-                <span class="detail-value">Odontology</span>
+                <span class="detail-value">{{ $category->name }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Service</span>
-                <span class="detail-value">Tooth Extraction</span>
+                <span class="detail-value">{{ $service->name }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Service Fees</span>
-                <span class="detail-value">$10</span>
+                <span class="detail-value">${{ number_format($appointment['service_fees'], 2) }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Employee</span>
-                <span class="detail-value">Michael Jackson</span>
+                <span class="detail-value">{{ $employee->name }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Appointment Date:</span>
-                <span class="detail-value">May 30, 2025</span>
+                <span class="detail-value">{{ $appointment['appointment_date'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Appointment Time:</span>
-                <span class="detail-value">01:45 PM-02:20 PM</span>
+                <span class="detail-value">{{ $appointment['appointment_time'] }}</span>
             </div>
         </div>
         
-        <form action="{{ route('appointment.finalize') }}" method="GET">
+        <form action="{{ route('appointment.complete') }}" method="POST">
+            @csrf
             <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                 <button type="button" style="padding: 10px 25px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 6px; cursor: pointer;" onclick="window.location.href='{{ route('appointment.billing') }}'">
-                    &lt; Back to Billing
+                    < Back to Billing
                 </button>
                 <button type="submit" style="padding: 10px 25px; background: #4a6cf7; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
                     Book Appointment

@@ -206,52 +206,52 @@
         <h1>Book Appointment</h1>
         
         <div class="summary">
-            <p>You've selected <strong>Tooth Extraction</strong> service from <strong>01:45 PM-02:20 PM</strong> on <strong>May 30, 2025</strong>. You'll be charged <strong>$10</strong>.</p>
+            <p>You've selected <strong>{{ $service->name }}</strong> service from <strong>{{ $appointment['appointment_time'] }}</strong> on <strong>{{ $appointment['appointment_date'] }}</strong>. You'll be charged <strong>${{ number_format($appointment['service_fees'], 2) }}</strong>.</p>
             <p>Please provide your details in the form below to proceed with booking.</p>
         </div>
         
-        <form action="{{ route('appointment.billing') }}" method="POST">
+        <form action="{{ route('appointment.details.post') }}" method="POST">
             @csrf
             
             <div class="form-group">
                 <label class="required">First Name</label>
-                <input type="text" value="Fazak" required>
+                <input type="text" name="first_name" required>
             </div>
             
             <div class="form-group">
                 <label class="required">Last Name</label>
-                <input type="text" value="nadaf" required>
+                <input type="text" name="last_name" required>
             </div>
             
             <div class="row">
                 <div class="col">
                     <div class="form-group">
                         <label class="required">Phone</label>
-                        <input type="tel" value="9145567879" required>
-                        <div class="validation">✓ Phone Number Valid</div>
+                        <input type="tel" name="phone" required>
+                        <div class="validation"></div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label class="required">Email</label>
-                        <input type="email" value="razak@gmail.com" required>
+                        <input type="email" name="email" required>
                     </div>
                 </div>
             </div>
             
             <div class="form-group">
                 <label>Details</label>
-                <textarea rows="3">Uykuykuyky</textarea>
+                <textarea name="details" rows="3"></textarea>
             </div>
             
             <div class="divider"></div>
             
             <div class="nav-buttons">
                 <button type="button" class="btn btn-prev" onclick="window.location.href='{{ route('appointment.time') }}'">
-                    &lt; Prev
+                    < Prev
                 </button>
-                <button onclick="window.location.href='{{ route('appointment.details') }}'" class="btn-next">
-                    Next &gt;
+                <button type="submit" class="btn btn-next">
+                    Next >
                 </button>
             </div>
         </form>

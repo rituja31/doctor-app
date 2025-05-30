@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Time Slot</title>
     <style>
-        /* [Keep all the CSS from the previous time slot implementation] */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -191,66 +190,29 @@
         <h1>Book Appointment</h1>
         
         <div class="service-info">
-            Below you can find list of available time slots for <strong>Tooth Extraction</strong> by <strong>Sanad Sanad</strong>
+            Below you can find list of available time slots for <strong>{{ $service->name }}</strong> by <strong>{{ $employee->name }}</strong>
         </div>
         
         <p class="required">Select time slot for booking</p>
         
-        <form action="{{ route('appointment.details') }}" method="GET">
+        <form action="{{ route('appointment.store-time') }}" method="POST">
             @csrf
             
             <div class="time-slots">
-                <div class="time-slot">
-                    <input type="radio" id="time1" name="appointment_time" value="08:00 AM - 08:35 AM" required>
-                    <label for="time1">08:00 AM - 08:35 AM</label>
-                </div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time2" name="appointment_time" value="10:10 AM - 10:45 AM">
-                    <label for="time2">10:10 AM - 10:45 AM</label>
-                </div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time3" name="appointment_time" value="12:30 PM - 01:05 PM">
-                    <label for="time3">12:30 PM - 01:05 PM</label>
-                </div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time4" name="appointment_time" value="02:40 PM - 03:15 PM">
-                    <label for="time4">02:40 PM - 03:15 PM</label>
-                </div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time5" name="appointment_time" value="04:50 PM - 05:25 PM">
-                    <label for="time5">04:50 PM - 05:25 PM</label>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time6" name="appointment_time" value="09:05 AM - 09:40 AM">
-                    <label for="time6">09:05 AM - 09:40 AM</label>
-                </div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time7" name="appointment_time" value="11:15 AM - 11:50 AM">
-                    <label for="time7">11:15 AM - 11:50 AM</label>
-                </div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time8" name="appointment_time" value="01:35 PM - 02:10 PM">
-                    <label for="time8">01:35 PM - 02:10 PM</label>
-                </div>
-                
-                <div class="time-slot">
-                    <input type="radio" id="time9" name="appointment_time" value="03:45 PM - 04:20 PM">
-                    <label for="time9">03:45 PM - 04:20 PM</label>
-                </div>
+                @foreach($timeSlots as $index => $slot)
+                    <div class="time-slot">
+                        <input type="radio" id="time{{ $index + 1 }}" name="appointment_time" value="{{ $slot }}" required>
+                        <label for="time{{ $index + 1 }}">{{ $slot }}</label>
+                    </div>
+                    @if($index == 4)
+                        <div class="divider"></div>
+                    @endif
+                @endforeach
             </div>
             
             <div class="nav-buttons">
                 <button type="button" class="btn btn-prev" onclick="window.location.href='{{ route('appointment.page') }}'">
-                    &lt; Prev
+                    < Prev
                 </button>
                 <button type="submit" class="btn btn-next">
                     Next >

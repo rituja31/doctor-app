@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Auth;
 
 // Home Redirection Based on Role
 Route::get('/', function () {
@@ -53,17 +53,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/docprofile', fn() => view('docprofile'))->name('doctor.docprofile');
     });
 
-    Route::get('/appointment', fn() => view('appointment'))->name('appointment.page');
-    Route::post('/appointment', [AppointmentController::class, 'store'])->name('appointment.store');
-    Route::get('/appointment/time', fn() => view('time'))->name('appointment.time');
+    // Appointment Routes
+    Route::get('/appointment', [AppointmentController::class, 'showAppointmentPage'])->name('appointment.page');
+    Route::post('/appointment', [AppointmentController::class, 'storeAppointment'])->name('appointment.store');
+    Route::get('/appointment/time', [AppointmentController::class, 'showTimePage'])->name('appointment.time');
     Route::post('/appointment/time', [AppointmentController::class, 'storeTime'])->name('appointment.store-time');
-    Route::get('/appointment/details', fn() => view('details'))->name('appointment.details');
-    Route::get('/appointment/billing', fn() => view('billing'))->name('appointment.billing');
-    Route::post('/appointment/billing', fn() => redirect()->route('appointment.billing'))->name('appointment.billing.post');
-    Route::get('/appointment/finalize', fn() => view('finalize'))->name('appointment.finalize');
-    Route::post('/appointment/finalize', fn() => redirect()->route('appointment.complete.show'))->name('appointment.finalize.post');
-    Route::post('/appointment/complete', fn() => redirect()->route('appointment.complete.show'))->name('appointment.complete');
-    Route::get('/appointment/complete', fn() => view('complete'))->name('appointment.complete.show');
+    Route::get('/appointment/details', [AppointmentController::class, 'showDetailsPage'])->name('appointment.details');
+    Route::post('/appointment/details', [AppointmentController::class, 'storeDetails'])->name('appointment.details.post');
+    Route::get('/appointment/billing', [AppointmentController::class, 'showBillingPage'])->name('appointment.billing');
+    Route::post('/appointment/billing', [AppointmentController::class, 'storeBilling'])->name('appointment.billing.post');
+    Route::get('/appointment/complete', [AppointmentController::class, 'showCompletePage'])->name('appointment.complete.show');
+    Route::post('/appointment/complete', [AppointmentController::class, 'finalize'])->name('appointment.complete');
+    Route::get('/appointment/finalize', [AppointmentController::class, 'showFinalizePage'])->name('appointment.finalize.show');
     Route::get('/appointments/calendar', fn() => view('appointmentcalender'))->name('appointments.calendar');
     Route::get('/patient/medical-history', fn() => view('medicalhistory'))->name('medical.history');
     Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');

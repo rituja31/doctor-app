@@ -9,11 +9,10 @@ class DoctorController extends Controller
 {
     public function index()
     {
-        $doctors = Doctor::all(); // Fetch all doctors from the database
-        return view('dashboards.admin', compact('doctors')); // Corrected view path
+        $doctors = Doctor::all();
+        return view('dashboards.admin', compact('doctors'));
     }
 
-    // Rest of the methods (store, edit, destroy) remain unchanged
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -33,7 +32,25 @@ class DoctorController extends Controller
     public function edit($id)
     {
         $doctor = Doctor::findOrFail($id);
-        return view('doctors.edit', compact('doctor')); // Ensure this view exists
+        return view('edit', compact('doctor')); // Points to resources/views/edit.blade.php
+    }
+
+    public function update(Request $request, $id)
+    {
+        $doctor = Doctor::findOrFail($id);
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
+            'phone' => 'required|string|max:20',
+            'specialties' => 'required|string',
+            'status' => 'required|in:Active,On Leave,Retired',
+        ]);
+
+        $doctor->update($validated);
+
+        return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully.');
     }
 
     public function destroy($id)

@@ -575,9 +575,10 @@
                         <span class="badge bg-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }}">{{ $doctor->status }}</span>
                     </td>
                     <td>
-                        <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
+        <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
+             <i class="fas fa-edit"></i> Edit
+                       </button>
+                             
                         <button class="btn btn-sm btn-view action-btn">
                             <i class="fas fa-eye"></i> View
                         </button>

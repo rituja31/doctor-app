@@ -62,52 +62,21 @@
             display: flex;
             flex-direction: column;
         }
-        .logo {
-            display: flex;
-            align-items: center;
-            padding: 0 1.5rem 1.5rem;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        .logo-icon {
-            background-color: var(--primary);
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 0.75rem;
-            font-size: 1.25rem;
-        }
-        .logo-text h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--dark);
-        }
-        .logo-text span {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            display: block;
-        }
-        
         /* Doctor Profile in Sidebar */
         .doctor-profile {
             padding: 1.5rem;
-            margin-top: 0;
             border-bottom: 1px solid var(--gray-200);
             display: flex;
             flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
-        
         .doctor-avatar-container {
             display: flex;
+            flex-direction: column;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
         .doctor-avatar {
             width: 60px;
             height: 60px;
@@ -117,70 +86,63 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1rem;
             font-weight: 600;
             font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
-        
         .doctor-info {
-            flex: 1;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        
         .doctor-name {
             font-weight: 600;
             margin: 0 0 0.25rem;
             color: var(--dark);
             font-size: 1rem;
         }
-        
         .doctor-specialty {
             color: var(--gray-600);
             font-size: 0.8rem;
             margin: 0;
         }
-        
-/* Add this to your existing styles */
-.profile-actions {
-    padding: 0 1rem; /* Match the nav-menu padding */
-    margin-top: 1rem;
-}
-
-.profile-link {
-    display: flex;
-    align-items: center;
-    color: var(--gray-700);
-    text-decoration: none;
-    font-size: 0.875rem;
-    padding: 0.75rem 1rem; /* Match nav-link padding */
-    transition: color 0.2s ease;
-    border-radius: var(--border-radius);
-}
-
-.profile-link:hover {
-    background-color: var(--primary-light);
-    color: var(--primary);
-}
-
-.profile-link i {
-    margin-right: 0.75rem;
-    width: 20px;
-    text-align: center;
-    font-size: 1rem; /* Match nav-link icon size */
-}
-
-.logout-link {
-    color: var(--danger);
-    margin-top: 0.5rem;
-    border-top: 1px solid var(--gray-200);
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem; /* Added to match other items */
-}
-
-/* Remove the margin from the form */
-#logout-form {
-    margin: 0;
-}
+        .profile-actions {
+            padding: 0 1rem;
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .profile-link {
+            display: flex;
+            align-items: center;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 0.75rem 1rem;
+            transition: color 0.2s ease;
+            border-radius: var(--border-radius);
+        }
+        .profile-link:hover {
+            background-color: var(--primary-light);
+            color: var(--gray-900);
+        }
+        .profile-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .logout-link {
+            color: var(--danger);
+            margin-top: 0.5rem;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+        #logout-form {
+            margin: 0;
+        }
         .nav-menu {
             padding: 0 1rem;
             flex: 1;
@@ -201,11 +163,10 @@
         }
         .nav-link:hover {
             background-color: var(--primary-light);
-            color: var(--primary);
+            color: var(--gray-900);
         }
         .nav-link.active {
-            background-color: var(--primary-light);
-            color: var(--primary);
+            color: var(--gray-900);
             font-weight: 600;
         }
         .nav-link i {
@@ -254,82 +215,6 @@
             margin: 0.5rem 0 0;
             font-weight: 400;
         }
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .card {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-lg);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--gray-700);
-        }
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-        }
-        .card-icon.appointments {
-            background-color: var(--primary);
-        }
-        .card-icon.patients {
-            background-color: var(--success);
-        }
-        .card-icon.messages {
-            background-color: var(--info);
-        }
-        .stats-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
-            color: var(--dark);
-        }
-        .stats-label {
-            color: var(--gray-600);
-            font-size: 0.875rem;
-        }
-        .stats-change {
-            display: flex;
-            align-items: center;
-            font-size: 0.75rem;
-            margin-top: 0.5rem;
-        }
-        .stats-change.positive {
-            color: var(--success);
-        }
-        .stats-change.negative {
-            color: var(--danger);
-        }
-        .stats-change i {
-            margin-right: 0.25rem;
-        }
         /* Calendar Container */
         .calendar-container {
             margin-bottom: 2rem;
@@ -358,18 +243,6 @@
             background-color: var(--primary);
             border: 1px solid var(--primary);
             color: var(--white);
-        }
-        .btn-primary:hover {
-            background-color: #2a75e6;
-            border-color: #2a75e6;
-        }
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--gray-300);
-            color: var(--gray-700);
-        }
-        .btn-outline:hover {
-            background-color: var(--gray-100);
         }
         /* Calendar */
         #calendar {
@@ -474,9 +347,6 @@
             .main-content {
                 margin-left: 0;
             }
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
             .header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -488,41 +358,28 @@
                 cursor: pointer;
             }
         }
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .card {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
     </style>
 </head>
 <body>
 <aside class="sidebar">
-    <div class="logo">
-        <div class="logo-icon">
-            <i class="fas fa-heartbeat"></i>
-        </div>
-        <div class="logo-text">
-            <h2>MediCare Pro</h2>
-            <span>Doctor Portal</span>
-        </div>
-    </div>
-    
-    <!-- Doctor Profile in Sidebar -->
     <div class="doctor-profile">
         <div class="doctor-avatar-container">
-            <div class="doctor-avatar">DR</div>
+            <div class="doctor-avatar">
+                <?php 
+                $name = Auth::user()->name;
+                $initials = '';
+                $nameParts = explode(' ', $name);
+                foreach ($nameParts as $part) {
+                    $initials .= strtoupper(substr($part, 0, 1));
+                }
+                echo substr($initials, 0, 2);
+                ?>
+            </div>
             <div class="doctor-info">
                 <h3 class="doctor-name">Dr. {{ Auth::user()->name }}</h3>
                 <p class="doctor-specialty">Cardiologist</p>
             </div>
         </div>
-        
         <div class="profile-actions">
             <a href="{{ route('doctor.docprofile') }}" class="nav-link {{ request()->routeIs('doctor.docprofile') ? 'active' : '' }}">
                 <i class="fas fa-user"></i> View Profile
@@ -530,13 +387,11 @@
             <a class="profile-link logout-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </div>
-        
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
     </div>
-    
     <nav class="nav-menu">
         <div class="nav-item">
             <a href="{{ route('doctor.dashboard') }}" class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
@@ -544,7 +399,6 @@
                 Dashboard
             </a>
         </div>
-        
         <div class="nav-item">
             <a href="{{ route('doctor.calendar') }}" class="nav-link {{ request()->routeIs('doctor.calendar') ? 'active' : '' }}">
                 <i class="fas fa-calendar-check"></i>
@@ -552,7 +406,6 @@
                 <span class="badge">5</span>
             </a>
         </div>
-        
         <div class="nav-item">
             <a href="#" class="nav-link">
                 <i class="fas fa-user-injured"></i>
@@ -565,7 +418,6 @@
                 Analytics
             </a>
         </div>
-       
     </nav>
 </aside>
 <main class="main-content">
@@ -580,55 +432,10 @@
             </button>
         </div>
     </header>
-    <div class="dashboard-grid">
-        <a href="{{('calendar') }}" class="card" style="text-decoration: none; color: inherit;">
-            <div class="card-header">
-                <h3 class="card-title">Today's Appointments</h3>
-                <div class="card-icon appointments">
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-            </div>
-            <div class="stats-value">5</div>
-            <div class="stats-label">Scheduled for today</div>
-            <div class="stats-change positive">
-                <i class="fas fa-arrow-up"></i> 2 from yesterday
-            </div>
-        </a>
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Active Patients</h3>
-                <div class="card-icon patients">
-                    <i class="fas fa-user-friends"></i>
-                </div>
-            </div>
-            <div class="stats-value">128</div>
-            <div class="stats-label">Under your care</div>
-            <div class="stats-change positive">
-                <i class="fas fa-arrow-up"></i> 8 this month
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Unread Messages</h3>
-                <div class="card-icon messages">
-                    <i class="fas fa-envelope"></i>
-                </div>
-            </div>
-            <div class="stats-value">3</div>
-            <div class="stats-label">Require attention</div>
-            <div class="stats-change negative">
-                <i class="fas fa-arrow-down"></i> 2 since yesterday
-            </div>
-        </div>
-    </div>
     <div class="calendar-container">
         <div class="section-header">
             <h2 class="section-title">Appointment Calendar</h2>
-            <div class="section-actions">
-                <button class="btn btn-primary">
-                    <i class="fas fa-plus"></i> New Appointment
-                </button>
-            </div>
+            <div class="section-actions"></div>
         </div>
         <div id="calendar"></div>
         <div class="booking-legend">
@@ -808,13 +615,12 @@
                 }
             }
         });
-        // Period buttons functionality
+        // Period buttons
         const periodButtons = document.querySelectorAll('.period-btn');
         periodButtons.forEach(button => {
             button.addEventListener('click', () => {
                 periodButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                // Here you would update the chart data based on the selected period
             });
         });
     });

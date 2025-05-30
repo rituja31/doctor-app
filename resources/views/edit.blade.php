@@ -68,7 +68,7 @@
         }
 
         .form-group label {
-            display: block;
+            display block;
             margin-bottom: 8px;
             font-weight: 500;
         }
@@ -126,61 +126,98 @@
         .btn-secondary:hover {
             background-color: #f5f7fa;
         }
+
+        .invalid-feedback {
+            color: #e3342f;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .is-invalid {
+            border-color: #e3342f;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="edit-form-container">
         <div class="form-header">
-            <h2>Dr. Nehal Dessai Cardiojogit</h2>
-            <span class="status-badge">Active</span>
+            <h2>Dr. {{ $doctor->first_name }} {{ $doctor->last_name }}</h2>
+            <span class="status-badge">{{ $doctor->status }}</span>
         </div>
 
-        <form class="form-grid">
+        @if (session('success'))
+            <div class="alert-success">{{ session('success') }}</div>
+        @endif
+
+        <form class="form-grid" action="{{ route('doctors.update', $doctor->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
             <div class="form-group">
                 <label for="firstName">First Name</label>
-                <input type="text" id="firstName" value="Nehal">
+                <input type="text" id="firstName" name="first_name" value="{{ old('first_name', $doctor->first_name) }}" class="form-control @error('first_name') is-invalid @enderror" required>
+                @error('first_name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" value="Dessai Cardiojogit">
+                <input type="text" id="lastName" name="last_name" value="{{ old('last_name', $doctor->last_name) }}" class="form-control @error('last_name') is-invalid @enderror" required>
+                @error('last_name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" value="nd@gmail.com">
+                <input type="email" id="email" name="email" value="{{ old('email', $doctor->email) }}" class="form-control @error('email') is-invalid @enderror" required>
+                @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="phone">Phone</label>
-                <input type="tel" id="phone" value="+1 (553) 123-4567">
+                <input type="tel" id="phone" name="phone" value="{{ old('phone', $doctor->phone) }}" class="form-control @error('phone') is-invalid @enderror" required>
+                @error('phone')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
-                <label for="specialty1">Primary Specialty</label>
-                <select id="specialty1">
-                    <option value="cardiology" selected>Cardiology</option>
-                    <option value="neurology">Neurology</option>
-                    <option value="orthopedics">Orthopedics</option>
-                    <option value="pediatrics">Pediatrics</option>
-                    <option value="surgery">Surgery</option>
-                </select>
+                <label for="specialties">Specialties</label>
+                <input type="text" id="specialties" name="specialties" value="{{ old('specialties', $doctor->specialties) }}" class="form-control @error('specialties') is-invalid @enderror" placeholder="e.g. Cardiology, Internal Medicine" required>
+                @error('specialties')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
-                <label for="specialty2">Secondary Specialty</label>
-                <select id="specialty2">
-                    <option value="internal-medicine" selected>Internal Medicine</option>
-                    <option value="sports-medicine">Sports Medicine</option>
-                    <option value="pediatrics">Pediatrics</option>
+                <label for="status">Status</label>
+                <select id="status" name="status" class="form-control @error('status') is-invalid @enderror" required>
+                    <option value="Active" {{ $doctor->status == 'Active' ? 'selected' : '' }}>Active</option>
+                    <option value="On Leave" {{ $doctor->status == 'On Leave' ? 'selected' : '' }}>On Leave</option>
+                    <option value="Retired" {{ $doctor->status == 'Retired' ? 'selected' : '' }}>Retired</option>
                 </select>
+                @error('status')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{{ route('doctors.index') }}" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
-
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <button type="button" onclick="window.location.href='{{ route('admin.dashboard') }}'" class="btn btn-sm btn-edit action-btn">Cancel</button>
-        </div>
     </div>
 </body>
 </html>

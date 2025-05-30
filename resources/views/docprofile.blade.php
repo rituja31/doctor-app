@@ -423,11 +423,6 @@
             color: var(--dark);
         }
         
-        .bio-text {
-            line-height: 1.7;
-            color: var(--gray-700);
-        }
-        
         /* Modal Styles */
         .modal {
             display: none;
@@ -720,13 +715,6 @@
                 <div class="profile-content">
                     <div class="profile-main">
                         <section class="profile-section">
-                            <h3 class="section-title">About Me</h3>
-                            <div class="bio-text">
-                                <p>Dr. {{ Auth::user()->name }} is a board-certified orthopedic surgeon with over 12 years of experience in treating musculoskeletal disorders. He completed his residency at AIIMS Delhi and specializes in joint replacement surgeries.</p>
-                            </div>
-                        </section>
-                        
-                        <section class="profile-section">
                             <h3 class="section-title">Professional Information</h3>
                             <div class="info-grid">
                                 <div class="info-item">
@@ -747,10 +735,6 @@
                                     <div class="info-label">Phone</div>
                                     <div class="info-value">+91 9876543210</div>
                                 </div>
-                                <div class="info-item">
-                                    <div class="info-label">Clinic Address</div>
-                                    <div class="info-value">154, Bannerghatta Road, Bengaluru, Karnataka 560076</div>
-                                </div>
                             </div>
                         </section>
                     </div>
@@ -765,7 +749,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Doctor Profile</h5>
-                    <button type="button" class="btn-close" onclick="closeEditModal()">&times;</button>
+                    <button type="button" class="btn-close" onclick="closeEditModal()">×</button>
                 </div>
                 <div class="modal-body">
                     <form id="editDoctorForm">
@@ -802,14 +786,14 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="editBio" class="form-label">Brief Biography</label>
-                            <textarea class="form-control" id="editBio" rows="3">Dr. John Doe is a board-certified orthopedic surgeon with over 12 years of experience in treating musculoskeletal disorders. He completed his residency at AIIMS Delhi and specializes in joint replacement surgeries.</textarea>
-                        </div>
                         <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="editAddress" class="form-label">Clinic Address</label>
-                                <input type="text" class="form-control" id="editAddress" value="154, Bannerghatta Road, Bengaluru, Karnataka 560076">
+                            <div class="col-md-6">
+                                <label for="editPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="editPassword">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editConfirmPassword" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="editConfirmPassword">
                             </div>
                         </div>
                     </form>
@@ -832,6 +816,14 @@
         }
         
         function saveDoctorProfile() {
+            const password = document.getElementById('editPassword').value;
+            const confirmPassword = document.getElementById('editConfirmPassword').value;
+            
+            if (password && password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
             // Here you would typically save the data via AJAX
             alert('Profile changes saved!');
             closeEditModal();

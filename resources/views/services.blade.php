@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +61,7 @@
             align-items: center;
             justify-content: center;
             color: var(--primary-color);
-            font-size: 2rem;
+            font csupersize: 2rem;
             margin: 0 auto 15px;
             transition: var(--transition);
         }
@@ -277,26 +278,6 @@
             transform: translateY(-1px);
         }
 
-        .btn-edit {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--primary-color);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-edit:hover {
-            background-color: rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-view {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .btn-view:hover {
-            background-color: rgba(16, 185, 129, 0.2);
-        }
-
         .btn-delete {
             background-color: rgba(239, 68, 68, 0.1);
             color: var(--danger-color);
@@ -305,12 +286,6 @@
 
         .btn-delete:hover {
             background-color: rgba(239, 68, 68, 0.2);
-        }
-
-        .badge {
-            font-weight: 500;
-            padding: 5px 10px;
-            font-size: 0.75rem;
         }
 
         .modal-content {
@@ -455,6 +430,14 @@
             </button>
         </div>
 
+        <!-- Success Message -->
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <!-- Services Table -->
         <div class="table-container">
             <div class="table-header">
@@ -470,8 +453,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Category</th>
-                            <th>Price</th>
-                            <th>Status</th>
+                            <th>Fees</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -480,17 +462,8 @@
                             <tr>
                                 <td>{{ $service->name }}</td>
                                 <td>{{ $service->category->name }}</td>
-                                <td>${{ number_format($service->price, 2) }}</td>
+                                <td>{{ number_format($service->fees, 2) }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $service->status == 'Active' ? 'success' : 'danger' }} bg-opacity-10 text-{{ $service->status == 'Active' ? 'success' : 'danger' }}">{{ $service->status }}</span>
-                                </td>
-                                <td>
-                                    <button onclick="window.location.href='{{ route('services.edit', $service->id) }}'" class="btn btn-sm btn-edit action-btn">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button onclick="window.location.href='{{ route('services.show', $service->id) }}'" class="btn btn-sm btn-view action-btn">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
                                     <form action="{{ route('services.destroy', $service->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -502,7 +475,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">No services found.</td>
+                                <td colspan="4" class="text-center">No services found.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -523,26 +496,30 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="name" class="form-label">Service Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="category_id" class="form-label">Category</label>
                                 <select class="form-select" id="category_id" name="category_id" required>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
                                     @endforeach
                                 </select>
+                                @error('category_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="price" class="form-label">Price ($)</label>
-                                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" id="status" name="status">
-                                    <option value="Active" selected>Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
+                                <label for="fees" class="form-label">Fees</label>
+                                <input type="number" class="form-control" id="fees" name="fees" step="0.01" min="0" value="{{ old('fees') }}" required>
+                                @error('fees')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Add Service</button>

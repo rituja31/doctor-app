@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Auth;
 
 // Home Redirection Based on Role
@@ -69,3 +71,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/patient/medical-history', fn() => view('medicalhistory'))->name('medical.history');
     Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');
 });
+
+// Category Routes
+Route::resource('categories', CategoryController::class);
+
+// Service Routes
+Route::get('/services', [ServiceController::class, 'index'])->name('services');
+Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');

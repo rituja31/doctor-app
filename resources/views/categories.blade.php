@@ -277,26 +277,6 @@
             transform: translateY(-1px);
         }
 
-        .btn-edit {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--primary-color);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-edit:hover {
-            background-color: rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-view {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .btn-view:hover {
-            background-color: rgba(16, 185, 129, 0.2);
-        }
-
         .btn-delete {
             background-color: rgba(239, 68, 68, 0.1);
             color: var(--danger-color);
@@ -305,12 +285,6 @@
 
         .btn-delete:hover {
             background-color: rgba(239, 68, 68, 0.2);
-        }
-
-        .badge {
-            font-weight: 500;
-            padding: 5px 10px;
-            font-size: 0.75rem;
         }
 
         .modal-content {
@@ -469,8 +443,6 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Description</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -478,17 +450,7 @@
                         @forelse ($categories as $category)
                             <tr>
                                 <td>{{ $category->name }}</td>
-                                <td>{{ $category->description }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $category->status == 'Active' ? 'success' : 'danger' }} bg-opacity-10 text-{{ $category->status == 'Active' ? 'success' : 'danger' }}">{{ $category->status }}</span>
-                                </td>
-                                <td>
-                                    <button onclick="window.location.href='{{ route('categories.edit', $category->id) }}'" class="btn btn-sm btn-edit action-btn">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button onclick="window.location.href='{{ route('categories.show', $category->id) }}'" class="btn btn-sm btn-view action-btn">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
                                     <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -500,7 +462,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">No categories found.</td>
+                                <td colspan="2" class="text-center">No categories found.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -522,17 +484,6 @@
                             <div class="mb-3">
                                 <label for="name" class="form-label">Category Name</label>
                                 <input type="text" class="form-control" id="name" name="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" id="status" name="status">
-                                    <option value="Active" selected>Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Add Category</button>

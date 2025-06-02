@@ -134,8 +134,7 @@
             margin: 10px 20px 20px;
             display: flex;
             align-items: center;
-            justify-content: center Ascending
-            center;
+            justify-content: center;
             gap: 8px;
             padding: 8px 12px;
             border-radius: 6px;
@@ -519,13 +518,13 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ url('/categories') }}" class="nav-link">
                     <i class="fas fa-tags"></i>
                     Categories
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ url('/services') }}" class="nav-link">
                     <i class="fas fa-concierge-bell"></i>
                     Services
                 </a>

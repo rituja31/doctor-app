@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -56,20 +57,17 @@ Route::middleware('auth')->group(function () {
     });
 
     // Appointment Routes
+   Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/appointment', [AppointmentController::class, 'showAppointmentPage'])->name('appointment.page');
-    Route::post('/appointment', [AppointmentController::class, 'storeAppointment'])->name('appointment.store');
-    Route::get('/appointment/time', [AppointmentController::class, 'showTimePage'])->name('appointment.time');
+    Route::post('/appointment', [AppointmentController::class, 'store'])->name('appointment.store');
+    Route::get('/appointment/time', [AppointmentController::class, 'showTimeForm'])->name('appointment.time');
     Route::post('/appointment/time', [AppointmentController::class, 'storeTime'])->name('appointment.store-time');
-    Route::get('/appointment/details', [AppointmentController::class, 'showDetailsPage'])->name('appointment.details');
+    Route::get('/appointment/details', [AppointmentController::class, 'showDetailsForm'])->name('appointment.details');
     Route::post('/appointment/details', [AppointmentController::class, 'storeDetails'])->name('appointment.details.post');
-    Route::get('/appointment/billing', [AppointmentController::class, 'showBillingPage'])->name('appointment.billing');
+    Route::get('/appointment/billing', [AppointmentController::class, 'showBillingForm'])->name('appointment.billing');
     Route::post('/appointment/billing', [AppointmentController::class, 'storeBilling'])->name('appointment.billing.post');
-    Route::get('/appointment/complete', [AppointmentController::class, 'showCompletePage'])->name('appointment.complete.show');
-    Route::post('/appointment/complete', [AppointmentController::class, 'finalize'])->name('appointment.complete');
-    Route::get('/appointment/finalize', [AppointmentController::class, 'showFinalizePage'])->name('appointment.finalize.show');
-    Route::get('/appointments/calendar', fn() => view('appointmentcalender'))->name('appointments.calendar');
-    Route::get('/patient/medical-history', fn() => view('medicalhistory'))->name('medical.history');
-    Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');
+    Route::post('/appointment/complete', [AppointmentController::class, 'complete'])->name('appointment.complete');
+    Route::get('/patient/dashboard', fn() => view('patient.dashboard'))->name('patient.dashboard');
 });
 
 // Category Routes
@@ -79,3 +77,5 @@ Route::resource('categories', CategoryController::class);
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
 Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+});

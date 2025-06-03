@@ -190,8 +190,8 @@
         <h1>Book Appointment</h1>
         
         <div class="service-info">
-            Below you can find list of available time slots for <strong>{{ $service->name }}</strong> by <strong>{{ $employee->name }}</strong>
-        </div>
+    Below you can find list of available time slots for <strong>{{ $service->name }}</strong> by <strong>{{ $doctor->first_name }} {{ $doctor->last_name }}</strong>
+</div>
         
         <p class="required">Select time slot for booking</p>
         

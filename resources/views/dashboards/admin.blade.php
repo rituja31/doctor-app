@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Your existing CSS styles remain unchanged */
         :root {
             --primary-color: #2563eb;
             --primary-dark: #1d4ed8;
@@ -472,7 +473,6 @@
     </style>
 </head>
 <body>
-
     <!-- Sidebar Navigation -->
     <div class="admin-sidebar">
         <div class="admin-profile">
@@ -494,37 +494,21 @@
 
         <div class="nav-menu">
             <div class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>
                     Dashboard
                 </a>
             </div>
+            
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-user-md"></i>
-                    Doctors
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-procedures"></i>
-                    Patients
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-calendar-check"></i>
-                    Appointments
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="{{ url('/categories') }}" class="nav-link">
+                <a href="{{ route('categories.index') }}" class="nav-link {{ Route::is('categories.index') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i>
                     Categories
                 </a>
             </div>
+            
             <div class="nav-item">
-                <a href="{{ url('/services') }}" class="nav-link">
+                <a href="{{ route('services') }}" class="nav-link {{ Route::is('services') ? 'active' : '' }}">
                     <i class="fas fa-concierge-bell"></i>
                     Services
                 </a>
@@ -572,108 +556,144 @@
                                             <h6 class="mb-0">Dr. {{ $doctor->first_name }} {{ $doctor->last_name }}</h6>
                                             <small class="text-muted">{{ $doctor->specialties }}</small>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div>{{ $doctor->email }}</div>
-                                        <small class="text-muted">{{ $doctor->phone }}</small>
-                                    </td>
-                                    <td>
-                                        @foreach (explode(',', $doctor->specialties) as $specialty)
-                                            <span class="specialty-badge">{{ trim($specialty) }}</span>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }}">{{ $doctor->status }}</span>
-                                    </td>
-                                    <td>
-                                        <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
-                                            <i class="fas fa-edit"></i> Edit
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>{{ $doctor->email }}</div>
+                                    <small class="text-muted">{{ $doctor->phone }}</small>
+                                </td>
+                                <td>
+                                    @foreach (explode(',', $doctor->specialties) as $specialty)
+                                        <span class="specialty-badge">{{ trim($specialty) }}</span>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }}">{{ $doctor->status }}</span>
+                                </td>
+                                <td>
+                                    <button onclick="window.location.href='{{ route('edit.page', $doctor->id) }}'" class="btn btn-sm btn-edit action-btn">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button onclick="window.location.href='{{ route('doctors.show', $doctor->id) }}'" class="btn btn-sm btn-view action-btn">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <form action="{{ route('doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this doctor?')">
+                                            <i class="fas fa-trash-alt"></i> Remove
                                         </button>
-                                        <button onclick="window.location.href='{{ route('doctors.show', $doctor->id) }}'" class="btn btn-sm btn-view action-btn">
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
-                                        <form action="{{ route('doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this doctor?')">
-                                                <i class="fas fa-trash-alt"></i> Remove
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">No doctors found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No doctors found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- Add Doctor Modal -->
-            <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addDoctorModalLabel">Add New Doctor</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ route('doctors.store') }}" method="POST">
-                                @csrf
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="firstName" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="firstName" name="first_name" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="lastName" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="lastName" name="last_name" required>
-                                    </div>
+        <!-- Add Doctor Modal -->
+        <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addDoctorModalLabel">Add New Doctor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('doctors.store') }}" method="POST">
+                            @csrf
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="firstName" name="first_name" value="{{ old('first_name') }}" required>
+                                    @error('first_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="phone" class="form-label">Phone Number</label>
-                                        <input type="text" class="form-control" id="phone" name="phone" required>
-                                    </div>
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="lastName" name="last_name" value="{{ old('last_name') }}" required>
+                                    @error('last_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
-                                    <label for="specialties" class="form-label">Specialties</label>
-                                    <input type="text" class="form-control" id="specialties" name="specialties" placeholder="e.g. Cardiology, Internal Medicine" required>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" id="status" name="status">
-                                        <option value="Active" selected>Active</option>
-                                        <option value="On Leave">On Leave</option>
-                                        <option value="Retired">Retired</option>
-                                    </select>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Add Doctor</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="category_id" class="form-label">Category</label>
+                                <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
+                                    <option value="" selected disabled>Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="service_id" class="form-label">Service</label>
+                                <select class="form-select @error('service_id') is-invalid @enderror" id="service_id" name="service_id" required>
+                                    <option value="" selected disabled>Select Service</option>
+                                    @foreach ($services as $service)
+                                        <option value="{{ $service->id }}" {{ old('service_id') == $service->id ? 'selected' : '' }}>{{ $service->name }} ({{ $service->category->name }})</option>
+                                    @endforeach
+                                </select>
+                                @error('service_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
+                                    <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                    <option value="On Leave" {{ old('status') == 'On Leave' ? 'selected' : '' }}>On Leave</option>
+                                    <option value="Retired" {{ old('status') == 'Retired' ? 'selected' : '' }}>Retired</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Add Doctor</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-            <script>
-                // You can add your custom JavaScript here
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Initialize tooltips
-                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                        return new bootstrap.Tooltip(tooltipTriggerEl);
-                    });
-                });
-            </script>
-        </body>
-    </html>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>

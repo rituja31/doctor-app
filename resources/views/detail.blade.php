@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,6 +135,12 @@
             margin-top: 5px;
         }
         
+        .error {
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
         .divider {
             height: 1px;
             background: #e2e8f0;
@@ -206,42 +213,67 @@
         <h1>Book Appointment</h1>
         
         <div class="summary">
-            <p>You've selected <strong>{{ $service->name }}</strong> service from <strong>{{ $appointment['appointment_time'] }}</strong> on <strong>{{ $appointment['appointment_date'] }}</strong>. You'll be charged <strong>${{ number_format($appointment['service_fees'], 2) }}</strong>.</p>
+            <p>You've selected <strong>{{ $service->name }}</strong> service from <strong>{{ $appointment['appointment_time'] }}</strong> on <strong>{{ $appointment['date'] }}</strong>. You'll be charged <strong>${{ number_format($service->fees, 2) }}</strong>.</p>
             <p>Please provide your details in the form below to proceed with booking.</p>
         </div>
         
         <form action="{{ route('appointment.details.post') }}" method="POST">
             @csrf
             
+            @if ($errors->any())
+                <div class="error">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            
             <div class="form-group">
                 <label class="required">First Name</label>
-                <input type="text" name="first_name" required>
+                <input type="text" name="first_name" value="{{ old('first_name') }}" required>
+                @error('first_name')
+                    <div class="error">{{ $message }}</div>
+                @enderror
             </div>
             
             <div class="form-group">
                 <label class="required">Last Name</label>
-                <input type="text" name="last_name" required>
+                <input type="text" name="last_name" value="{{ old('last_name') }}" required>
+                @error('last_name')
+                    <div class="error">{{ $message }}</div>
+                @enderror
             </div>
             
             <div class="row">
                 <div class="col">
                     <div class="form-group">
                         <label class="required">Phone</label>
-                        <input type="tel" name="phone" required>
+                        <input type="tel" name="phone" value="{{ old('phone') }}" required>
+                        @error('phone')
+                            <div class="error">{{ $message }}</div>
+                        @enderror
                         <div class="validation"></div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label class="required">Email</label>
-                        <input type="email" name="email" required>
+                        <input type="email" name="email" value="{{ old('email') }}" required>
+                        @error('email')
+                            <div class="error">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
             
             <div class="form-group">
                 <label>Details</label>
-                <textarea name="details" rows="3"></textarea>
+                <textarea name="details" rows="3">{{ old('details') }}</textarea>
+                @error('details')
+                    <div class="error">{{ $message }}</div>
+                @enderror
             </div>
             
             <div class="divider"></div>

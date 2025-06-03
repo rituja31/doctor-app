@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -382,37 +383,19 @@
         </div>
         <div class="nav-menu">
             <div class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>
                     Dashboard
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-user-md"></i>
-                    Doctors
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-procedures"></i>
-                    Patients
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-calendar-check"></i>
-                    Appointments
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="{{ route('categories.index') }}" class="nav-link {{ Request::is('categories*') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i>
                     Categories
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('services') }}" class="nav-link {{ Request::is('services') ? 'active' : '' }}">
                     <i class="fas fa-concierge-bell"></i>
                     Services
                 </a>
@@ -420,7 +403,7 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Categories Main Content -->
     <div class="main-content">
         <div class="page-header">
             <h1 class="page-title">Category Management</h1>
@@ -428,6 +411,14 @@
                 <i class="fas fa-plus"></i> Add New Category
             </button>
         </div>
+
+        <!-- Success Message -->
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
         <!-- Categories Table -->
         <div class="table-container">
@@ -455,7 +446,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this category?')">
-                                            <i class="fas fa-trash-alt"></i> Remove
+                                            <i class="fas fa-trash"></i> Remove
                                         </button>
                                     </form>
                                 </td>
@@ -471,11 +462,11 @@
         </div>
 
         <!-- Add Category Modal -->
-        <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategory" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                        <h5 class="modal-title" id="addCategory">Add New Category</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -483,7 +474,10 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="name" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Add Category</button>

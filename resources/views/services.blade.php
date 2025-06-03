@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Service Management</title>
+    <title>Services</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -26,14 +26,14 @@
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             background-color: #f8f9fa;
             color: var(--dark-color);
             line-height: 1.6;
         }
 
         .admin-sidebar {
-            width: 280px;
+            width: 270px;
             height: 100vh;
             position: fixed;
             background-color: white;
@@ -61,7 +61,7 @@
             align-items: center;
             justify-content: center;
             color: var(--primary-color);
-            font csupersize: 2rem;
+            font-size: 2rem;
             margin: 0 auto 15px;
             transition: var(--transition);
         }
@@ -153,7 +153,7 @@
         }
 
         .main-content {
-            margin-left: 280px;
+            margin-left: 270px;
             padding: 30px;
             transition: var(--transition);
         }
@@ -162,7 +162,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--border-color);
         }
@@ -260,7 +260,7 @@
         }
 
         .table tbody tr:hover {
-            background-color: rgba(37, 99, 235, 0.02);
+            background-color: rgba(0, 99, 235, 0);
         }
 
         .action-btn {
@@ -270,8 +270,7 @@
             align-items: center;
             gap: 5px;
             border-radius: 4px;
-            transition: var(--transition);
-            font-weight: 500;
+            transition: font-weight: 500;
         }
 
         .action-btn:hover {
@@ -383,37 +382,19 @@
         </div>
         <div class="nav-menu">
             <div class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>
                     Dashboard
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-user-md"></i>
-                    Doctors
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-procedures"></i>
-                    Patients
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-calendar-check"></i>
-                    Appointments
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('categories.index') }}" class="nav-link {{ Request::is('categories*') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i>
                     Categories
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="{{ route('services') }}" class="nav-link {{ Request::is('services') ? 'active' : '' }}">
                     <i class="fas fa-concierge-bell"></i>
                     Services
                 </a>
@@ -458,7 +439,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($services as $service)
+                        @foreach ($services as $service)
                             <tr>
                                 <td>{{ $service->name }}</td>
                                 <td>{{ $service->category->name }}</td>
@@ -468,16 +449,17 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-delete action-btn" onclick="return confirm('Are you sure you want to delete this service?')">
-                                            <i class="fas fa-trash-alt"></i> Remove
+                                            <i class="fas fa-trash-alt"></i> Delete
                                         </button>
                                     </form>
                                 </td>
                             </tr>
-                        @empty
+                        @endforeach
+                        @if ($services->isEmpty())
                             <tr>
                                 <td colspan="4" class="text-center">No services found.</td>
                             </tr>
-                        @endforelse
+                        @endif
                     </tbody>
                 </table>
             </div>

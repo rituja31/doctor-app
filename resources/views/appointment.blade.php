@@ -198,11 +198,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="employee" class="required">Employee</label>
-                    <select id="employee" name="employee" required>
-                        <option value="">Select Employee</option>
-                        @foreach($employees as $employee)
-                            <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                    <label for="doctor" class="required">Doctor</label>
+                    <select id="doctor" name="doctor" required>
+                        <option value="">Select Doctor</option>
+                        @foreach($doctors as $doctor)
+                            <option value="{{ $doctor->id }}">{{ $doctor->first_name }} {{ $doctor->last_name }}</option>
                         @endforeach
                     </select>
                 </div>

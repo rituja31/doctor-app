@@ -2,154 +2,168 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Service;
+use App\Models\Doctor;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
-    // Page 1: Show the appointment form
     public function showAppointmentPage()
     {
-        $categories = DB::table('categories')->get();
-        $services = DB::table('services')->get();
-        $employees = DB::table('employees')->get();
-        $today = now()->format('Y-m-d'); // Current date for the date input
-
-        return view('appointment', compact('categories', 'services', 'employees', 'today')); // Updated
+        $categories = Category::all();
+        $services = Service::with('category')->get();
+        $doctors = Doctor::where('status', 'Active')->get();
+        $today = now()->format('Y-m-d');
+        return view('appointment', compact('categories', 'services', 'doctors', 'today'));
     }
 
-    // Page 1: Store appointment data
-    public function storeAppointment(Request $request)
+    public function store(Request $request)
     {
-        $request->validate([
-            'category' => 'required|integer|exists:categories,id',
-            'service' => 'required|integer|exists:services,id',
-            'employee' => 'required|integer|exists:employees,id',
+        $validated = $request->validate([
+            'category' => 'required|exists:categories,id',
+            'service' => 'required|exists:services,id',
+            'doctor' => 'required|exists:doctors,id',
             'appointment_type' => 'required|in:online,offline',
             'date' => 'required|date|after_or_equal:today',
         ]);
 
-        // Fetch service fees
-        $service = DB::table('services')->where('id', $request->service)->first();
-
-        // Store in session
-        session([
-            'appointment.category_id' => $request->category,
-            'appointment.service_id' => $request->service,
-            'appointment.employee_id' => $request->employee,
-            'appointment.appointment_type' => $request->appointment_type,
-            'appointment.appointment_date' => $request->date,
-            'appointment.service_fees' => $service->fees,
-        ]);
-
+        $request->session()->put('appointment', $validated);
         return redirect()->route('appointment.time');
     }
 
-    // Page 2: Show the time selection form
-    public function showTimePage()
+    public function showTimeForm(Request $request)
     {
-        // Fetch session data for display
-        $appointment = session('appointment');
-        $service = DB::table('services')->where('id', $appointment['service_id'])->first();
-        $employee = DB::table('employees')->where('id', $appointment['employee_id'])->first();
+        $appointment = $request->session()->get('appointment');
+        if (!$appointment) {
+            Log::error('Appointment session data missing in showTimeForm');
+            return redirect()->route('appointment.page')->with('error', 'Session expired. Please start over.');
+        }
 
-        // Generate time slots dynamically (for simplicity, using a fixed list; you can make this more dynamic)
-        $timeSlots = [
-            '08:00 AM - 08:35 AM', '09:05 AM - 09:40 AM', '10:10 AM - 10:45 AM',
-            '11:15 AM - 11:50 AM', '12:30 PM - 01:05 PM', '01:35 PM - 02:10 PM',
-            '02:40 PM - 03:15 PM', '03:45 PM - 04:20 PM', '04:50 PM - 05:25 PM',
-        ];
-
-        return view('time', compact('service', 'employee', 'timeSlots', 'appointment')); // Updated
+        $service = Service::findOrFail($appointment['service']);
+        $doctor = Doctor::findOrFail($appointment['doctor']);
+        $timeSlots = $this->generateTimeSlots();
+        return view('time', compact('service', 'doctor', 'timeSlots'));
     }
 
-    // Page 2: Store time selection data
     public function storeTime(Request $request)
     {
-        $request->validate([
-            'appointment_time' => 'required|string',
+        $validated = $request->validate([
+            'appointment_time' => 'required',
         ]);
 
-        // Add to session
-        session(['appointment.appointment_time' => $request->appointment_time]);
+        $appointment = $request->session()->get('appointment');
+        if (!$appointment) {
+            Log::error('Appointment session data missing in storeTime');
+            return redirect()->route('appointment.page')->with('error', 'Session expired. Please start over.');
+        }
 
+        $appointment['appointment_time'] = $validated['appointment_time'];
+        $request->session()->put('appointment', $appointment);
         return redirect()->route('appointment.details');
     }
 
-    // Page 3: Show the details form
-    public function showDetailsPage()
+    public function showDetailsForm(Request $request)
     {
-        $appointment = session('appointment');
-        $service = DB::table('services')->where('id', $appointment['service_id'])->first();
-        $employee = DB::table('employees')->where('id', $appointment['employee_id'])->first();
+        $appointment = $request->session()->get('appointment');
+        if (!$appointment) {
+            Log::error('Appointment session data missing in showDetailsForm');
+            return redirect()->route('appointment.page')->with('error', 'Session expired. Please start over.');
+        }
 
-        return view('details', compact('appointment', 'service', 'employee')); // Updated
+        if (!isset($appointment['appointment_time'])) {
+            Log::warning('Appointment time missing in showDetailsForm', $appointment);
+            return redirect()->route('appointment.time')->with('error', 'Please select a time slot.');
+        }
+
+        $service = Service::findOrFail($appointment['service']);
+        return view('detail', compact('appointment', 'service'));
     }
 
-    // Page 3: Store details data
     public function storeDetails(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email',
+            'details' => 'nullable|string',
         ]);
 
-        // Add to session
-        session([
-            'appointment.first_name' => $request->first_name,
-            'appointment.last_name' => $request->last_name,
-            'appointment.phone' => $request->phone,
-            'appointment.email' => $request->email,
-            'appointment.details' => $request->details,
-        ]);
+        $appointment = $request->session()->get('appointment');
+        if (!$appointment) {
+            Log::error('Appointment session data missing in storeDetails');
+            return redirect()->route('appointment.page')->with('error', 'Session expired. Please start over.');
+        }
 
+        $appointment = array_merge($appointment, $validated);
+        $request->session()->put('appointment', $appointment);
         return redirect()->route('appointment.billing');
     }
 
-    // Page 4: Show the billing form
-    public function showBillingPage()
+    public function showBillingForm(Request $request)
     {
-        return view('billing'); // Updated
+        $appointment = $request->session()->get('appointment');
+        if (!$appointment) {
+            Log::error('Appointment session data missing in showBillingForm');
+            return redirect()->route('appointment.page')->with('error', 'Session expired. Please start over.');
+        }
+
+        return view('billing');
     }
 
-    // Page 4: Store billing data
     public function storeBilling(Request $request)
     {
-        $request->validate([
-            'payment_method' => 'required|string',
+        $validated = $request->validate([
+            'payment_method' => 'required|in:stripe,razorpay,razorpay2,pay_later',
         ]);
 
-        // Add to session
-        session(['appointment.payment_method' => $request->payment_method]);
+        $appointmentData = $request->session()->get('appointment');
+        if (!$appointmentData) {
+            Log::error('Appointment session data missing in storeBilling');
+            return redirect()->route('appointment.page')->with('error', 'Session expired. Please start over.');
+        }
 
-        return redirect()->route('appointment.complete.show');
+        $service = Service::findOrFail($appointmentData['service']);
+        $doctor = Doctor::findOrFail($appointmentData['doctor']);
+        $category = Category::findOrFail($appointmentData['category']);
+
+        $appointmentData['payment_method'] = $validated['payment_method'];
+        $request->session()->put('appointment', $appointmentData);
+
+        $finalData = [
+            'category_name' => $category->name,
+            'service_name' => $service->name,
+            'service_fees' => $service->fees,
+            'doctor_name' => $doctor->first_name . ' ' . $doctor->last_name,
+            'appointment_date' => $appointmentData['date'],
+            'appointment_time' => $appointmentData['appointment_time'],
+            'email' => $appointmentData['email'],
+        ];
+
+        return view('complete', compact('finalData'));
     }
 
-    // Page 5: Show the complete page
-    public function showCompletePage()
+    public function complete(Request $request)
     {
-        $appointment = session('appointment');
-        $category = DB::table('categories')->where('id', $appointment['category_id'])->first();
-        $service = DB::table('services')->where('id', $appointment['service_id'])->first();
-        $employee = DB::table('employees')->where('id', $appointment['employee_id'])->first();
+        $appointmentData = $request->session()->get('appointment');
+        if (!$appointmentData) {
+            Log::error('Appointment session data missing in complete');
+            return redirect()->route('appointment.page')->with('error', 'Session expired. Please start over.');
+        }
 
-        return view('complete', compact('appointment', 'category', 'service', 'employee')); // Updated
-    }
+        $service = Service::findOrFail($appointmentData['service']);
+        $doctor = Doctor::findOrFail($appointmentData['doctor']);
+        $category = Category::findOrFail($appointmentData['category']);
 
-    // Page 5: Finalize the appointment (save to database)
-    public function finalize(Request $request)
-    {
-        $appointmentData = session('appointment');
-
-        // Insert into appointments table
-        DB::table('appointments')->insert([
-            'category_id' => $appointmentData['category_id'],
-            'service_id' => $appointmentData['service_id'],
-            'employee_id' => $appointmentData['employee_id'],
+        $appointment = Appointment::create([
+            'category_id' => $appointmentData['category'],
+            'service_id' => $appointmentData['service'],
+            'doctor_id' => $appointmentData['doctor'],
             'appointment_type' => $appointmentData['appointment_type'],
-            'appointment_date' => $appointmentData['appointment_date'],
+            'appointment_date' => $appointmentData['date'],
             'appointment_time' => $appointmentData['appointment_time'],
             'first_name' => $appointmentData['first_name'],
             'last_name' => $appointmentData['last_name'],
@@ -157,33 +171,25 @@ class AppointmentController extends Controller
             'email' => $appointmentData['email'],
             'details' => $appointmentData['details'] ?? null,
             'payment_method' => $appointmentData['payment_method'],
-            'service_fees' => $appointmentData['service_fees'],
-            'created_at' => now(),
-            'updated_at' => now(),
+            'service_fees' => $service->fees,
         ]);
 
-        // Store in session for the final page (since we clear 'appointment' session)
         $finalData = [
-            'category_name' => DB::table('categories')->where('id', $appointmentData['category_id'])->value('name'),
-            'service_name' => DB::table('services')->where('id', $appointmentData['service_id'])->value('name'),
-            'service_fees' => $appointmentData['service_fees'],
-            'employee_name' => DB::table('employees')->where('id', $appointmentData['employee_id'])->value('name'),
-            'appointment_date' => $appointmentData['appointment_date'],
-            'appointment_time' => $appointmentData['appointment_time'],
-            'email' => $appointmentData['email'],
+            'category_name' => $category->name,
+            'service_name' => $service->name,
+            'service_fees' => $appointment->service_fees,
+            'doctor_name' => $doctor->first_name . ' ' . $doctor->last_name,
+            'appointment_date' => $appointment->appointment_date,
+            'appointment_time' => $appointment->appointment_time,
+            'email' => $appointment->email,
         ];
-        session(['final_appointment' => $finalData]);
 
-        // Clear appointment session data
         $request->session()->forget('appointment');
-
-        return redirect()->route('appointment.finalize.show');
+        return view('finalize', compact('finalData'));
     }
 
-    // Page 6: Show the finalize page
-    public function showFinalizePage()
+    private function generateTimeSlots()
     {
-        $finalData = session('final_appointment');
-        return view('finalize', compact('finalData')); // Updated
+        return ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00'];
     }
 }

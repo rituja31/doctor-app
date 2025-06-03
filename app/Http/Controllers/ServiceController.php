@@ -45,4 +45,12 @@ class ServiceController extends Controller
         $service->delete();
         return redirect()->route('services')->with('success', 'Service deleted successfully.');
     }
+
+    public function show($id)
+{
+    $service = Service::with('category')->findOrFail($id);
+    return view('services_show', compact('service'));
 }
+}
+
+

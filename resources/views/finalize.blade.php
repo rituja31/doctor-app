@@ -232,8 +232,8 @@
                 <span class="detail-value">${{ number_format($finalData['service_fees'], 2) }}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Employee</span>
-                <span class="detail-value">{{ $finalData['employee_name'] }}</span>
+                <span class="detail-label">Doctor</span>
+                <span class="detail-value">{{ $finalData['doctor_name'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Appointment Date:</span>

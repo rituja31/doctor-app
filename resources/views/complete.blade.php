@@ -163,33 +163,33 @@
         <div class="notice">
             Please confirm your appointment booking details once before proceed.
             <br><br>
-            We'll send booking details via an email to you at <span class="highlight">{{ $appointment['email'] }}</span>
+            We'll send booking details via an email to you at <span class="highlight">{{ $finalData['email'] }}</span>
         </div>
         
         <div class="details-container">
             <div class="detail-row">
                 <span class="detail-label">Category</span>
-                <span class="detail-value">{{ $category->name }}</span>
+                <span class="detail-value">{{ $finalData['category_name'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Service</span>
-                <span class="detail-value">{{ $service->name }}</span>
+                <span class="detail-value">{{ $finalData['service_name'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Service Fees</span>
-                <span class="detail-value">${{ number_format($appointment['service_fees'], 2) }}</span>
+                <span class="detail-value">${{ number_format($finalData['service_fees'], 2) }}</span>
             </div>
             <div class="detail-row">
-                <span class="detail-label">Employee</span>
-                <span class="detail-value">{{ $employee->name }}</span>
+                <span class="detail-label">Doctor</span>
+                <span class="detail-value">{{ $finalData['doctor_name'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Appointment Date:</span>
-                <span class="detail-value">{{ $appointment['appointment_date'] }}</span>
+                <span class="detail-value">{{ $finalData['appointment_date'] }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Appointment Time:</span>
-                <span class="detail-value">{{ $appointment['appointment_time'] }}</span>
+                <span class="detail-value">{{ $finalData['appointment_time'] }}</span>
             </div>
         </div>
         

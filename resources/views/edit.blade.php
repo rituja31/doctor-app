@@ -148,6 +148,14 @@
             border-radius: 6px;
             margin-bottom: 20px;
         }
+
+        .form-check {
+            margin-bottom: 5px;
+        }
+
+        .form-check-input {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -159,7 +167,17 @@
         @if (session('success'))
             <div class="alert-success">{{ session('success') }}</div>
         @endif
-        <form action="{{ route('doctors.update', $doctor->id) }}" method="POST">
+        @if ($errors->any())
+            <div class="alert" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <strong>Errors:</strong>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <form action="{{ route('doctors.update', $doctor->id) }}" method="POST" id="editDoctorForm">
             @csrf
             @method('PUT')
             <div class="form-grid">
@@ -187,12 +205,43 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+            <div class="form-group">
+    <label for="password">Password (Leave blank to keep current)</label>
+    <input type="password" id="password" name="password" placeholder="Enter New Password (min 4 chars)" class="@error('password') is-invalid @enderror">
+    @error('password')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
                     <input type="text" id="phone" name="phone" value="{{ old('phone', $doctor->phone) }}" required
                            class="@error('phone') is-invalid @enderror">
                     @error('phone')
                         <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label>Working Days</label>
+                    <?php
+                        $workingDays = explode(',', $doctor->working_days);
+                        $allDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'All Days'];
+                    ?>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="working_days_all" name="working_days[]" value="All Days"
+                               {{ in_array('All Days', old('working_days', $workingDays)) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="working_days_all">All Days</label>
+                    </div>
+                    @foreach ($allDays as $day)
+                        @if ($day !== 'All Days')
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="working_days_{{ strtolower($day) }}" name="working_days[]" value="{{ $day }}"
+                                       {{ in_array($day, old('working_days', $workingDays)) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="working_days_{{ strtolower($day) }}">{{ $day }}</label>
+                            </div>
+                        @endif
+                    @endforeach
+                    @error('working_days')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
@@ -241,5 +290,19 @@
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('working_days_all').addEventListener('change', function () {
+                const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                days.forEach(day => {
+                    document.getElementById(`working_days_${day}`).checked = this.checked;
+                });
+            });
+
+            document.getElementById('editDoctorForm').addEventListener('submit', function (e) {
+                console.log('Form submitted with data:', new FormData(this));
+            });
+        });
+    </script>
 </body>
 </html>

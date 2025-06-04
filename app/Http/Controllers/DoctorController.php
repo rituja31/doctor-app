@@ -6,6 +6,7 @@ use App\Models\Doctor;
 use App\Models\Category;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DoctorController extends Controller
 {
@@ -19,33 +20,53 @@ class DoctorController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:doctors,email',
-            'phone' => 'required|string|max:20',
-            'category_id' => 'required|exists:categories,id',
-            'service_id' => 'required|exists:services,id',
-            'status' => 'required|in:Active,On Leave,Retired',
-        ]);
+        Log::info('Doctor store request:', $request->all());
 
-        // Fetch category and service names for specialties
-        $category = Category::findOrFail($request->category_id);
-        $service = Service::findOrFail($request->service_id);
-        $specialties = $category->name . ',' . $service->name;
+        try {
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:doctors,email',
+                'phone' => 'required|string|max:20',
+                'category_id' => 'required|integer|exists:categories,id',
+                'service_id' => 'required|integer|exists:services,id',
+                'status' => 'required|in:Active,On Leave,Retired',
+                'password' => 'required|string|min:4',
+                'working_days' => 'required|array|min:1',
+                'working_days.*' => 'string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,All Days',
+            ]);
 
-        Doctor::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'category_id' => $request->category_id,
-            'service_id' => $request->service_id,
-            'specialties' => $specialties,
-            'status' => $request->status,
-        ]);
+            $workingDays = in_array('All Days', $request->working_days)
+                ? 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'
+                : implode(',', array_diff($request->working_days, ['All Days']));
 
-        return redirect()->route('doctors.index')->with('success', 'Doctor added successfully.');
+            $category = Category::findOrFail($request->category_id);
+            $service = Service::findOrFail($request->service_id);
+            $specialties = $category->name . ',' . $service->name;
+
+            $doctor = Doctor::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'category_id' => (int) $request->category_id,
+                'service_id' => (int) $request->service_id,
+                'specialties' => $specialties,
+                'status' => $request->status,
+                'password' => bcrypt($request->password),
+                'working_days' => $workingDays,
+            ]);
+
+            Log::info('Doctor created:', $doctor->toArray());
+
+            return redirect()->route('doctors.index')->with('success', 'Doctor added successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation errors:', $e->errors());
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error saving doctor: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to save: ' . $e->getMessage()])->withInput();
+        }
     }
 
     public function edit($id)
@@ -60,33 +81,58 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::findOrFail($id);
 
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
-            'phone' => 'required|string|max:20',
-            'category_id' => 'required|exists:categories,id',
-            'service_id' => 'required|exists:services,id',
-            'status' => 'required|in:Active,On Leave,Retired',
-        ]);
+        Log::info('Doctor update request:', $request->all());
 
-        // Fetch category and service names for specialties
-        $category = Category::findOrFail($request->category_id);
-        $service = Service::findOrFail($request->service_id);
-        $specialties = $category->name . ',' . $service->name;
+        try {
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:doctors,email,' . $doctor->id,
+                'phone' => 'required|string|max:20',
+                'category_id' => 'required|integer|exists:categories,id',
+                'service_id' => 'required|integer|exists:services,id',
+                'status' => 'required|in:Active,On Leave,Retired',
+                'password' => 'nullable|string|min:4',
+                'working_days' => 'required|array|min:1',
+                'working_days.*' => 'string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,All Days',
+            ]);
 
-        $doctor->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'category_id' => $request->category_id,
-            'service_id' => $request->service_id,
-            'specialties' => $specialties,
-            'status' => $request->status,
-        ]);
+            $workingDays = in_array('All Days', $request->working_days)
+                ? 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'
+                : implode(',', array_diff($request->working_days, ['All Days']));
 
-        return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully.');
+            $category = Category::findOrFail($request->category_id);
+            $service = Service::findOrFail($request->service_id);
+            $specialties = $category->name . ',' . $service->name;
+
+            $updateData = [
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'category_id' => (int) $request->category_id,
+                'service_id' => (int) $request->service_id,
+                'specialties' => $specialties,
+                'status' => $request->status,
+                'working_days' => $workingDays,
+            ];
+
+            if ($request->filled('password')) {
+                $updateData['password'] = bcrypt($request->password);
+            }
+
+            $doctor->update($updateData);
+
+            Log::info('Doctor updated:', $doctor->toArray());
+
+            return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation errors:', $e->errors());
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error updating doctor: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to update: ' . $e->getMessage()])->withInput();
+        }
     }
 
     public function show($id)

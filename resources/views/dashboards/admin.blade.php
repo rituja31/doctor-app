@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Your existing CSS styles remain unchanged */
         :root {
             --primary-color: #2563eb;
             --primary-dark: #1d4ed8;
@@ -32,7 +31,6 @@
             line-height: 1.6;
         }
 
-        /* Sidebar Styles */
         .admin-sidebar {
             width: 280px;
             height: 100vh;
@@ -129,7 +127,6 @@
             text-align: center;
         }
 
-        /* Profile Logout Button */
         .profile-logout-btn {
             width: calc(100% - 40px);
             margin: 10px 20px 20px;
@@ -154,7 +151,6 @@
             box-shadow: 0 4px 8px rgba(37, 99, 235, 0.15);
         }
 
-        /* Main Content Styles */
         .main-content {
             margin-left: 280px;
             padding: 30px;
@@ -191,7 +187,6 @@
             box-shadow: 0 4px 8px rgba(37, 99, 235, 0.15);
         }
 
-        /* Stats Cards */
         .stats-card {
             background: white;
             border-radius: 12px;
@@ -234,7 +229,6 @@
             font-weight: 500;
         }
 
-        /* Table Styles */
         .table-container {
             background: white;
             border-radius: 12px;
@@ -373,7 +367,6 @@
             font-size: 0.75rem;
         }
 
-        /* Pagination */
         .pagination .page-item .page-link {
             font-size: 0.85rem;
             color: var(--secondary-color);
@@ -387,7 +380,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Modal Styles */
         .modal-content {
             border-radius: 12px;
             border: none;
@@ -425,7 +417,6 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* Responsive Styles */
         @media (max-width: 992px) {
             .admin-sidebar {
                 width: 250px;
@@ -605,19 +596,31 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('doctors.store') }}" method="POST">
+                        <!-- Enhanced Error Display -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Errors:</strong>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+                        <form action="{{ route('doctors.store') }}" method="POST" id="addDoctorForm">
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="firstName" class="form-label">First Name</label>
-                                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="firstName" name="first_name" value="{{ old('first_name') }}" required>
+                                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="firstName" name="first_name" value="{{ old('first_name') }}" placeholder="Enter First Name" required>
                                     @error('first_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label for="lastName" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="lastName" name="last_name" value="{{ old('last_name') }}" required>
+                                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="lastName" name="last_name" value="{{ old('last_name') }}" placeholder="Enter Last Name" required>
                                     @error('last_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -626,16 +629,63 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="Enter Doctor's Email" required autocomplete="off">
                                     @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                             <div class="col-md-6">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter Password (min 4 chars)" required autocomplete="new-password">
+    @error('password')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+                            </div>
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Phone Number</label>
-                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
+                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Enter Phone Number" required>
                                     @error('phone')
                                         <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Working Days</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_all" name="working_days[]" value="All Days" {{ in_array('All Days', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_all">All Days</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_sunday" name="working_days[]" value="Sunday" {{ in_array('Sunday', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_sunday">Sunday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_monday" name="working_days[]" value="Monday" {{ in_array('Monday', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_monday">Monday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_tuesday" name="working_days[]" value="Tuesday" {{ in_array('Tuesday', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_tuesday">Tuesday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_wednesday" name="working_days[]" value="Wednesday" {{ in_array('Wednesday', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_wednesday">Wednesday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_thursday" name="working_days[]" value="Thursday" {{ in_array('Thursday', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_thursday">Thursday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_friday" name="working_days[]" value="Friday" {{ in_array('Friday', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_friday">Friday</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="working_days_saturday" name="working_days[]" value="Saturday" {{ in_array('Saturday', old('working_days', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="working_days_saturday">Saturday</label>
+                                    </div>
+                                    @error('working_days')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -687,8 +737,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Initialize tooltips
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('working_days_all').addEventListener('change', function () {
+                const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                days.forEach(day => {
+                    document.getElementById(`working_days_${day}`).checked = this.checked;
+                });
+            });
+
+            document.getElementById('addDoctorForm').addEventListener('submit', function (e) {
+                console.log('Form submitted with data:', new FormData(this));
+            });
+
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);

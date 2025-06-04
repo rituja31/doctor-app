@@ -4,16 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Doctor;
-use App\Models\Category; // Add Category model
-use App\Models\Service;  // Add Service model (if applicable)
+use App\Models\Category;
+use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $doctors = Doctor::all();    // Fetch all doctors
-        $categories = Category::all(); // Fetch all categories
-        $services = Service::all();    // Fetch all services (if needed)
+        if (!Auth::check() && !$request->session()->has('admin_logged_in')) {
+            return redirect()->route('login')->with('error', 'Please log in as an admin.');
+        }
+
+        if (!$request->session()->has('admin_logged_in')) {
+            $request->session()->put('admin_logged_in', true);
+            $request->session()->put('admin_email', 'admin@gmail.com');
+        }
+
+        $doctors = Doctor::all();
+        $categories = Category::all();
+        $services = Service::all();
 
         return view('dashboards.admin', compact('doctors', 'categories', 'services'));
     }

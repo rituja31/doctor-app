@@ -10,7 +10,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Auth;
 
-// Home Redirection Based on Role
 Route::get('/', function () {
     if (Auth::check()) {
         $role = Auth::user()->role;
@@ -23,41 +22,38 @@ Route::get('/', function () {
     } elseif (session('admin_logged_in')) {
         return redirect()->route('admin.dashboard');
     }
-
-    return view('Auth.home');
+    return view('auth.home');
 })->name('home');
 
-// Auth Routes
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin Dashboard (session-based)
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/', [DoctorController::class, 'index'])->name('doctors.index');
+    Route::post('/doctors', [DoctorController::class, 'store'])->name('doctors.store');
+    Route::get('/doctors/{id}/edit', [DoctorController::class, 'edit'])->name('edit.page');
+    Route::put('/doctors/{id}', [DoctorController::class, 'update'])->name('doctors.update');
+    Route::get('/doctors/{id}', [DoctorController::class, 'show'])->name('doctors.show');
+    Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
+});
 
-// Doctor Routes
-Route::get('/admin', [DoctorController::class, 'index'])->name('doctors.index');
-Route::post('/doctors', [DoctorController::class, 'store'])->name('doctors.store');
-Route::get('/doctors/{id}/edit', [DoctorController::class, 'edit'])->name('edit.page');
-Route::put('/doctors/{id}', [DoctorController::class, 'update'])->name('doctors.update');
-Route::get('/doctors/{id}', [DoctorController::class, 'show'])->name('doctors.show');
-Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
+Route::resource('categories', CategoryController::class);
+Route::get('/services', [ServiceController::class, 'index'])->name('services');
+Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
 
-// Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/doctor/dashboard', fn() => view('dashboards.doctor'))->name('doctor.dashboard');
     Route::get('/patient/dashboard', fn() => view('dashboards.patient'))->name('patient.dashboard');
-
     Route::prefix('doctor')->group(function () {
         Route::get('/calendar', fn() => view('calendar'))->name('doctor.calendar');
         Route::get('/analytics', fn() => view('analytics'))->name('doctor.analytics');
         Route::get('/docprofile', fn() => view('docprofile'))->name('doctor.docprofile');
     });
-
-    // Appointment Routes
-   Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/appointment', [AppointmentController::class, 'showAppointmentPage'])->name('appointment.page');
     Route::post('/appointment', [AppointmentController::class, 'store'])->name('appointment.store');
     Route::get('/appointment/time', [AppointmentController::class, 'showTimeForm'])->name('appointment.time');
@@ -67,15 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/appointment/billing', [AppointmentController::class, 'showBillingForm'])->name('appointment.billing');
     Route::post('/appointment/billing', [AppointmentController::class, 'storeBilling'])->name('appointment.billing.post');
     Route::post('/appointment/complete', [AppointmentController::class, 'complete'])->name('appointment.complete');
-    Route::get('/patient/dashboard', fn() => view('patient.dashboard'))->name('patient.dashboard');
-});
-
-// Category Routes
-Route::resource('categories', CategoryController::class);
-
-// Service Routes
-Route::get('/services', [ServiceController::class, 'index'])->name('services');
-Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
-Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
-
+    Route::get('/appointments/calendar', fn() => view('appointmentcalender'))->name('appointments.calendar');
+    Route::get('/medical/history', fn() => view('medicalhistory'))->name('medical.history');
+    Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');
 });

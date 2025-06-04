@@ -372,7 +372,7 @@
                 <i class="fas fa-user-shield"></i>
             </div>
             <h5 class="admin-name">Admin</h5>
-            <p class="admin-email">{{ session('admin_email', 'admin@medicare.com') }}</p>
+            <p class="admin-email">{{ session('admin_email', 'admin@gmail.com') }}</p>
             <span class="admin-role">Administrator</span>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf

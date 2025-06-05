@@ -192,6 +192,32 @@
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
         }
 
+        .form-control.is-invalid {
+            border-color: var(--danger);
+        }
+
+        .invalid-feedback {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+
+        .alert-danger {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+
         .form-actions {
             display: flex;
             justify-content: flex-end;
@@ -236,6 +262,12 @@
 
         .full-width {
             grid-column: span 2;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
         }
 
         @media (max-width: 768px) {
@@ -292,20 +324,38 @@
             </div>
         </div>
         
-        <form action="#" method="POST" class="settings-form">
+        <form action="{{ route('patient.settings.update') }}" method="POST" class="settings-form">
             @csrf
             
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            @if ($errors->has('error'))
+                <div class="alert alert-danger">
+                    {{ $errors->first('error') }}
+                </div>
+            @endif
+
             <div class="form-section">
                 <h3><i class="fas fa-user-edit"></i> Personal Information</h3>
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" value="{{ Auth::user()->name }}" class="form-control">
+                        <input type="text" id="name" name="name" value="{{ old('name', Auth::user()->name) }}" class="form-control @error('name') is-invalid @enderror">
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" value="{{ Auth::user()->email }}" class="form-control">
+                        <input type="email" id="email" name="email" value="{{ old('email', Auth::user()->email) }}" class="form-control @error('email') is-invalid @enderror">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -315,12 +365,19 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="current_password">Current Password</label>
-                        <input type="password" id="current_password" name="current_password" class="form-control">
+                        <input type="password" id="current_password" name="current_password" class="form-control @error('current_password') is-invalid @enderror">
+                        @error('current_password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     
                     <div class="form-group">
                         <label for="password">New Password</label>
-                        <input type="password" id="password" name="password" class="form-control">
+                        <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror">
+                        <div class="help-text">Minimum 4 characters</div>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     
                     <div class="form-group full-width">
@@ -335,26 +392,26 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" name="email_notifications" checked> Email Notifications
+                            <input type="checkbox" name="email_notifications" {{ Auth::user()->email_notifications ? 'checked' : '' }}> Email Notifications
                         </label>
                     </div>
                     
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" name="sms_notifications"> SMS Notifications
+                            <input type="checkbox" name="sms_notifications" {{ Auth::user()->sms_notifications ? 'checked' : '' }}> SMS Notifications
                         </label>
                     </div>
                     
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" name="app_notifications" checked> In-App Notifications
+                            <input type="checkbox" name="app_notifications" {{ Auth::user()->app_notifications ? 'checked' : '' }}> In-App Notifications
                         </label>
                     </div>
                 </div>
             </div>
             
             <div class="form-actions">
-                <button type="button" class="btn btn-outline">
+                <button type="button" class="btn btn-outline" onclick="window.location.href='{{ route('patient.dashboard') }}'">
                     <i class="fas fa-times"></i> Cancel
                 </button>
                 <button type="submit" class="btn btn-primary">

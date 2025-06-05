@@ -511,12 +511,6 @@
             <a href="{{ route('patient.dashboard') }}" class="active">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
             </a>
-            <a href="{{ route('appointments.calendar') }}">
-                <i class="fas fa-calendar-check"></i> My Appointments
-            </a>
-            <a href="{{ route('medical.history') }}">
-                <i class="fas fa-notes-medical"></i> Medical History
-            </a>
             <a href="{{ route('patient.settings') }}">
                 <i class="fas fa-user-cog"></i> Settings
             </a>
@@ -571,8 +565,6 @@
                             <p>{{ Auth::user()->email }}</p>
                         </div>
                     </div>
-                    
-                    
                 </div>
             </div>
 
@@ -581,12 +573,6 @@
                     <i class="fas fa-calendar-plus"></i>
                     <h3>Book Appointment</h3>
                     <p>Schedule a new consultation with your doctor</p>
-                </div>
-                
-                <div class="action-card" onclick="window.location.href='{{ route('medical.history') }}'">
-                    <i class="fas fa-file-medical"></i>
-                    <h3>Medical Records</h3>
-                    <p>View your complete medical history</p>
                 </div>
                 
                 <div class="action-card" onclick="window.location.href='{{ route('patient.settings') }}'">

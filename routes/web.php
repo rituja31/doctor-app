@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -8,6 +7,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -48,7 +48,7 @@ Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('se
 
 Route::middleware('auth')->group(function () {
     Route::get('/doctor/dashboard', fn() => view('dashboards.doctor'))->name('doctor.dashboard');
-    Route::get('/patient/dashboard', fn() => view('dashboards.patient'))->name('patient.dashboard');
+    Route::get('/dashboard/patient', [PatientController::class, 'dashboard'])->name('patient.dashboard');
     Route::prefix('doctor')->group(function () {
         Route::get('/calendar', fn() => view('calendar'))->name('doctor.calendar');
         Route::get('/analytics', fn() => view('analytics'))->name('doctor.analytics');
@@ -65,5 +65,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/appointment/complete', [AppointmentController::class, 'complete'])->name('appointment.complete');
     Route::get('/appointments/calendar', fn() => view('appointmentcalender'))->name('appointments.calendar');
     Route::get('/medical/history', fn() => view('medicalhistory'))->name('medical.history');
-    Route::get('/patient/settings', fn() => view('settings'))->name('patient.settings');
+    Route::get('/patient/settings', [PatientController::class, 'edit'])->name('patient.settings');
+    Route::post('/patient/settings', [PatientController::class, 'update'])->name('patient.settings.update');
 });

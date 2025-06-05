@@ -98,6 +98,14 @@
             transition: border-color 0.3s;
         }
 
+        /* Ensure dropdown menus are scrollable if they have many options */
+        select {
+            /* Modern browsers will automatically add a scrollbar to the dropdown menu if needed */
+            -webkit-appearance: menulist; /* Ensure default dropdown behavior in WebKit browsers */
+            -moz-appearance: menulist; /* Ensure default dropdown behavior in Firefox */
+            appearance: menulist; /* Ensure default dropdown behavior */
+        }
+
         select:focus, input:focus {
             outline: none;
             border-color: #4a6cf7;

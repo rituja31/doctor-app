@@ -63,8 +63,8 @@ Route::prefix('doctor')->group(function () {
 
     Route::middleware('auth:doctor')->group(function () {
         Route::get('/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
-        Route::get('/calendar', fn() => view('calendar'))->name('doctor.calendar');
-        Route::get('/analytics', fn() => view('analytics'))->name('doctor.analytics');
+       Route::get('/calendar', [DoctorController::class, 'calendar'])->name('doctor.calendar');
+       Route::get('/analytics', [DoctorController::class, 'analytics'])->name('doctor.analytics');
         Route::get('/docprofile', fn() => view('docprofile'))->name('doctor.docprofile');
         Route::put('/doctor/{id}', [DoctorController::class, 'update'])->name('doctor.update')->middleware('auth:doctor');
         Route::get('/doctor/profile', [DoctorController::class, 'showProfile'])->name('doctor.docprofile')->middleware('auth:doctor');

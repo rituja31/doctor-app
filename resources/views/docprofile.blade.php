@@ -481,12 +481,7 @@
                     </a>
                 </div>
                 
-                <div class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-user-injured"></i>
-                        Patients
-                    </a>
-                </div>
+               
                 
                 <div class="nav-item">
                     <a href="{{ route('doctor.analytics') }}" class="nav-link">

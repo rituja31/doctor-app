@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | eDoc</title>
+    <title>Register </title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -116,7 +116,6 @@
             @csrf
 
             <div class="roles">
-                <label><input type="radio" name="role" value="doctor" required> Doctor</label>
                 <label><input type="radio" name="role" value="patient" required> Patient</label>
             </div>
 

@@ -361,269 +361,210 @@
     </style>
 </head>
 <body>
-<aside class="sidebar">
-    <div class="doctor-profile">
-        <div class="doctor-avatar-container">
-            <div class="doctor-avatar">
-                <?php 
-                $fullName = Auth::guard('doctor')->user()->first_name . ' ' . Auth::guard('doctor')->user()->last_name;
-                $initials = '';
-                $nameParts = explode(' ', $fullName);
-                foreach ($nameParts as $part) {
-                    $initials .= strtoupper(substr($part, 0, 1));
-                }
-                echo substr($initials, 0, 2);
-                ?>
-            </div>
-            <div class="doctor-info">
-                <h3 class="doctor-name">Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h3>
-                <p class="doctor-specialty">{{ ucfirst(explode(',', Auth::guard('doctor')->user()->specialties)[0]) }}</p>
-            </div>
-        </div>
-        <div class="profile-actions">
-            <a href="{{ route('doctor.docprofile') }}" class="nav-link {{ request()->routeIs('doctor.docprofile') ? 'active' : '' }}">
-                <i class="fas fa-user"></i> View Profile
-            </a>
-            <a class="profile-link logout-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-            <form id="logout-form" action="{{ route('doctor.logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-        </div>
-    </div>
-    <nav class="nav-menu">
-        <div class="nav-item">
-            <a href="{{ route('doctor.dashboard') }}" class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
-                <i class="fas fa-tachometer-alt"></i>
-                Dashboard
-            </a>
-        </div>
-        <div class="nav-item">
-            <a href="{{ route('doctor.calendar') }}" class="nav-link {{ request()->routeIs('doctor.calendar') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i>
-                Appointments
-                <span class="badge">5</span>
-            </a>
-        </div>
-        <div class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="fas fa-user-injured"></i>
-                Patients
-            </a>
-        </div>
-        <div class="nav-item">
-            <a href="{{ route('doctor.analytics') }}" class="nav-link {{ request()->routeIs('doctor.analytics') ? 'active' : '' }}">
-                <i class="fas fa-chart-line"></i>
-                Analytics
-            </a>
-        </div>
-    </nav>
-</aside>
-<main class="main-content">
-    <header class="header">
-        <div class="header-title">
-            <h1>Doctor Dashboard</h1>
-            <h2>Welcome back, Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h2>
-        </div>
-        <div class="section-actions">
-            <button class="btn btn-primary">
-                <i class="fas fa-bell"></i>
-            </button>
-        </div>
-    </header>
-    <div class="calendar-container">
-        <div class="section-header">
-            <h2 class="section-title">Appointment Calendar</h2>
-            <div class="section-actions"></div>
-        </div>
-        <div id="calendar"></div>
-        <div class="booking-legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: var(--online-booking);"></div>
-                <span>Online Booking</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: var(--offline-booking);"></div>
-                <span>Offline Booking</span>
-            </div>
-        </div>
-    </div>
-    <div class="graph-container">
-        <div class="graph-card">
-            <div class="graph-header">
-                <h2 class="graph-title">Appointments Overview</h2>
-                <div class="graph-period">
-                    <button class="period-btn">Day</button>
-                    <button class="period-btn active">Week</button>
-                    <button class="period-btn">Month</button>
-                    <button class="period-btn">Year</button>
+    <aside class="sidebar">
+        <div class="doctor-profile">
+            <div class="doctor-avatar-container">
+                <div class="doctor-avatar">
+                    @php
+                        $fullName = Auth::guard('doctor')->user()->first_name . ' ' . Auth::guard('doctor')->user()->last_name;
+                        $initials = '';
+                        $nameParts = explode(' ', $fullName);
+                        foreach ($nameParts as $part) {
+                            $initials .= strtoupper(substr($part, 0, 1));
+                        }
+                        echo substr($initials, 0, 2);
+                    @endphp
+                </div>
+                <div class="doctor-info">
+                    <h3 class="doctor-name">Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h3>
+                    <p class="doctor-specialty">
+                        @php
+                            echo ucfirst(explode(',', Auth::guard('doctor')->user()->specialties)[0]);
+                        @endphp
+                    </p>
                 </div>
             </div>
-            <canvas id="appointmentGraph"></canvas>
+            <div class="profile-actions">
+                <a href="{{ route('doctor.docprofile') }}" class="nav-link {{ request()->routeIs('doctor.docprofile') ? 'active' : '' }}">
+                    <i class="fas fa-user"></i> View Profile
+                </a>
+                <a class="profile-link logout-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+                <form id="logout-form" action="{{ route('doctor.logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
         </div>
-    </div>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Calendar initialization
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: [
-                {
-                    title: 'John Smith - Checkup',
-                    start: new Date().toISOString().split('T')[0] + 'T09:00:00',
-                    end: new Date().toISOString().split('T')[0] + 'T09:30:00',
-                    className: 'fc-event-online',
-                    extendedProps: {
-                        type: 'online',
-                        patientId: 101
-                    }
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="{{ route('doctor.dashboard') }}" class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('doctor.calendar') }}" class="nav-link {{ request()->routeIs('doctor.calendar') ? 'active' : '' }}">
+                    <i class="fas fa-calendar-check"></i>
+                    Appointments
+                    <span class="badge">{{ $appointments->count() }}</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('doctor.analytics') }}" class="nav-link {{ request()->routeIs('doctor.analytics') ? 'active' : '' }}">
+                    <i class="fas fa-chart-line"></i>
+                    Analytics
+                </a>
+            </div>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="header">
+            <div class="header-title">
+                <h1>Doctor Dashboard</h1>
+                <h2>Welcome back, Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h2>
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-primary">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </header>
+        <div class="calendar-container">
+            <div class="section-header">
+                <h2 class="section-title">Appointment Calendar</h2>
+                <div class="section-actions"></div>
+            </div>
+            <div id="calendar"></div>
+            <div class="booking-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--online-booking);"></div>
+                    <span>Online Booking</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--offline-booking);"></div>
+                    <span>Offline Booking</span>
+                </div>
+            </div>
+        </div>
+        <div class="graph-container">
+            <div class="graph-card">
+                <div class="graph-header">
+                    <h2 class="graph-title">Appointments Overview</h2>
+                    <div class="graph-period">
+                        <button class="period-btn">Day</button>
+                        <button class="period-btn active">Week</button>
+                        <button class="period-btn">Month</button>
+                        <button class="period-btn">Year</button>
+                    </div>
+                </div>
+                <canvas id="appointmentGraph"></canvas>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calendar initialization
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                {
-                    title: 'Sarah Johnson - Follow-up',
-                    start: new Date().toISOString().split('T')[0] + 'T11:00:00',
-                    end: new Date().toISOString().split('T')[0] + 'T11:45:00',
-                    className: 'fc-event-offline',
-                    extendedProps: {
-                        type: 'offline',
-                        patientId: 102
-                    }
+                events: @json($appointments),
+                eventClick: function(info) {
+                    alert('Appointment with ' + info.event.extendedProps.patientName + '\nType: ' +
+                          info.event.extendedProps.type.toUpperCase() + ' booking');
                 },
-                {
-                    title: 'Michael Brown - Consultation',
-                    start: new Date().toISOString().split('T')[0] + 'T14:00:00',
-                    end: new Date().toISOString().split('T')[0] + 'T14:30:00',
-                    className: 'fc-event-offline',
-                    extendedProps: {
-                        type: 'offline',
-                        patientId: 103
-                    }
-                },
-                {
-                    title: 'Emily Davis - Annual Physical',
-                    start: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T10:00:00',
-                    end: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T10:45:00',
-                    className: 'fc-event-online',
-                    extendedProps: {
-                        type: 'online',
-                        patientId: 104
-                    }
-                },
-                {
-                    title: 'Robert Wilson - Post-Op',
-                    start: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T15:30:00',
-                    end: new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T16:15:00',
-                    className: 'fc-event-offline',
-                    extendedProps: {
-                        type: 'offline',
-                        patientId: 105
-                    }
+                eventDisplay: 'block',
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
                 }
-            ],
-            eventClick: function(info) {
-                alert('Appointment with ' + info.event.title + '\nType: ' +
-                      info.event.extendedProps.type.toUpperCase() + ' booking');
-            },
-            eventDisplay: 'block',
-            eventTimeFormat: {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            }
-        });
-        calendar.render();
-        // Line graph configuration
-        var ctx = document.getElementById('appointmentGraph').getContext('2d');
-        var appointmentGraph = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [
-                    {
-                        label: 'Completed',
-                        data: [12, 15, 10, 18, 14, 8, 5],
-                        borderColor: 'rgba(58, 134, 255, 1)',
-                        backgroundColor: 'rgba(58, 134, 255, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true
-                    },
-                    {
-                        label: 'Scheduled',
-                        data: [8, 10, 12, 9, 16, 10, 6],
-                        borderColor: 'rgba(131, 56, 236, 1)',
-                        backgroundColor: 'rgba(131, 56, 236, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true
-                    },
-                    {
-                        label: 'Cancelled',
-                        data: [2, 1, 3, 2, 1, 0, 1],
-                        borderColor: 'rgba(255, 0, 110, 1)',
-                        backgroundColor: 'rgba(255, 0, 110, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 20
-                        }
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            drawBorder: false
+            });
+            calendar.render();
+
+            // Line graph configuration
+            var ctx = document.getElementById('appointmentGraph').getContext('2d');
+            var appointmentGraph = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: @json($days),
+                    datasets: [
+                        {
+                            label: 'Online',
+                            data: @json($onlineData),
+                            borderColor: 'rgba(58, 134, 255, 1)', // --online-booking
+                            backgroundColor: 'rgba(58, 134, 255, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
                         },
-                        ticks: {
-                            stepSize: 5
+                        {
+                            label: 'Offline',
+                            data: @json($offlineData),
+                            borderColor: 'rgba(131, 56, 236, 1)', // --offline-booking
+                            backgroundColor: 'rgba(131, 56, 236, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
                         }
                     },
-                    x: {
-                        grid: {
-                            display: false
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 4,
+                            hoverRadius: 6
                         }
                     }
-                },
-                elements: {
-                    point: {
-                        radius: 4,
-                        hoverRadius: 6
-                    }
                 }
-            }
-        });
-        // Period buttons
-        const periodButtons = document.querySelectorAll('.period-btn');
-        periodButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                periodButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+            });
+
+            // Period buttons (placeholder for future dynamic updates)
+            const periodButtons = document.querySelectorAll('.period-btn');
+            periodButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    periodButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    // TODO: Add AJAX to update graph data based on period
+                });
             });
         });
-    });
-</script>
+    </script>
 </body>
 </html>

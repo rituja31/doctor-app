@@ -543,7 +543,7 @@
         <div class="dashboard">
             <div class="welcome-card">
                 <h2>Welcome back, <span>{{ Auth::user()->name }}</span></h2>
-                <p>Here's what's happening with your health profile today. You have 2 upcoming appointments and 1 new prescription.</p>
+                <p>Here's what's happening with your health profile today </p>
                 
                 <div class="user-info-grid">
                     <div class="info-card">

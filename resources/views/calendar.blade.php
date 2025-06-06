@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -296,97 +297,12 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Hardcoded appointment data with Indian names
-        const allEvents = [
-            {
-                id: '1',
-                title: 'Razak Khan - Checkup',
-                start: '2023-06-01T09:00:00',
-                end: '2023-06-01T09:30:00',
-                className: 'online',
-                extendedProps: { 
-                    type: 'online',
-                    patientId: 'P1001',
-                    notes: 'Annual physical examination. Patient has concerns about sleep quality.'
-                }
-            },
-            {
-                id: '2',
-                title: 'Rituja Sharma - Follow-up',
-                start: '2023-06-01T11:00:00',
-                end: '2023-06-01T11:45:00',
-                className: 'online',
-                extendedProps: { 
-                    type: 'online',
-                    patientId: 'P1002',
-                    notes: 'Diabetes management follow-up. Review latest blood sugar readings.'
-                }
-            },
-            {
-                id: '3',
-                title: 'Saurabh Patel - Consultation',
-                start: '2023-06-02T14:00:00',
-                end: '2023-06-02T14:30:00',
-                className: 'offline',
-                extendedProps: { 
-                    type: 'offline',
-                    patientId: 'P1003',
-                    notes: 'New patient consultation. Bring insurance card and medical history.'
-                }
-            },
-            {
-                id: '4',
-                title: 'Rohan Desai - Treatment',
-                start: '2023-06-03T10:15:00',
-                end: '2023-06-03T11:00:00',
-                className: 'offline',
-                extendedProps: { 
-                    type: 'offline',
-                    patientId: 'P1004',
-                    notes: 'Post-operative check. Remove stitches and assess healing.'
-                }
-            },
-            {
-                id: '5',
-                title: 'Razak Singh - Video Consult',
-                start: '2023-06-05T13:30:00',
-                end: '2023-06-05T14:00:00',
-                className: 'online',
-                extendedProps: { 
-                    type: 'online',
-                    patientId: 'P1005',
-                    notes: 'Medication review. Discuss side effects of current prescription.'
-                }
-            },
-            {
-                id: '6',
-                title: 'Rituja Nair - Physical',
-                start: '2023-06-06T09:30:00',
-                end: '2023-06-06T10:15:00',
-                className: 'offline',
-                extendedProps: { 
-                    type: 'offline',
-                    patientId: 'P1006',
-                    notes: 'Sports physical for school. Bring completed forms.'
-                }
-            },
-            {
-                id: '7',
-                title: 'Saurabh Gupta - Follow-up',
-                start: '2023-06-07T15:00:00',
-                end: '2023-06-07T15:30:00',
-                className: 'online',
-                extendedProps: { 
-                    type: 'online',
-                    patientId: 'P1007',
-                    notes: 'Blood pressure follow-up. Review medication effectiveness.'
-                }
-            }
-        ];
-
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
             const appointmentModal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+
+            // Dynamic events from Laravel
+            const allEvents = @json($appointments);
 
             // Initialize calendar
             let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -396,7 +312,7 @@
                     center: 'title',
                     right: 'timeGridDay,timeGridWeek,dayGridMonth,listWeek'
                 },
-                initialDate: '2023-06-01',
+                initialDate: '{{ now()->format('Y-m-d') }}', // Current date
                 navLinks: true,
                 editable: false,
                 dayMaxEvents: true,
@@ -405,7 +321,7 @@
                 slotMaxTime: '20:00:00',
                 allDaySlot: false,
                 eventContent: function(arg) {
-                    let icon = arg.event.classNames.includes('online') 
+                    let icon = arg.event.classNames.includes('fc-event-online') 
                         ? '<i class="bi bi-laptop me-1"></i>' 
                         : '<i class="bi bi-geo-alt me-1"></i>';
                     
@@ -415,9 +331,9 @@
                 },
                 eventClick: function(info) {
                     // Populate modal with event data
-                    document.getElementById('patientName').textContent = info.event.title;
-                    document.getElementById('patientId').textContent = info.event.extendedProps.patientId;
-                    document.getElementById('appointmentNotes').textContent = info.event.extendedProps.notes;
+                    document.getElementById('patientName').textContent = info.event.extendedProps.patientName;
+                    document.getElementById('patientId').textContent = info.event.id;
+                    document.getElementById('appointmentNotes').textContent = info.event.extendedProps.notes || 'No notes provided.';
                     
                     // Format date/time
                     const options = { 

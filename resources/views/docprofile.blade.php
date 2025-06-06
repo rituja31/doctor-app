@@ -519,6 +519,10 @@
             box-shadow: 0 0 0 0.2rem rgba(58, 134, 255, 0.25);
         }
         
+        .form-control.is-invalid {
+            border-color: var(--danger);
+        }
+        
         .form-select {
             display: block;
             width: 100%;
@@ -541,6 +545,16 @@
             border-color: var(--primary);
             outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(58, 134, 255, 0.25);
+        }
+        
+        .form-select.is-invalid {
+            border-color: var(--danger);
+        }
+        
+        .invalid-feedback {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
         
         textarea.form-control {
@@ -608,9 +622,9 @@
                 <div class="doctor-avatar-container">
                     <div class="doctor-avatar">
                         <?php 
-                        $name = Auth::user()->name;
+                        $fullName = Auth::guard('doctor')->user()->first_name . ' ' . Auth::guard('doctor')->user()->last_name;
                         $initials = '';
-                        $nameParts = explode(' ', $name);
+                        $nameParts = explode(' ', $fullName);
                         foreach ($nameParts as $part) {
                             $initials .= strtoupper(substr($part, 0, 1));
                         }
@@ -618,19 +632,27 @@
                         ?>
                     </div>
                     <div class="doctor-info">
-                        <h3 class="doctor-name">Dr. {{ Auth::user()->name }}</h3>
-                        <p class="doctor-specialty">Orthopedic Surgeon</p>
+                        <h3 class="doctor-name">Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h3>
+                        <p class="doctor-specialty">
+                            @php
+                                $specialties = explode(',', Auth::guard('doctor')->user()->specialties);
+                                $formattedSpecialties = array_map(function($specialty) {
+                                    return ucfirst(trim($specialty));
+                                }, $specialties);
+                                echo implode(', ', $formattedSpecialties);
+                            @endphp
+                        </p>
                     </div>
                 </div>
                 
                 <div class="profile-actions">
-                    <a href="#" class="profile-link active">
+                    <a href="{{ route('doctor.docprofile') }}" class="profile-link active">
                         <i class="fas fa-user"></i> View Profile
                     </a>
-                    <a href="{{ route('logout') }}" class="profile-link logout-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="{{ route('doctor.logout') }}" class="profile-link logout-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ route('doctor.logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </div>
@@ -638,14 +660,14 @@
             
             <nav class="nav-menu">
                 <div class="nav-item">
-                    <a href="/doctor/dashboard" class="nav-link">
+                    <a href="{{ route('doctor.dashboard') }}" class="nav-link">
                         <i class="fas fa-tachometer-alt"></i>
                         Dashboard
                     </a>
                 </div>
                 
                 <div class="nav-item">
-                    <a href="/doctor/calendar" class="nav-link">
+                    <a href="{{ route('doctor.calendar') }}" class="nav-link">
                         <i class="fas fa-calendar-check"></i>
                         Appointments
                     </a>
@@ -659,7 +681,7 @@
                 </div>
                 
                 <div class="nav-item">
-                    <a href="/doctor/analytics" class="nav-link">
+                    <a href="{{ route('doctor.analytics') }}" class="nav-link">
                         <i class="fas fa-chart-line"></i>
                         Analytics
                     </a>
@@ -682,7 +704,7 @@
             </header>
             
             <!-- Back to Dashboard Button -->
-            <a href="/doctor/dashboard" class="back-to-dashboard">
+            <a href="{{ route('doctor.dashboard') }}" class="back-to-dashboard">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </a>
             
@@ -691,9 +713,9 @@
                     <div class="profile-identity">
                         <div class="profile-avatar">
                             <?php 
-                            $name = Auth::user()->name;
+                            $fullName = Auth::guard('doctor')->user()->first_name . ' ' . Auth::guard('doctor')->user()->last_name;
                             $initials = '';
-                            $nameParts = explode(' ', $name);
+                            $nameParts = explode(' ', $fullName);
                             foreach ($nameParts as $part) {
                                 $initials .= strtoupper(substr($part, 0, 1));
                             }
@@ -701,8 +723,22 @@
                             ?>
                         </div>
                         <div class="profile-info">
-                            <h2>Dr. {{ Auth::user()->name }}</h2>
-                            <p>Orthopedic Surgeon</p>
+                            <h2>Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h2>
+                            <p>
+                                @php
+                                    $specialties = explode(',', Auth::guard('doctor')->user()->specialties);
+                                    $formattedSpecialties = array_map(function($specialty) {
+                                        return ucfirst(trim($specialty));
+                                    }, $specialties);
+                                    echo implode(', ', $formattedSpecialties);
+                                @endphp
+                            </p>
+                            <div class="profile-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-briefcase"></i>
+                                    {{ Auth::guard('doctor')->user()->status }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="profile-actions-header">
@@ -719,7 +755,15 @@
                             <div class="info-grid">
                                 <div class="info-item">
                                     <div class="info-label">Specialization</div>
-                                    <div class="info-value">Orthopedics</div>
+                                    <div class="info-value">
+                                        @php
+                                            $specialties = explode(',', Auth::guard('doctor')->user()->specialties);
+                                            $formattedSpecialties = array_map(function($specialty) {
+                                                return ucfirst(trim($specialty));
+                                            }, $specialties);
+                                            echo implode(', ', $formattedSpecialties);
+                                        @endphp
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -729,11 +773,11 @@
                             <div class="info-grid">
                                 <div class="info-item">
                                     <div class="info-label">Email</div>
-                                    <div class="info-value">{{ Auth::user()->email }}</div>
+                                    <div class="info-value">{{ Auth::guard('doctor')->user()->email }}</div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Phone</div>
-                                    <div class="info-value">+91 9876543210</div>
+                                    <div class="info-value">{{ Auth::guard('doctor')->user()->phone }}</div>
                                 </div>
                             </div>
                         </section>
@@ -752,55 +796,95 @@
                     <button type="button" class="btn-close" onclick="closeEditModal()">×</button>
                 </div>
                 <div class="modal-body">
-                    <form id="editDoctorForm">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form id="editDoctorForm" action="{{ route('doctor.update', Auth::guard('doctor')->user()->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="editFirstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="editFirstName" value="John" required>
+                                <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="editFirstName" name="first_name" value="{{ old('first_name', Auth::guard('doctor')->user()->first_name) }}" required>
+                                @error('first_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="editLastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="editLastName" value="Doe" required>
+                                <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="editLastName" name="last_name" value="{{ old('last_name', Auth::guard('doctor')->user()->last_name) }}" required>
+                                @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="editEmail" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="editEmail" value="john.doe@example.com" required>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="editEmail" name="email" value="{{ old('email', Auth::guard('doctor')->user()->email) }}" required>
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="editPhone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="editPhone" value="+91 9876543210">
+                                <input type="tel" class="form-control @error('phone') is-invalid @enderror" id="editPhone" name="phone" value="{{ old('phone', Auth::guard('doctor')->user()->phone) }}">
+                                @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="editSpecialty" class="form-label">Primary Specialty</label>
-                                <select class="form-select" id="editSpecialty" required>
-                                    <option value="">Select specialty</option>
-                                    <option selected>Orthopedics</option>
-                                    <option>Cardiology</option>
-                                    <option>Neurology</option>
-                                    <option>Pediatrics</option>
-                                    <option>Dermatology</option>
+                                <label for="editSpecialty" class="form-label">Specialties</label>
+                                <input type="text" class="form-control @error('specialties') is-invalid @enderror" id="editSpecialty" name="specialties" value="{{ old('specialties', Auth::guard('doctor')->user()->specialties) }}" required>
+                                @error('specialties')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editStatus" class="form-label">Status</label>
+                                <select class="form-select @error('status') is-invalid @enderror" id="editStatus" name="status" required>
+                                    <option value="Active" {{ old('status', Auth::guard('doctor')->user()->status) == 'Active' ? 'selected' : '' }}>Active</option>
+                                    <option value="On Leave" {{ old('status', Auth::guard('doctor')->user()->status) == 'On Leave' ? 'selected' : '' }}>On Leave</option>
+                                    <option value="Retired" {{ old('status', Auth::guard('doctor')->user()->status) == 'Retired' ? 'selected' : '' }}>Retired</option>
                                 </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="editPassword" class="form-label">New Password</label>
-                                <input type="password" class="form-control" id="editPassword">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="editPassword" name="password">
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="editConfirmPassword" class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" id="editConfirmPassword">
+                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="editConfirmPassword" name="password_confirmation">
+                                @error('password_confirmation')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
+                        <!-- Hidden fields for validation -->
+                        <input type="hidden" name="category_id" value="{{ Auth::guard('doctor')->user()->category_id ?? '1' }}">
+                        <input type="hidden" name="service_id" value="{{ Auth::guard('doctor')->user()->service_id ?? '1' }}">
+                        <input type="hidden" name="working_days" value="{{ Auth::guard('doctor')->user()->working_days ?? 'none' }}">
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveDoctorProfile()">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" onclick="saveDoctorProfile()">Submit</button>
                 </div>
             </div>
         </div>
@@ -824,13 +908,11 @@
                 return;
             }
             
-            // Here you would typically save the data via AJAX
-            alert('Profile changes saved!');
-            closeEditModal();
-            // You would then update the profile page with the new data
+            // Submit the form
+            document.getElementById('editDoctorForm').submit();
         }
         
-        // Close modal when clicking outside of it
+        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('editDoctorModal');
             if (event.target == modal) {

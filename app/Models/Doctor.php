@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Doctor extends Model
+class Doctor extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
+
+    // Laravel expects this model to use the 'doctors' table
+    protected $table = 'doctors';
 
     protected $fillable = [
         'first_name',
@@ -19,10 +22,14 @@ class Doctor extends Model
         'specialties',
         'status',
         'password',
-        'start_time',
-        'finish_time',
-        'break_start_time',
-        'break_end_time',
         'working_days',
     ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    // Enable timestamps (created_at and updated_at)
+    public $timestamps = true;
 }

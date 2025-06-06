@@ -19,10 +19,6 @@ class CreateDoctorsTable extends Migration
             $table->string('specialties');
             $table->string('status');
             $table->string('password');
-            $table->string('start_time'); // HH:mm (e.g., 09:00)
-            $table->string('finish_time');
-            $table->string('break_start_time');
-            $table->string('break_end_time');
             $table->string('working_days'); // Comma-separated (e.g., Monday,Tuesday)
             $table->timestamps();
         });

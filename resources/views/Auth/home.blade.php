@@ -513,6 +513,21 @@
                 gap: 0;
             }
         }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -702,26 +717,47 @@
             </div>
         </div>
         
-        <form class="contact-form">
+        <form class="contact-form" action="{{ route('contact.store') }}" method="POST">
+            @csrf
+            @if(session('success'))
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="form-row">
                 <div>
                     <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" placeholder="Enter your full name" required>
+                    <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" value="{{ old('full_name') }}" required>
+                    @error('full_name')
+                        <div class="error">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div>
                     <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required>
+                    @error('email')
+                        <div class="error">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" placeholder="Enter your phone number">
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{ old('phone') }}">
+            @error('phone')
+                <div class="error">{{ $message }}</div>
+            @enderror
             
             <label for="subject">Subject</label>
-            <input type="text" id="subject" placeholder="Enter subject">
+            <input type="text" id="subject" name="subject" placeholder="Enter subject" value="{{ old('subject') }}">
+            @error('subject')
+                <div class="error">{{ $message }}</div>
+            @enderror
             
             <label for="message">Message</label>
-            <textarea id="message" placeholder="Write your message here..." required></textarea>
+            <textarea id="message" name="message" placeholder="Write your message here..." required>{{ old('message') }}</textarea>
+            @error('message')
+                <div class="error">{{ $message }}</div>
+            @enderror
             
             <button type="submit" class="btn-primary">
                 <i class="fas fa-paper-plane"></i> Send Message
@@ -775,7 +811,7 @@
     </div>
     
     <div class="footer-bottom">
-        <p>&copy; 2025 MediCare. All Rights Reserved. | <a href="#" style="color: var(--accent-color);">Privacy Policy</a> | <a href="#" style="color: var(--accent-color);">Terms of Service</a></p>
+        <p>© 2025 MediCare. All Rights Reserved. | <a href="#" style="color: var(--accent-color);">Privacy Policy</a> | <a href="#" style="color: var(--accent-color);">Terms of Service</a></p>
     </div>
 </footer>
 

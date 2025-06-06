@@ -366,9 +366,9 @@
         <div class="doctor-avatar-container">
             <div class="doctor-avatar">
                 <?php 
-                $name = Auth::user()->name;
+                $fullName = Auth::guard('doctor')->user()->first_name . ' ' . Auth::guard('doctor')->user()->last_name;
                 $initials = '';
-                $nameParts = explode(' ', $name);
+                $nameParts = explode(' ', $fullName);
                 foreach ($nameParts as $part) {
                     $initials .= strtoupper(substr($part, 0, 1));
                 }
@@ -376,8 +376,8 @@
                 ?>
             </div>
             <div class="doctor-info">
-                <h3 class="doctor-name">Dr. {{ Auth::user()->name }}</h3>
-                <p class="doctor-specialty">Cardiologist</p>
+                <h3 class="doctor-name">Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h3>
+                <p class="doctor-specialty">{{ ucfirst(explode(',', Auth::guard('doctor')->user()->specialties)[0]) }}</p>
             </div>
         </div>
         <div class="profile-actions">
@@ -387,7 +387,7 @@
             <a class="profile-link logout-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            <form id="logout-form" action="{{ route('doctor.logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
         </div>
@@ -424,7 +424,7 @@
     <header class="header">
         <div class="header-title">
             <h1>Doctor Dashboard</h1>
-            <h2>Welcome back, Dr. {{ Auth::user()->name }}</h2>
+            <h2>Welcome back, Dr. {{ Auth::guard('doctor')->user()->first_name }} {{ Auth::guard('doctor')->user()->last_name }}</h2>
         </div>
         <div class="section-actions">
             <button class="btn btn-primary">

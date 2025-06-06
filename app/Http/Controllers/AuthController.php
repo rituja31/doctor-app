@@ -50,7 +50,6 @@ class AuthController extends Controller
         $password = $request->password;
         $role = $request->role;
 
-        
         if ($role === 'admin') {
             if ($email === 'admin@gmail.com' && $password === 'admin1234') {
                 $request->session()->put('admin_logged_in', true);
@@ -61,13 +60,18 @@ class AuthController extends Controller
             }
         }
 
-        
-        $credentials = $request->only('email', 'password');
+        if ($role === 'doctor') {
+            if (Auth::guard('doctor')->attempt(['email' => $email, 'password' => $password])) {
+                $request->session()->regenerate();
+                return redirect()->route('doctor.dashboard');
+            } else {
+                return back()->withErrors(['email' => 'Invalid doctor credentials.'])->withInput();
+            }
+        }
 
-        if (Auth::attempt($credentials)) {
+        // For patient and default users
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
             $user = Auth::user();
-
-            
             if ($user->role !== $role) {
                 Auth::logout();
                 return back()->withErrors(['email' => 'Incorrect role selected.'])->withInput();
@@ -75,9 +79,7 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            if ($role === 'doctor') {
-                return redirect()->route('doctor.dashboard');
-            } elseif ($role === 'patient') {
+            if ($role === 'patient') {
                 return redirect()->route('patient.dashboard');
             }
         }
@@ -87,16 +89,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        
         $request->session()->forget(['admin_logged_in', 'admin_email']);
-
-        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
     }
-
-    
 }

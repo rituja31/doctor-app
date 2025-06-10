@@ -229,7 +229,7 @@
             </div>
             <div class="detail-row">
                 <span class="detail-label">Service Fees</span>
-                <span class="detail-value">${{ number_format($finalData['service_fees'], 2) }}</span>
+                <span class="detail-value">₹{{ number_format($finalData['service_fees'], 2) }}</span>
             </div>
             <div class="detail-row">
                 <span class="detail-label">Doctor</span>

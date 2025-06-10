@@ -56,9 +56,18 @@ class DoctorController extends Controller
         $appointments = Appointment::where('doctor_id', $doctor->id)
             ->select('id', 'appointment_type', 'appointment_date', 'appointment_time', 'first_name', 'last_name', 'details')
             ->get()
-            ->map(function ($appointment) {
+            ->map(function ($appointment) use ($doctor) {
                 $startDateTime = Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
-                $endDateTime = $startDateTime->copy()->addMinutes(30);
+                $timings = $doctor->timings ? explode(',', $doctor->timings) : [];
+                $startTime = $startDateTime->format('H:i');
+                $nextTime = null;
+                if ($timings && in_array($startTime, $timings)) {
+                    $currentIndex = array_search($startTime, $timings);
+                    if (isset($timings[$currentIndex + 1])) {
+                        $nextTime = $timings[$currentIndex + 1];
+                    }
+                }
+                $endDateTime = $nextTime ? Carbon::parse($appointment->appointment_date . ' ' . $nextTime) : $startDateTime->copy()->addMinutes(30);
                 
                 return [
                     'id' => $appointment->id,
@@ -112,13 +121,21 @@ class DoctorController extends Controller
     {
         $doctor = Auth::guard('doctor')->user();
         
-        // Fetch appointments for the logged-in doctor
         $appointments = Appointment::where('doctor_id', $doctor->id)
             ->select('id', 'appointment_type', 'appointment_date', 'appointment_time', 'first_name', 'last_name', 'details')
             ->get()
-            ->map(function ($appointment) {
+            ->map(function ($appointment) use ($doctor) {
                 $startDateTime = Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
-                $endDateTime = $startDateTime->copy()->addMinutes(30);
+                $timings = $doctor->timings ? explode(',', $doctor->timings) : [];
+                $startTime = $startDateTime->format('H:i');
+                $nextTime = null;
+                if ($timings && in_array($startTime, $timings)) {
+                    $currentIndex = array_search($startTime, $timings);
+                    if (isset($timings[$currentIndex + 1])) {
+                        $nextTime = $timings[$currentIndex + 1];
+                    }
+                }
+                $endDateTime = $nextTime ? Carbon::parse($appointment->appointment_date . ' ' . $nextTime) : $startDateTime->copy()->addMinutes(30);
                 
                 return [
                     'id' => $appointment->id,
@@ -141,10 +158,9 @@ class DoctorController extends Controller
     public function analytics()
     {
         $doctor = Auth::guard('doctor')->user();
-        $startDate = Carbon::now()->subDays(365); // Last year for trend
-        $startOfWeek = Carbon::now()->startOfWeek(); // For peak hours
+        $startDate = Carbon::now()->subDays(365);
+        $startOfWeek = Carbon::now()->startOfWeek();
 
-        // Trend data (monthly counts for online/offline)
         $monthlyAppointments = Appointment::where('doctor_id', $doctor->id)
             ->where('appointment_date', '>=', $startDate)
             ->groupBy('appointment_type', \DB::raw('DATE_FORMAT(appointment_date, "%Y-%m")'))
@@ -177,7 +193,6 @@ class DoctorController extends Controller
             'offline' => array_values($offlineTrend),
         ];
 
-        // Appointment types (online vs offline percentages)
         $typeCounts = Appointment::where('doctor_id', $doctor->id)
             ->groupBy('appointment_type')
             ->selectRaw('appointment_type, COUNT(*) as count')
@@ -189,7 +204,6 @@ class DoctorController extends Controller
             'offline' => round(($typeCounts->get('offline', 0) / $totalTypes) * 100, 1),
         ];
 
-        // Weekly peak hours (this week)
         $peakHours = Appointment::where('doctor_id', $doctor->id)
             ->whereBetween('appointment_date', [$startOfWeek, Carbon::now()->endOfWeek()])
             ->selectRaw('HOUR(appointment_time) as hour, COUNT(*) as count')
@@ -198,13 +212,12 @@ class DoctorController extends Controller
 
         $hours = [];
         $peakData = [];
-        for ($i = 8; $i <= 17; $i++) { // 8 AM to 5 PM
+        for ($i = 8; $i <= 17; $i++) {
             $hourLabel = $i < 12 ? "$i AM" : ($i == 12 ? "12 PM" : ($i - 12) . " PM");
             $hours[] = $hourLabel;
             $peakData[] = $peakHours->get($i, 0);
         }
 
-        // Recent appointments (last 6)
         $recentAppointments = Appointment::where('doctor_id', $doctor->id)
             ->select('id', 'first_name', 'last_name', 'appointment_type', 'appointment_date', 'appointment_time', 'details')
             ->latest('appointment_date')
@@ -239,10 +252,16 @@ class DoctorController extends Controller
     // List all doctors (Admin view)
     public function index()
     {
-        $doctors = Doctor::all();
-        $categories = Category::all();
-        $services = Service::with('category')->get();
-        return view('doctors.index', compact('doctors', 'categories', 'services'));
+        try {
+            $doctors = Doctor::all();
+            $categories = Category::all();
+            $services = Service::with('category')->get();
+            Log::info('Doctors fetched for index:', ['count' => $doctors->count()]);
+            return view('dashboards.admin', compact('doctors', 'categories', 'services'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching doctors for index: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to load dashboard: ' . $e->getMessage()]);
+        }
     }
 
     // Store new doctor
@@ -255,33 +274,42 @@ class DoctorController extends Controller
                 'last_name' => 'required|string|max:255',
                 'email' => 'required|email|unique:doctors,email',
                 'phone' => 'required|string|max:20',
-                'category_id' => 'required|integer|exists:categories,id',
-                'service_id' => 'required|integer|exists:services,id',
+                'category_id' => 'required|array|min:1',
+                'category_id.*' => 'exists:categories,id',
+                'service_id' => 'required|array|min:1',
+                'service_id.*' => 'exists:services,id',
                 'status' => 'required|in:Active,On Leave,Retired',
                 'password' => 'required|string|min:4',
                 'working_days' => 'required|array|min:1',
                 'working_days.*' => 'string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,All Days',
+                'timings' => 'required|array|min:1',
+                'timings.*' => 'date_format:H:i', // Use date_format for reliable time validation
             ]);
 
             $workingDays = in_array('All Days', $request->working_days)
                 ? 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'
                 : implode(',', array_diff($request->working_days, ['All Days']));
 
-            $category = Category::findOrFail($request->category_id);
-            $service = Service::findOrFail($request->service_id);
-            $specialties = $category->name . ',' . $service->name;
+            $categoryNames = Category::whereIn('id', $request->category_id)->pluck('name')->toArray();
+            $serviceNames = Service::whereIn('id', $request->service_id)->pluck('name')->toArray();
+            // Deduplicate specialties
+            $specialtiesArray = array_unique(array_merge($categoryNames, $serviceNames));
+            $specialties = implode(',', $specialtiesArray);
+
+            Log::info('Timings before saving:', ['timings' => $request->timings]);
 
             $doctor = Doctor::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'category_id' => (int) $request->category_id,
-                'service_id' => (int) $request->service_id,
+                'category_id' => implode(',', $request->category_id),
+                'service_id' => implode(',', $request->service_id),
                 'specialties' => $specialties,
                 'status' => $request->status,
                 'password' => bcrypt($request->password),
                 'working_days' => $workingDays,
+                'timings' => implode(',', $request->timings), // Save timings directly
             ]);
 
             Log::info('Doctor created:', $doctor->toArray());
@@ -298,10 +326,17 @@ class DoctorController extends Controller
     // Show form to edit doctor
     public function edit($id)
     {
-        $doctor = Doctor::findOrFail($id);
-        $categories = Category::all();
-        $services = Service::with('category')->get();
-        return view('edit', compact('doctor', 'categories', 'services'));
+        try {
+            $doctor = Doctor::findOrFail($id);
+            $categories = Category::all();
+            $services = Service::with('category')->get();
+            $selectedTimings = explode(',', $doctor->timings ?? '');
+            Log::info('Edit doctor form accessed:', ['id' => $id, 'selectedTimings' => $selectedTimings]);
+            return view('edit', compact('doctor', 'categories', 'services', 'selectedTimings'));
+        } catch (\Exception $e) {
+            Log::error('Error accessing edit doctor form: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to load edit form: ' . $e->getMessage()]);
+        }
     }
 
     // Update doctor info
@@ -315,34 +350,39 @@ class DoctorController extends Controller
                 'last_name' => 'required|string|max:255',
                 'email' => 'required|email|unique:doctors,email,' . $doctor->id,
                 'phone' => 'required|string|max:20',
-                'category_id' => 'required|integer|exists:categories,id',
-                'service_id' => 'required|integer|exists:services,id',
+                'category_id' => 'required|array|min:1',
+                'category_id.*' => 'exists:categories,id',
+                'service_id' => 'required|array|min:1',
+                'service_id.*' => 'exists:services,id',
                 'status' => 'required|in:Active,On Leave,Retired',
                 'password' => 'nullable|string|min:4',
-                'password_confirmation' => 'nullable|same:password',
                 'working_days' => 'required|array|min:1',
                 'working_days.*' => 'string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,All Days',
-                'specialties' => 'nullable|string|max:255',
+                'timings' => 'required|array|min:1',
+                'timings.*' => 'date_format:H:i',
             ]);
 
             $workingDays = in_array('All Days', $request->working_days)
                 ? 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'
                 : implode(',', array_diff($request->working_days, ['All Days']));
 
-            $specialties = $request->filled('specialties')
-                ? $request->specialties
-                : Category::findOrFail($request->category_id)->name . ',' . Service::findOrFail($request->service_id)->name;
+            $categoryNames = Category::whereIn('id', $request->category_id)->pluck('name')->toArray();
+            $serviceNames = Service::whereIn('id', $request->service_id)->pluck('name')->toArray();
+            // Deduplicate specialties
+            $specialtiesArray = array_unique(array_merge($categoryNames, $serviceNames));
+            $specialties = implode(',', $specialtiesArray);
 
             $updateData = [
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'category_id' => (int) $request->category_id,
-                'service_id' => (int) $request->service_id,
+                'category_id' => implode(',', $request->category_id),
+                'service_id' => implode(',', $request->service_id),
                 'specialties' => $specialties,
                 'status' => $request->status,
                 'working_days' => $workingDays,
+                'timings' => implode(',', $request->timings),
             ];
 
             if ($request->filled('password')) {
@@ -350,6 +390,7 @@ class DoctorController extends Controller
             }
 
             $doctor->update($updateData);
+
             Log::info('Doctor updated:', $doctor->toArray());
 
             if (Session::get('admin_logged_in')) {
@@ -368,22 +409,49 @@ class DoctorController extends Controller
     // Show single doctor details
     public function show($id)
     {
-        $doctor = Doctor::findOrFail($id);
-        return view('view', compact('doctor'));
+        try {
+            $doctor = Doctor::findOrFail($id);
+            $categories = Category::whereIn('id', explode(',', $doctor->category_id))->get();
+            $services = Service::whereIn('id', explode(',', $doctor->service_id))->get();
+            Log::info('Doctor details fetched:', ['id' => $id]);
+            return view('view', compact('doctor', 'categories', 'services'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching doctor details: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to load doctor details: ' . $e->getMessage()]);
+        }
     }
 
     // Delete doctor
     public function destroy($id)
     {
-        $doctor = Doctor::findOrFail($id);
-        $doctor->delete();
-        return redirect()->back()->with('success', 'Doctor deleted successfully.');
+        try {
+            $doctor = Doctor::findOrFail($id);
+            $doctor->delete();
+            Log::info('Doctor deleted:', ['id' => $id]);
+            return redirect()->back()->with('success', 'Doctor deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting doctor: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to delete doctor: ' . $e->getMessage()]);
+        }
     }
 
     // Show doctor profile
     public function showProfile()
     {
-        $doctor = Auth::guard('doctor')->user();
-        return view('docprofile', compact('doctor'));
+        try {
+            $doctor = Auth::guard('doctor')->user();
+            if (!$doctor) {
+                Log::warning('Unauthenticated doctor access attempt to profile');
+                return redirect()->route('doctor.login')->withErrors(['error' => 'Please login first']);
+            }
+            $categories = Category::whereIn('id', explode(',', $doctor->category_id))->get();
+            $services = Service::whereIn('id', explode(',', $doctor->service_id))->get();
+            $selectedTimings = explode(',', $doctor->timings ?? '');
+            Log::info('Doctor profile accessed:', ['doctor_id' => $doctor->id]);
+            return view('docprofile', compact('doctor', 'categories', 'services', 'selectedTimings'));
+        } catch (\Exception $e) {
+            Log::error('Error accessing doctor profile: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to load profile: ' . $e->getMessage()]);
+        }
     }
 }

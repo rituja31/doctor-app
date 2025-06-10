@@ -8,6 +8,10 @@ use App\Models\Doctor;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BookingConfirmed;
 
 class AppointmentController extends Controller
 {
@@ -182,7 +186,11 @@ class AppointmentController extends Controller
             'appointment_date' => $appointment->appointment_date,
             'appointment_time' => $appointment->appointment_time,
             'email' => $appointment->email,
+            'name' => $appointment->first_name . ' ' . $appointment->last_name,
         ];
+
+        // ✅ Send confirmation email
+        Mail::to($appointment->email)->send(new BookingConfirmed($finalData));
 
         $request->session()->forget('appointment');
         return view('finalize', compact('finalData'));

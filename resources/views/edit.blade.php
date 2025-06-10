@@ -205,13 +205,14 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            <div class="form-group">
-    <label for="password">Password (Leave blank to keep current)</label>
-    <input type="password" id="password" name="password" placeholder="Enter New Password (min 4 chars)" class="@error('password') is-invalid @enderror">
-    @error('password')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
+                <div class="form-group">
+                    <label for="password">Password (Leave blank to keep current)</label>
+                    <input type="password" id="password" name="password" placeholder="Enter New Password (min 4 chars)"
+                           class="@error('password') is-invalid @enderror">
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
                     <input type="text" id="phone" name="phone" value="{{ old('phone', $doctor->phone) }}" required
@@ -245,31 +246,56 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="category_id">Category</label>
-                    <select id="category_id" name="category_id" required class="@error('category_id') is-invalid @enderror">
-                        <option value="" disabled>Select Category</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id', $doctor->category_id) == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <label>Categories</label>
+                    <?php
+                        $currentCategories = $doctor->category_id ? explode(',', $doctor->category_id) : [];
+                    ?>
+                    @foreach ($categories as $category)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="category_{{ $category->id }}" name="category_id[]" value="{{ $category->id }}"
+                                   {{ in_array($category->id, old('category_id', $currentCategories)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="category_{{ $category->id }}">{{ $category->name }}</label>
+                        </div>
+                    @endforeach
                     @error('category_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="service_id">Service</label>
-                    <select id="service_id" name="service_id" required class="@error('service_id') is-invalid @enderror">
-                        <option value="" disabled>Select Service</option>
-                        @foreach ($services as $service)
-                            <option value="{{ $service->id }}" {{ old('service_id', $doctor->service_id) == $service->id ? 'selected' : '' }}>
-                                {{ $service->name }} ({{ $service->category->name }})
-                            </option>
-                        @endforeach
-                    </select>
+                    <label>Services</label>
+                    <?php
+                        $currentServices = $doctor->service_id ? explode(',', $doctor->service_id) : [];
+                    ?>
+                    @foreach ($services as $service)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="service_{{ $service->id }}" name="service_id[]" value="{{ $service->id }}"
+                                   {{ in_array($service->id, old('service_id', $currentServices)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="service_{{ $service->id }}">{{ $service->name }} ({{ $service->category->name }})</label>
+                        </div>
+                    @endforeach
                     @error('service_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label>Appointment Timings</label>
+                    <?php
+                        $timings = [
+                            '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                            '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+                            '16:00', '16:30', '17:00', '17:30', '18:00'
+                        ];
+                        $currentTimings = $doctor->timings ? explode(',', $doctor->timings) : [];
+                    ?>
+                    @foreach ($timings as $time)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="timing_{{ $time }}" name="timings[]" value="{{ $time }}"
+                                   {{ in_array($time, old('timings', $currentTimings)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="timing_{{ $time }}">{{ date('h:i A', strtotime($time)) }}</label>
+                        </div>
+                    @endforeach
+                    @error('timings')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">

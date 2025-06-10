@@ -9,9 +9,10 @@ class Doctor extends Authenticatable
 {
     use Notifiable;
 
-    // Laravel expects this model to use the 'doctors' table
+    // Specify the table name
     protected $table = 'doctors';
 
+    // Add 'timings' to the fillable array
     protected $fillable = [
         'first_name',
         'last_name',
@@ -23,6 +24,7 @@ class Doctor extends Authenticatable
         'status',
         'password',
         'working_days',
+        'timings', // Added to allow mass assignment
     ];
 
     protected $hidden = [
@@ -30,6 +32,6 @@ class Doctor extends Authenticatable
         'remember_token',
     ];
 
-    // Enable timestamps (created_at and updated_at)
+    // Enable timestamps
     public $timestamps = true;
 }

@@ -213,7 +213,7 @@
         <h1>Book Appointment</h1>
         
         <div class="summary">
-            <p>You've selected <strong>{{ $service->name }}</strong> service from <strong>{{ $appointment['appointment_time'] }}</strong> on <strong>{{ $appointment['date'] }}</strong>. You'll be charged <strong>${{ number_format($service->fees, 2) }}</strong>.</p>
+            <p>You've selected <strong>{{ $service->name }}</strong> service from <strong>{{ $appointment['appointment_time'] }}</strong> on <strong>{{ $appointment['date'] }}</strong>. You'll be charged <strong>₹{{ number_format($service->fees, 2) }}</strong>.</p>
             <p>Please provide your details in the form below to proceed with booking.</p>
         </div>
         

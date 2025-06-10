@@ -238,53 +238,7 @@
         }
 
         .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .table-title {
             font-weight: 600;
-            margin: 0;
-            font-size: 1.25rem;
-            color: var(--dark-color);
-        }
-
-        .search-box {
-            position: relative;
-            width: 250px;
-        }
-
-        .search-box input {
-            padding-left: 35px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-        }
-
-        .search-box input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            top: 10px;
-            color: var(--secondary-color);
-            font-size: 0.9rem;
-        }
-
-        .table {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        .table thead th {
-            background-color: #f8fafc;
             color: var(--secondary-color);
             font-weight: 600;
             border-bottom-width: 1px;
@@ -474,7 +428,6 @@
             <p class="admin-email">{{ session('admin_email', 'admin@medicare.com') }}</p>
             <span class="admin-role">Administrator</span>
             
-            <!-- Logout Button Below Profile -->
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="profile-logout-btn">
@@ -518,16 +471,16 @@
 
         <!-- Doctors Table -->
         <div class="table-container">
-            <div class="table-header">
-                <h3 class="table-title">All Doctors</h3>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" class="form-control" placeholder="Search doctors...">
+            <div class="table-header d-flex justify-content-between align-items-center">
+                <h3 class="table-title mb-0">All Doctors</h3>
+                <div class="search-box position-relative">
+                    <i class="fas fa-search position-absolute" style="top: 50%; left: 10px; transform: translateY(-50%);"></i>
+                    <input type="text" class="form-control ps-5" id="searchInput" placeholder="Search doctors...">
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover" id="doctorsTable">
                     <thead>
                         <tr>
                             <th>Doctor</th>
@@ -554,9 +507,17 @@
                                     <small class="text-muted">{{ $doctor->phone }}</small>
                                 </td>
                                 <td>
-                                    @foreach (explode(',', $doctor->specialties) as $specialty)
-                                        <span class="specialty-badge">{{ trim($specialty) }}</span>
-                                    @endforeach
+                                    @if ($doctor->specialties)
+                                        @php
+                                            // Deduplicate specialties
+                                            $uniqueSpecialties = array_unique(array_filter(array_map('trim', explode(',', $doctor->specialties))));
+                                        @endphp
+                                        @foreach ($uniqueSpecialties as $specialty)
+                                            <span class="specialty-badge">{{ $specialty }}</span>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted">No specialties</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <span class="badge bg-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $doctor->status == 'Active' ? 'success' : ($doctor->status == 'On Leave' ? 'warning' : 'danger') }}">{{ $doctor->status }}</span>
@@ -596,7 +557,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <!-- Enhanced Error Display -->
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong>Errors:</strong>
@@ -634,13 +594,13 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                             <div class="col-md-6">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter Password (min 4 chars)" required autocomplete="new-password">
-    @error('password')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
+                                <div class="col-md-6">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter Password (min 4 chars)" required autocomplete="new-password">
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -690,27 +650,46 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="category_id" class="form-label">Category</label>
-                                <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
-                                    <option value="" selected disabled>Select Category</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label">Categories</label>
+                                @foreach ($categories as $category)
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="category_{{ $category->id }}" name="category_id[]" value="{{ $category->id }}" {{ in_array($category->id, old('category_id', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="category_{{ $category->id }}">{{ $category->name }}</label>
+                                    </div>
+                                @endforeach
                                 @error('category_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="service_id" class="form-label">Service</label>
-                                <select class="form-select @error('service_id') is-invalid @enderror" id="service_id" name="service_id" required>
-                                    <option value="" selected disabled>Select Service</option>
-                                    @foreach ($services as $service)
-                                        <option value="{{ $service->id }}" {{ old('service_id') == $service->id ? 'selected' : '' }}>{{ $service->name }} ({{ $service->category->name }})</option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label">Services</label>
+                                @foreach ($services as $service)
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="service_{{ $service->id }}" name="service_id[]" value="{{ $service->id }}" {{ in_array($service->id, old('service_id', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="service_{{ $service->id }}">{{ $service->name }} ({{ $service->category->name }})</label>
+                                    </div>
+                                @endforeach
                                 @error('service_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Appointment Timings</label>
+                                <?php
+                                    $timings = [
+                                        '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                                        '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+                                        '16:00', '16:30', '17:00', '17:30', '18:00'
+                                    ];
+                                ?>
+                                @foreach ($timings as $time)
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="timing_{{ $time }}" name="timings[]" value="{{ $time }}" {{ in_array($time, old('timings', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="timing_{{ $time }}">{{ date('h:i A', strtotime($time)) }}</label>
+                                    </div>
+                                @endforeach
+                                @error('timings')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
@@ -738,20 +717,65 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('working_days_all').addEventListener('change', function () {
-                const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-                days.forEach(day => {
-                    document.getElementById(`working_days_${day}`).checked = this.checked;
+            // Handle "All Days" checkbox
+            const allDaysCheckbox = document.getElementById('working_days_all');
+            const dayCheckboxes = [
+                'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
+            ].map(day => document.getElementById(`working_days_${day}`));
+
+            allDaysCheckbox.addEventListener('change', function () {
+                dayCheckboxes.forEach(checkbox => {
+                    if (checkbox) checkbox.checked = this.checked;
                 });
             });
 
+            // Client-side validation for timings
             document.getElementById('addDoctorForm').addEventListener('submit', function (e) {
-                console.log('Form submitted with data:', new FormData(this));
+                const timings = document.querySelectorAll('input[name="timings[]"]:checked');
+                if (timings.length === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one appointment timing.');
+                    return;
+                }
+
+                const formData = new FormData(this);
+                console.log('Form submitted with data:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
             });
 
+            // Initialize Bootstrap tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const table = document.getElementById('doctorsTable');
+            const rows = table.getElementsByTagName('tr');
+
+            searchInput.addEventListener('input', function () {
+                const searchText = this.value.toLowerCase();
+
+                // Start from index 1 to skip the header row
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    const doctorName = row.cells[0].textContent.toLowerCase();
+                    const email = row.cells[1].textContent.toLowerCase();
+                    const specialties = row.cells[2].textContent.toLowerCase();
+
+                    if (
+                        doctorName.includes(searchText) ||
+                        email.includes(searchText) ||
+                        specialties.includes(searchText)
+                    ) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
             });
         });
     </script>

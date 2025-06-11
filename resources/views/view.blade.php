@@ -15,6 +15,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -70,6 +71,7 @@
         .view-group label {
             display: block;
             margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 500;
             color: var(--text-color);
         }
@@ -87,7 +89,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid var(--border-color);
         }

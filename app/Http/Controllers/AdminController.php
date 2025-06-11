@@ -7,6 +7,7 @@ use App\Models\Doctor;
 use App\Models\Category;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -21,10 +22,16 @@ class AdminController extends Controller
             $request->session()->put('admin_email', 'admin@gmail.com');
         }
 
-        $doctors = Doctor::all();
-        $categories = Category::all();
-        $services = Service::all();
+        try {
+            $doctors = Doctor::paginate(10); // Changed from Doctor::all() to paginate(10)
+            $categories = Category::all();
+            $services = Service::with('category')->get(); // Added with('category') for consistency
+            Log::info('Doctors fetched for admin dashboard:', ['count' => $doctors->total()]);
 
-        return view('dashboards.admin', compact('doctors', 'categories', 'services'));
+            return view('dashboards.admin', compact('doctors', 'categories', 'services'));
+        } catch (\Exception $e) {
+            Log::error('Error fetching admin dashboard data: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to load dashboard: ' . $e->getMessage()]);
+        }
     }
 }

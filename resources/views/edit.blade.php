@@ -38,7 +38,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--border-color);
         }
@@ -137,7 +137,8 @@
             border-color: #e3342f;
         }
 
-        .is-invalid ~ .invalid-feedback {
+        .is-invalid ~ .invalid-feedback,
+        .is-invalid .invalid-feedback {
             display: block;
         }
 
@@ -223,10 +224,10 @@
                 </div>
                 <div class="form-group">
                     <label>Working Days</label>
-                    <?php
-                        $workingDays = explode(',', $doctor->working_days);
+                    @php
+                        $workingDays = $doctor->working_days ? explode(',', $doctor->working_days) : [];
                         $allDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'All Days'];
-                    ?>
+                    @endphp
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="working_days_all" name="working_days[]" value="All Days"
                                {{ in_array('All Days', old('working_days', $workingDays)) ? 'checked' : '' }}>
@@ -247,9 +248,9 @@
                 </div>
                 <div class="form-group">
                     <label>Categories</label>
-                    <?php
+                    @php
                         $currentCategories = $doctor->category_id ? explode(',', $doctor->category_id) : [];
-                    ?>
+                    @endphp
                     @foreach ($categories as $category)
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="category_{{ $category->id }}" name="category_id[]" value="{{ $category->id }}"
@@ -263,9 +264,9 @@
                 </div>
                 <div class="form-group">
                     <label>Services</label>
-                    <?php
+                    @php
                         $currentServices = $doctor->service_id ? explode(',', $doctor->service_id) : [];
-                    ?>
+                    @endphp
                     @foreach ($services as $service)
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="service_{{ $service->id }}" name="service_id[]" value="{{ $service->id }}"
@@ -279,22 +280,87 @@
                 </div>
                 <div class="form-group">
                     <label>Appointment Timings</label>
-                    <?php
+                    @php
                         $timings = [
                             '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
                             '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
-                            '16:00', '16:30', '17:00', '17:30', '18:00'
+                            '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
+                            '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00'
                         ];
                         $currentTimings = $doctor->timings ? explode(',', $doctor->timings) : [];
-                    ?>
+                    @endphp
                     @foreach ($timings as $time)
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="timing_{{ $time }}" name="timings[]" value="{{ $time }}"
                                    {{ in_array($time, old('timings', $currentTimings)) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="timing_{{ $time }}">{{ date('h:i A', strtotime($time)) }}</label>
+                            <label class="form-check-label" for="timing_{{ $time }}">{{ \Carbon\Carbon::createFromFormat('H:i', $time)->format('h:i A') }}</label>
                         </div>
                     @endforeach
                     @error('timings')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label>Working Hours - Start Time</label>
+                    @php
+                        $startTimes = $doctor->start_time ? explode(',', $doctor->start_time) : [];
+                    @endphp
+                    @foreach ($timings as $time)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="start_time_{{ $time }}" name="start_time[]" value="{{ $time }}"
+                                   {{ in_array($time, old('start_time', $startTimes)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="start_time_{{ $time }}">{{ \Carbon\Carbon::createFromFormat('H:i', $time)->format('h:i A') }}</label>
+                        </div>
+                    @endforeach
+                    @error('start_time')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label>Working Hours - End Time</label>
+                    @php
+                        $endTimes = $doctor->end_time ? explode(',', $doctor->end_time) : [];
+                    @endphp
+                    @foreach ($timings as $time)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="end_time_{{ $time }}" name="end_time[]" value="{{ $time }}"
+                                   {{ in_array($time, old('end_time', $endTimes)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="end_time_{{ $time }}">{{ \Carbon\Carbon::createFromFormat('H:i', $time)->format('h:i A') }}</label>
+                        </div>
+                    @endforeach
+                    @error('end_time')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label>Break Start Time (Optional)</label>
+                    @php
+                        $breakStartTimes = $doctor->break_start_time ? explode(',', $doctor->break_start_time) : [];
+                    @endphp
+                    @foreach ($timings as $time)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="break_start_time_{{ $time }}" name="break_start_time[]" value="{{ $time }}"
+                                   {{ in_array($time, old('break_start_time', $breakStartTimes)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="break_start_time_{{ $time }}">{{ \Carbon\Carbon::createFromFormat('H:i', $time)->format('h:i A') }}</label>
+                        </div>
+                    @endforeach
+                    @error('break_start_time')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label>Break End Time (Optional)</label>
+                    @php
+                        $breakEndTimes = $doctor->break_end_time ? explode(',', $doctor->break_end_time) : [];
+                    @endphp
+                    @foreach ($timings as $time)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="break_end_time_{{ $time }}" name="break_end_time[]" value="{{ $time }}"
+                                   {{ in_array($time, old('break_end_time', $breakEndTimes)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="break_end_time_{{ $time }}">{{ \Carbon\Carbon::createFromFormat('H:i', $time)->format('h:i A') }}</label>
+                        </div>
+                    @endforeach
+                    @error('break_end_time')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
@@ -326,7 +392,57 @@
             });
 
             document.getElementById('editDoctorForm').addEventListener('submit', function (e) {
-                console.log('Form submitted with data:', new FormData(this));
+                // Client-side validation for time fields
+                const startTimes = document.querySelectorAll('input[name="start_time[]"]:checked');
+                const endTimes = document.querySelectorAll('input[name="end_time[]"]:checked');
+                const breakStartTimes = document.querySelectorAll('input[name="break_start_time[]"]:checked');
+                const breakEndTimes = document.querySelectorAll('input[name="break_end_time[]"]:checked');
+
+                if (startTimes.length !== endTimes.length) {
+                    e.preventDefault();
+                    alert('The number of start times must match the number of end times.');
+                    return;
+                }
+
+                if (breakStartTimes.length !== breakEndTimes.length) {
+                    e.preventDefault();
+                    alert('The number of break start times must match the number of break end times.');
+                    return;
+                }
+
+                for (let i = 0; i < startTimes.length; i++) {
+                    const startTime = startTimes[i].value;
+                    const endTime = endTimes[i].value;
+                    if (startTime >= endTime) {
+                        e.preventDefault();
+                        alert('End time must be after start time for all time slots.');
+                        return;
+                    }
+                }
+
+                for (let i = 0; i < breakStartTimes.length; i++) {
+                    const breakStartTime = breakStartTimes[i].value;
+                    const breakEndTime = breakEndTimes[i].value;
+                    if (breakStartTime >= breakEndTime) {
+                        e.preventDefault();
+                        alert('Break end time must be after break start time.');
+                        return;
+                    }
+                    let withinWorkingHours = false;
+                    for (let j = 0; j < startTimes.length; j++) {
+                        if (breakStartTime >= startTimes[j].value && breakEndTime <= endTimes[j].value) {
+                            withinWorkingHours = true;
+                            break;
+                        }
+                    }
+                    if (!withinWorkingHours && breakStartTimes.length > 0) {
+                        e.preventDefault();
+                        alert('Break times must be within working hours.');
+                        return;
+                    }
+                }
+
+                console.log('Form submission with data:', new FormData(this));
             });
         });
     </script>

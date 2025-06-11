@@ -274,10 +274,11 @@ class DoctorController extends Controller
     public function index()
     {
         try {
-            $doctors = Doctor::all();
+            // Changed from Doctor::all() to Doctor::paginate(10) to support pagination
+            $doctors = Doctor::paginate(10);
             $categories = Category::all();
             $services = Service::with('category')->get();
-            Log::info('Doctors fetched for index:', ['count' => $doctors->count()]);
+            Log::info('Doctors fetched for index:', ['count' => $doctors->total(), 'class' => get_class($doctors)]);
             return view('dashboards.admin', compact('doctors', 'categories', 'services'));
         } catch (\Exception $e) {
             Log::error('Error fetching doctors for index: ' . $e->getMessage());
@@ -305,6 +306,14 @@ class DoctorController extends Controller
                 'working_days.*' => 'string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,All Days',
                 'timings' => 'required|array|min:1',
                 'timings.*' => 'date_format:H:i',
+                'start_time' => 'required|array|min:1',
+                'start_time.*' => 'date_format:H:i',
+                'end_time' => 'required|array|min:1',
+                'end_time.*' => 'date_format:H:i',
+                'break_start_time' => 'nullable|array',
+                'break_start_time.*' => 'date_format:H:i',
+                'break_end_time' => 'nullable|array',
+                'break_end_time.*' => 'date_format:H:i',
             ]);
 
             $workingDays = in_array('All Days', $request->working_days)
@@ -330,6 +339,10 @@ class DoctorController extends Controller
                 'password' => bcrypt($request->password),
                 'working_days' => $workingDays,
                 'timings' => implode(',', $request->timings),
+                'start_time' => implode(',', $request->start_time),
+                'end_time' => implode(',', $request->end_time),
+                'break_start_time' => $request->break_start_time ? implode(',', $request->break_start_time) : null,
+                'break_end_time' => $request->break_end_time ? implode(',', $request->break_end_time) : null,
             ]);
 
             Log::info('Doctor created:', $doctor->toArray());
@@ -380,6 +393,14 @@ class DoctorController extends Controller
                 'working_days.*' => 'string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,All Days',
                 'timings' => 'required|array|min:1',
                 'timings.*' => 'date_format:H:i',
+                'start_time' => 'required|array|min:1',
+                'start_time.*' => 'date_format:H:i',
+                'end_time' => 'required|array|min:1',
+                'end_time.*' => 'date_format:H:i',
+                'break_start_time' => 'nullable|array',
+                'break_start_time.*' => 'date_format:H:i',
+                'break_end_time' => 'nullable|array',
+                'break_end_time.*' => 'date_format:H:i',
             ]);
 
             $workingDays = in_array('All Days', $request->working_days)
@@ -402,6 +423,10 @@ class DoctorController extends Controller
                 'status' => $request->status,
                 'working_days' => $workingDays,
                 'timings' => implode(',', $request->timings),
+                'start_time' => implode(',', $request->start_time),
+                'end_time' => implode(',', $request->end_time),
+                'break_start_time' => $request->break_start_time ? implode(',', $request->break_start_time) : null,
+                'break_end_time' => $request->break_end_time ? implode(',', $request->break_end_time) : null,
             ];
 
             if ($request->filled('password')) {

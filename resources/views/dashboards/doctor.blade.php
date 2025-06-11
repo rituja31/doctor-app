@@ -35,9 +35,11 @@
             --online-booking: #3a86ff;
             --offline-booking: #8338ec;
             --telehealth: #ff006e;
+            --card-padding: 1.5rem;
+            --icon-size: 48px;
         }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f5f7fb;
             color: var(--gray-800);
             margin: 0;
@@ -48,7 +50,6 @@
             display: flex;
             min-height: 100vh;
         }
-        /* Sidebar */
         .sidebar {
             width: 260px;
             background: var(--white);
@@ -62,7 +63,6 @@
             display: flex;
             flex-direction: column;
         }
-        /* Doctor Profile in Sidebar */
         .doctor-profile {
             padding: 1.5rem;
             border-bottom: 1px solid var(--gray-200);
@@ -183,14 +183,12 @@
             padding: 0.25rem 0.5rem;
             border-radius: 10px;
         }
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 260px;
             padding: 1.5rem;
             transition: all 0.3s ease;
         }
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -215,7 +213,61 @@
             margin: 0.5rem 0 0;
             font-weight: 400;
         }
-        /* Calendar Container */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--card-padding);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid var(--gray-200);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-lg);
+        }
+        .stat-icon {
+            width: var(--icon-size);
+            height: var(--icon-size);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+            transition: transform 0.2s ease;
+        }
+        .stat-icon.appointments {
+            background: linear-gradient(135deg, var(--primary), #2b6cb0);
+        }
+        .stat-icon.earnings {
+            background: linear-gradient(135deg, var(--success), #218838);
+        }
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1);
+        }
+        .stat-content h3 {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            margin: 0;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .stat-content p {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin: 0.25rem 0 0;
+            font-weight: 600;
+        }
         .calendar-container {
             margin-bottom: 2rem;
         }
@@ -244,7 +296,6 @@
             border: 1px solid var(--primary);
             color: var(--white);
         }
-        /* Calendar */
         #calendar {
             background: var(--white);
             border-radius: var(--border-radius-lg);
@@ -267,7 +318,6 @@
         .fc-daygrid-event-dot {
             display: none;
         }
-        /* Legend */
         .booking-legend {
             display: flex;
             justify-content: center;
@@ -286,7 +336,6 @@
             border-radius: 3px;
             margin-right: 0.5rem;
         }
-        /* Graph Container */
         .graph-container {
             margin-top: 2rem;
         }
@@ -327,7 +376,6 @@
             background-color: var(--primary);
             color: var(--white);
         }
-        /* Responsive */
         @media (max-width: 992px) {
             .sidebar {
                 width: 220px;
@@ -357,6 +405,9 @@
                 font-size: 1.5rem;
                 cursor: pointer;
             }
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -366,7 +417,7 @@
             <div class="doctor-avatar-container">
                 <div class="doctor-avatar">
                     @php
-                        $fullName = Auth::guard('doctor')->user()->first_name . ' ' . Auth::guard('doctor')->user()->last_name;
+                        $fullName = Auth::guard('doctor')->user()->first_name . ' ' . Auth::guard('doctor')->user()->first_name;
                         $initials = '';
                         $nameParts = explode(' ', $fullName);
                         foreach ($nameParts as $part) {
@@ -430,6 +481,26 @@
                 </button>
             </div>
         </header>
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon appointments">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Total Appointments</h3>
+                    <p>{{ $totalAppointments }}</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon earnings">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Monthly Earnings</h3>
+                    <p>₹{{ number_format($monthlyEarnings, 2, '.', ',') }}</p>
+                </div>
+            </div>
+        </div>
         <div class="calendar-container">
             <div class="section-header">
                 <h2 class="section-title">Appointment Calendar</h2>
@@ -469,6 +540,7 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                timeZone: 'Asia/Kolkata',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -476,14 +548,19 @@
                 },
                 events: @json($appointments),
                 eventClick: function(info) {
-                    alert('Appointment with ' + info.event.extendedProps.patientName + '\nType: ' +
-                          info.event.extendedProps.type.toUpperCase() + ' booking');
+                    alert('Appointment with ' + info.event.extendedProps.patientName + 
+                          '\nType: ' + info.event.extendedProps.type.toUpperCase() + ' booking' +
+                          '\nTime: ' + info.event.extendedProps.time_formatted);
                 },
                 eventDisplay: 'block',
                 eventTimeFormat: {
                     hour: '2-digit',
                     minute: '2-digit',
                     hour12: true
+                },
+                eventDidMount: function(info) {
+                    info.el.querySelector('.fc-event-time').textContent = 
+                        info.event.extendedProps.time_formatted;
                 }
             });
             calendar.render();
@@ -498,7 +575,7 @@
                         {
                             label: 'Online',
                             data: @json($onlineData),
-                            borderColor: 'rgba(58, 134, 255, 1)', // --online-booking
+                            borderColor: 'rgba(58, 134, 255, 1)',
                             backgroundColor: 'rgba(58, 134, 255, 0.1)',
                             borderWidth: 2,
                             tension: 0.3,
@@ -507,7 +584,7 @@
                         {
                             label: 'Offline',
                             data: @json($offlineData),
-                            borderColor: 'rgba(131, 56, 236, 1)', // --offline-booking
+                            borderColor: 'rgba(131, 56, 236, 1)',
                             backgroundColor: 'rgba(131, 56, 236, 0.1)',
                             borderWidth: 2,
                             tension: 0.3,

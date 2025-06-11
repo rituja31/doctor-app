@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -307,12 +306,13 @@
             // Initialize calendar
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridDay',
+                timeZone: 'Asia/Kolkata', // Set to match backend timezone
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'timeGridDay,timeGridWeek,dayGridMonth,listWeek'
                 },
-                initialDate: '{{ now()->format('Y-m-d') }}', // Current date
+                initialDate: '{{ now()->setTimezone('Asia/Kolkata')->format('Y-m-d') }}', // Current date in IST
                 navLinks: true,
                 editable: false,
                 dayMaxEvents: true,
@@ -324,9 +324,9 @@
                     let icon = arg.event.classNames.includes('fc-event-online') 
                         ? '<i class="bi bi-laptop me-1"></i>' 
                         : '<i class="bi bi-geo-alt me-1"></i>';
-                    
+                    let time = arg.event.extendedProps.time_formatted;
                     return {
-                        html: icon + arg.event.title
+                        html: `${icon}${time} ${arg.event.title}`
                     };
                 },
                 eventClick: function(info) {
@@ -335,18 +335,14 @@
                     document.getElementById('patientId').textContent = info.event.id;
                     document.getElementById('appointmentNotes').textContent = info.event.extendedProps.notes || 'No notes provided.';
                     
-                    // Format date/time
-                    const options = { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    };
-                    const timeString = info.event.start.toLocaleDateString('en-US', options) + 
-                                     ' - ' + 
-                                     info.event.end.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
+                    // Use time_formatted for consistent display
+                    const timeString = info.event.extendedProps.time_formatted + 
+                        ' on ' + info.event.start.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
                     document.getElementById('appointmentTime').textContent = timeString;
                     
                     // Set appointment type badge
@@ -356,6 +352,13 @@
                     
                     // Show modal
                     appointmentModal.show();
+                },
+                eventDidMount: function(info) {
+                    // Ensure event time is displayed correctly
+                    const timeEl = info.el.querySelector('.fc-event-time');
+                    if (timeEl) {
+                        timeEl.textContent = info.event.extendedProps.time_formatted;
+                    }
                 }
             });
             
@@ -371,6 +374,9 @@
                 calendar.removeAllEvents();
                 filteredEvents.forEach(e => calendar.addEvent(e));
             });
+
+            // Debug: Log events to console
+            console.log('Appointments:', allEvents);
         });
     </script>
 </body>

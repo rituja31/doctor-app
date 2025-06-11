@@ -79,9 +79,21 @@ class DoctorController extends Controller
                         'type' => $appointment->appointment_type,
                         'patientName' => $appointment->first_name . ' ' . $appointment->last_name,
                         'notes' => $appointment->details ?? 'No notes provided.',
+                        'time_formatted' => $startDateTime->format('h:i A'),
                     ],
                 ];
             });
+
+        // Total Appointments
+        $totalAppointments = Appointment::where('doctor_id', $doctor->id)->count();
+
+        // Monthly Earnings from service_fees
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+        
+        $monthlyEarnings = Appointment::where('doctor_id', $doctor->id)
+            ->whereBetween('appointment_date', [$startOfMonth, $endOfMonth])
+            ->sum('service_fees');
 
         // Graph data for online/offline appointments
         $startOfWeek = Carbon::now()->startOfWeek();
@@ -113,7 +125,15 @@ class DoctorController extends Controller
             }
         }
 
-        return view('dashboards.doctor', compact('doctor', 'appointments', 'days', 'onlineData', 'offlineData'));
+        return view('dashboards.doctor', compact(
+            'doctor',
+            'appointments',
+            'days',
+            'onlineData',
+            'offlineData',
+            'totalAppointments',
+            'monthlyEarnings'
+        ));
     }
 
     // Calendar view
@@ -147,6 +167,7 @@ class DoctorController extends Controller
                         'type' => $appointment->appointment_type,
                         'patientName' => $appointment->first_name . ' ' . $appointment->last_name,
                         'notes' => $appointment->details ?? 'No notes provided.',
+                        'time_formatted' => $startDateTime->format('h:i A'),
                     ],
                 ];
             });
@@ -283,7 +304,7 @@ class DoctorController extends Controller
                 'working_days' => 'required|array|min:1',
                 'working_days.*' => 'string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,All Days',
                 'timings' => 'required|array|min:1',
-                'timings.*' => 'date_format:H:i', // Use date_format for reliable time validation
+                'timings.*' => 'date_format:H:i',
             ]);
 
             $workingDays = in_array('All Days', $request->working_days)
@@ -292,7 +313,6 @@ class DoctorController extends Controller
 
             $categoryNames = Category::whereIn('id', $request->category_id)->pluck('name')->toArray();
             $serviceNames = Service::whereIn('id', $request->service_id)->pluck('name')->toArray();
-            // Deduplicate specialties
             $specialtiesArray = array_unique(array_merge($categoryNames, $serviceNames));
             $specialties = implode(',', $specialtiesArray);
 
@@ -309,7 +329,7 @@ class DoctorController extends Controller
                 'status' => $request->status,
                 'password' => bcrypt($request->password),
                 'working_days' => $workingDays,
-                'timings' => implode(',', $request->timings), // Save timings directly
+                'timings' => implode(',', $request->timings),
             ]);
 
             Log::info('Doctor created:', $doctor->toArray());
@@ -368,7 +388,6 @@ class DoctorController extends Controller
 
             $categoryNames = Category::whereIn('id', $request->category_id)->pluck('name')->toArray();
             $serviceNames = Service::whereIn('id', $request->service_id)->pluck('name')->toArray();
-            // Deduplicate specialties
             $specialtiesArray = array_unique(array_merge($categoryNames, $serviceNames));
             $specialties = implode(',', $specialtiesArray);
 

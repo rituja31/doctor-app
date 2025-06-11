@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingConfirmed;
+use App\Mail\DoctorAppointmentNotification;
 use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
@@ -82,7 +83,18 @@ class AppointmentController extends Controller
                 'name' => $appointment->first_name, // Use the single name field
             ];
 
+            // Send email to the patient
             Mail::to($appointment->email)->send(new BookingConfirmed($finalData));
+
+            // Prepare data for the doctor's email
+            $doctorEmailData = [
+                'patient_name' => $appointment->first_name,
+                'appointment_date' => $appointment->appointment_date,
+                'appointment_time' => $appointment->appointment_time,
+            ];
+
+            // Send email to the doctor
+            Mail::to($doctor->email)->send(new DoctorAppointmentNotification($doctorEmailData));
 
             return response()->json(['success' => true, 'message' => 'Appointment booked successfully']);
         } catch (\Exception $e) {
